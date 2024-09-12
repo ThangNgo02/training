@@ -11,7 +11,7 @@ function Button(props: IButton) {
   return (
     <button
       disabled={props.disabled}
-      className={props.className}
+      className={`rounded-lg bg-primary-pressed text-white ${props.className}`}
       {...props}>
       {props.iconStart} {props.name} {props.iconEnd}
     </button>

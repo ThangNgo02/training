@@ -7,7 +7,7 @@ export default {
         desktopXL: "1920px",
       },
       fontFamily: {
-        mont: ["Montserrat", "sans-serif"],
+        mont: ["Inter", "sans-serif"],
       },
       borderRadius: {
         "4xl": "180px",
@@ -26,7 +26,7 @@ export default {
           500: "#101316",
         },
         primary: {
-          pressed: "#AD1D2F",
+          pressed: "#2DB976",
         },
         secondary: {
           pressed: "#00645C",

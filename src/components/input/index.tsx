@@ -42,12 +42,12 @@ function InputRoot({
   return (
     <div className={` flex flex-col gap-2`}>
       {props.label && (
-        <span className='text-16x20 font-medium text-neutral-100'>
+        <span className='text-16x20 font-medium text-[#1A1A1A]'>
           <Localize tid={props.label} />
         </span>
       )}
       <div
-        className={` text-16x20 text-neutral-80 flex h-11 items-center gap-2 rounded-lg border p-3 transition ${props.className} ${isErrorVariable ? 'border-danger-main' : 'border-neutral-40 hover:border-primary-hover hover:bg-primary-bg_color focus:border-primary-hover active:border-primary-hover '} ${
+        className={`text-16x20 text-neutral-80 flex items-center gap-2 rounded-lg border p-3 transition ${props.className} ${isErrorVariable ? 'border-danger-main' : 'hover:border-primary-hover hover:bg-primary-bg_color focus:border-primary-hover active:border-primary-hover border-[#e5e7eb] '} ${
           props.disabled && 'bg-neutral-40 hover:bg-neutral-40 cursor-not-allowed  border-none'
         }`}>
         <input
