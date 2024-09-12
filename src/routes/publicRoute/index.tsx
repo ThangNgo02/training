@@ -10,10 +10,12 @@ function PublicRoute(props: any) {
   if (!Helper.isEmpty(auth)) {
     LoggerService.info('Navigate to HOME PAGE because user is authenticated');
     return (
-      <Navigate
-        to={'/'}
-        replace
-      />
+      <>
+        <Navigate
+          to={'/'}
+          replace
+        />
+      </>
     );
   }
 

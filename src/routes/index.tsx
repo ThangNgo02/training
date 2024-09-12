@@ -4,6 +4,7 @@ import { createBrowserRouter } from 'react-router-dom';
 import { EnumPath } from '@/common/enum/Enums';
 import Notfound from '@/components/notfound';
 import FeatureComponent from '@/pages';
+import LoginIndex from '@/pages/login';
 
 import PrivateRoute from './privateRoute';
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -28,6 +29,15 @@ const rootRoutes: Array<{
           <PrivateRoute
             role={[]}
             children={<HomePage />}
+          />
+        ),
+      },
+      {
+        path: EnumPath.login,
+        element: (
+          <PrivateRoute
+            role={[]}
+            children={<LoginIndex />}
           />
         ),
       },

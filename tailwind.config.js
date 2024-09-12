@@ -15,7 +15,9 @@ export default {
       boxShadow: {
         btnGroup: "0px 2px 4px 0px rgba(0, 0, 0, 0.12);",
       },
-      fontSize: {},
+      fontSize: {
+        "12x18": ["12px", "18px"]
+      },
       colors: {
         neutral: {
           110: "#F2F2F2",
