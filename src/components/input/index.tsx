@@ -18,6 +18,7 @@ export interface IInputRootProps extends React.InputHTMLAttributes<HTMLInputElem
   isErrorWrongLogin?: boolean;
   errorString?: string;
   readOnly: boolean;
+  iconEnd?: React.ReactNode;
 }
 function InputRoot({
   type = 'text',
@@ -62,6 +63,7 @@ function InputRoot({
           placeholder={LocalizeTypeFunc(props.placeholder ?? '')}
           readOnly={readOnly}
         />
+        {props.iconEnd}
       </div>
       {!Helper.isEmpty(methods?.formState?.errors[props.name]) && (
         <div className='bg-danger-bg_color flex gap-1 p-1'>

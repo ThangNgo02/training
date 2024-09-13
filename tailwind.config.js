@@ -16,7 +16,8 @@ export default {
         btnGroup: "0px 2px 4px 0px rgba(0, 0, 0, 0.12);",
       },
       fontSize: {
-        "12x18": ["12px", "18px"]
+        "12x18": ["12px", "18px"],
+        "14x18": ["14px", "18px"]
       },
       colors: {
         neutral: {

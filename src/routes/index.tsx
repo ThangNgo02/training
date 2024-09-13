@@ -4,9 +4,10 @@ import { createBrowserRouter } from 'react-router-dom';
 import { EnumPath } from '@/common/enum/Enums';
 import Notfound from '@/components/notfound';
 import FeatureComponent from '@/pages';
-import LoginIndex from '@/pages/login';
+import Authen from '@/pages/authen/view';
 
 import PrivateRoute from './privateRoute';
+import PublicRoute from './publicRoute';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const HomePage = React.lazy(async () => import('@/pages/home'));
 
@@ -35,9 +36,18 @@ const rootRoutes: Array<{
       {
         path: EnumPath.login,
         element: (
-          <PrivateRoute
+          <PublicRoute
             role={[]}
-            children={<LoginIndex />}
+            children={<Authen />}
+          />
+        ),
+      },
+      {
+        path: EnumPath.register,
+        element: (
+          <PublicRoute
+            role={[]}
+            children={<Authen />}
           />
         ),
       },
