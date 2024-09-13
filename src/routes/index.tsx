@@ -4,7 +4,9 @@ import { createBrowserRouter } from 'react-router-dom';
 import { EnumPath } from '@/common/enum/Enums';
 import Notfound from '@/components/notfound';
 import FeatureComponent from '@/pages';
-import LoginIndex from '@/pages/login';
+import Login from '@/pages/authen/components/login';
+import Register from '@/pages/authen/components/register';
+import Authen from '@/pages/authen/view';
 
 import PrivateRoute from './privateRoute';
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -18,6 +20,12 @@ const rootRoutes: Array<{
     breadcrumbText?: JSX.Element | string;
     title?: JSX.Element;
     element: JSX.Element;
+    children?: Array<{
+      path: string;
+      breadcrumbText?: JSX.Element | string;
+      title?: JSX.Element;
+      element: JSX.Element;
+    }>;
   }>;
 }> = [
   {
@@ -33,13 +41,28 @@ const rootRoutes: Array<{
         ),
       },
       {
-        path: EnumPath.login,
-        element: (
-          <PrivateRoute
-            role={[]}
-            children={<LoginIndex />}
-          />
-        ),
+        path: '',
+        element: <Authen />,
+        children: [
+          {
+            path: '/login', // default route for login
+            element: (
+              <PrivateRoute
+                role={[]}
+                children={<Login />}
+              />
+            ),
+          },
+          {
+            path: '/register', // relative path to login
+            element: (
+              <PrivateRoute
+                role={[]}
+                children={<Register />}
+              />
+            ),
+          },
+        ],
       },
     ],
   },

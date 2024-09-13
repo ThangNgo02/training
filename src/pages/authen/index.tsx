@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import LoginView from '@/pages/login/view';
+import Authen from './view';
 
 function LoginIndex() {
   const [data, setData] = useState<any>();
@@ -10,7 +10,7 @@ function LoginIndex() {
   };
 
   return (
-    <LoginView
+    <Authen
       handleCallApi={handleLogin}
       isLoading={false}
       data={data}
