@@ -19,6 +19,12 @@ const rootRoutes: Array<{
     breadcrumbText?: JSX.Element | string;
     title?: JSX.Element;
     element: JSX.Element;
+    children?: Array<{
+      path: string;
+      breadcrumbText?: JSX.Element | string;
+      title?: JSX.Element;
+      element: JSX.Element;
+    }>;
   }>;
 }> = [
   {
