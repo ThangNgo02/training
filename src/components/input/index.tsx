@@ -19,6 +19,7 @@ export interface IInputRootProps extends React.InputHTMLAttributes<HTMLInputElem
   errorString?: string;
   readOnly: boolean;
   iconEnd?: React.ReactNode;
+  iconStart?: React.ReactNode;
 }
 function InputRoot({
   type = 'text',
@@ -40,6 +41,7 @@ function InputRoot({
     setState(value);
     methods?.setValue(props.name, value);
   };
+
   return (
     <div className={` flex flex-col gap-2`}>
       {props.label && (
@@ -48,9 +50,10 @@ function InputRoot({
         </span>
       )}
       <div
-        className={`text-16x20 text-neutral-80 flex items-center gap-2 rounded-lg border p-3 transition ${props.className} ${isErrorVariable ? 'border-danger-main' : 'hover:border-primary-hover hover:bg-primary-bg_color focus:border-primary-hover active:border-primary-hover border-[#e5e7eb] '} ${
+        className={`text-neutral-80 flex items-center gap-2 rounded-lg border p-3 text-16x20 transition ${props.className} ${isErrorVariable ? 'border-danger-main' : 'hover:border-primary-hover hover:bg-primary-bg_color focus:border-primary-hover active:border-primary-hover border-[#e5e7eb] '} ${
           props.disabled && 'bg-neutral-40 hover:bg-neutral-40 cursor-not-allowed  border-none'
         }`}>
+        {props.iconStart}
         <input
           autoFocus={props.autoFocus}
           value={state}
@@ -76,7 +79,7 @@ function InputRoot({
       {errorString && (
         <div className='bg-danger-bg_color flex gap-1 p-1'>
           <IconRoot icon={IconVariable.error} />
-          <span className='text-12x16 text-neutral-100'>
+          <span className='text-12x16 text-[#EF1414]'>
             <Localize tid={errorString ?? ''} />
           </span>
         </div>

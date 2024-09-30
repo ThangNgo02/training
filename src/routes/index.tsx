@@ -57,6 +57,15 @@ const rootRoutes: Array<{
           />
         ),
       },
+      {
+        path: EnumPath.forgotPassword,
+        element: (
+          <PublicRoute
+            role={[]}
+            children={<Authen />}
+          />
+        ),
+      },
     ],
   },
   {

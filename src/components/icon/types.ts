@@ -5,4 +5,7 @@ export enum IconVariable {
   openEyes,
   dot,
   noCopyRight,
+  arrowLeft,
+  phone,
+  refresh,
 }

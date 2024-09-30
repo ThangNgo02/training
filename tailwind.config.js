@@ -17,7 +17,9 @@ export default {
       },
       fontSize: {
         "12x18": ["12px", "18px"],
-        "14x18": ["14px", "18px"]
+        "14x18": ["14px", "18px"],
+        "16x20": ["16px", "20px"],
+        "36x44": ["36px", "44px"],
       },
       colors: {
         neutral: {
