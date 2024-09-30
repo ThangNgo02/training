@@ -3,11 +3,21 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import { EnumPath } from '@/common/enum/Enums';
 import Notfound from '@/components/notfound';
-import FeatureComponent from '@/pages';
+import PrivateIndex from '@/pages/private';
+import PublicIndex from '@/pages/public';
 
 import PrivateRoute from './privateRoute';
+import PublicRoute from './publicRoute';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const HomePage = React.lazy(async () => import('@/pages/home'));
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const ProfilePage = React.lazy(async () => import('@/pages/register'));
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const RegisterPage = React.lazy(async () => import('@/pages/register'));
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const LoginPage = React.lazy(async () => import('@/pages/login'));
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const EmployeeListPage = React.lazy(async () => import('@/pages/list'));
 
 const rootRoutes: Array<{
   element: JSX.Element;
@@ -16,11 +26,36 @@ const rootRoutes: Array<{
     path: string;
     breadcrumbText?: JSX.Element | string;
     title?: JSX.Element;
+    name?: string;
     element: JSX.Element;
   }>;
 }> = [
   {
-    element: <FeatureComponent />,
+    element: <PublicIndex />,
+    children: [
+      {
+        path: EnumPath.login,
+        element: (
+          <PublicRoute
+            role={[]}
+            children={<LoginPage />}
+          />
+        ),
+      },
+      {
+        path: EnumPath.signup,
+        element: (
+          <PublicRoute
+            role={[]}
+            children={<RegisterPage />}
+          />
+        ),
+      },
+    ],
+  },
+  {
+    path: '/',
+    element: <PrivateIndex name={'404page'} />,
     children: [
       {
         path: EnumPath.home,
@@ -30,6 +65,27 @@ const rootRoutes: Array<{
             children={<HomePage />}
           />
         ),
+        name: 'homepage',
+      },
+      {
+        path: EnumPath.list,
+        element: (
+          <PrivateRoute
+            role={[]}
+            children={<EmployeeListPage />}
+          />
+        ),
+        name: 'list',
+      },
+      {
+        path: EnumPath.profile,
+        element: (
+          <PrivateRoute
+            role={[]}
+            children={<ProfilePage />}
+          />
+        ),
+        name: 'profile',
       },
     ],
   },
@@ -38,6 +94,7 @@ const rootRoutes: Array<{
     element: <Notfound />,
   },
 ];
+
 const browserRouter = createBrowserRouter(rootRoutes);
 
 export { browserRouter, rootRoutes };

@@ -116,6 +116,10 @@ export const useRequest = (
           ResponseCode.find(data, funcRequest);
         }
       },
+      onSettled: (data, error) => {
+        console.log(data, 'data');
+        console.log(error, 'error');
+      },
       onError: () => {
         callbackWhenError && callbackWhenError();
         // toastDefault(EnumToast.ERROR, 'Network error, please check your network!');

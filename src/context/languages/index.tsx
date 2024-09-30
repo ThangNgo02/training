@@ -3,9 +3,9 @@ import React, { createContext, useContext, useState } from 'react';
 
 import Config from '@/env';
 import { dictionaryList, type IDictionaryList, languageOptions } from '@/languages';
-interface IContextLanguage {
+export interface IContextLanguage {
   userLanguage: string;
-  dictionary: object;
+  dictionary: any;
   userLanguageChange: (selected: any) => void;
 }
 const config = new Config().getState();
@@ -35,15 +35,17 @@ export const LanguageProvider = ({ children }: IPropsProviderLanguage) => {
     }),
     [userLanguage],
   );
+
   return <LanguageContext.Provider value={value}>{children}</LanguageContext.Provider>;
 };
 
 interface IProps {
   tid: any;
+  fallbackText?: string;
 }
-export const Localize = ({ tid }: IProps) => {
+export const Localize = ({ tid, fallbackText }: IProps) => {
   const languageContext = useContext(LanguageContext);
-  return languageContext.dictionary[tid as keyof object] || tid;
+  return languageContext.dictionary[tid as keyof object] || fallbackText || tid;
 };
 
 export function LocalizeTypeFunc(tid: string | undefined): any {
