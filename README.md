@@ -367,3 +367,8 @@ See more | [Be creative](http://www.emoji-cheat-sheet.com/)
 - Tất cả các nhánh phát triển tính năng hoặc sửa lỗi đều được tách từ nhánh chính là `develop`.
 - Trong trường hợp nhánh phụ có các nhánh con, cần checkout từ nhánh phụ, phát triển tính năng, và sau đó merge lại vào nhánh phụ trước khi merge nhánh phụ đó vào nhánh chính `develop`.
 
+# Tool GitKraken
+- Link download: https://gitkraken.en.uptodown.com/windows/versions
+- Down version 8.x
+- Crack https://github.com/qsshs/GitKraKen-Crack
+- Thực hiện clone về và thực hiện các bước trong Readme
