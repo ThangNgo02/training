@@ -23,12 +23,10 @@ function PrivateRoute({ role, children }: IPrivateRoute) {
     // do navigate
   }
 
-  useEffect(() => {
-    if (Helper.isEmpty(auth)) {
-      LoggerService.info('Navigate to LOGIN PAGE because user is not authenticated');
-      navigate(EnumPath.login);
-    }
-  }, [auth]);
+  if (Helper.isEmpty(auth)) {
+    LoggerService.info('Navigate to LOGIN PAGE because user is not authenticated');
+    navigate(EnumPath.login);
+  }
 
   return isAllow ? (
     children

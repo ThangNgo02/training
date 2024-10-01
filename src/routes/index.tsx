@@ -55,7 +55,7 @@ const rootRoutes: Array<{
   },
   {
     path: '/',
-    element: <PrivateIndex name={'404page'} />,
+    element: <PrivateIndex />,
     children: [
       {
         path: EnumPath.home,

@@ -1,6 +1,6 @@
 /* eslint-disable no-debugger */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 
 import { type ITableColumns } from '@/common/interfaces/tableColumn';
 import { Localize } from '@/context/languages';
@@ -12,6 +12,17 @@ interface ITableRootProps {
 }
 
 export function TableRoot({ name, data, columns }: ITableRootProps) {
+  const talbeRef = useRef<HTMLDivElement>(null);
+  const isOverflowing = useMemo(() => {
+    if (talbeRef.current) {
+      const isOverflowing =
+        talbeRef.current.scrollHeight > talbeRef.current.clientHeight ||
+        talbeRef.current.scrollWidth > talbeRef.current.clientWidth;
+      return isOverflowing;
+    } else {
+      return false;
+    }
+  }, [talbeRef.current]);
   const [activeColumnIndexes, setActiveColumnIndexes] = useState(columns.map(column => column.isHiddenColumn !== true));
   const [isOpenColumnSetting, setOpenColumnSetting] = useState(false);
   const activeColumns = useMemo(() => {
@@ -38,18 +49,20 @@ export function TableRoot({ name, data, columns }: ITableRootProps) {
         </button>
       </div>
       <div className='max-w-full overflow-hidden rounded-xl border border-[#98A2B3]'>
-        <div className='overflow-x-auto'>
-          <table className=' -m-[1px] w-[calc(100%+2px)] table-fixed border-collapse rounded-xl'>
+        <div
+          ref={talbeRef}
+          className={`-ml-1 -mr-1 -mt-1 ${isOverflowing ? 'mb-[1px]' : '-mb-1'} h-fit overflow-x-auto`}>
+          <table className='w-full table-fixed rounded-xl border-none'>
             <thead>
               <tr className='bg-primary text-12x18 font-medium text-white'>
                 {activeColumns.map(column => (
                   <th
                     key={column.key}
-                    className={`min-w-24 overflow-ellipsis border border-[#98A2B3] px-5 py-2 ${column.width ? `w-[${column.width}px]` : 'w-[400px]'} ${column.fixed === undefined ? '' : 'sticky left-0'}`}>
+                    className={`border border-[#98A2B3] px-5 py-2 ${column.fixed === undefined ? '' : 'sticky'} ${column.width ? `w-[${column.width}px]` : 'w-[200px]'}`}>
                     {column.isHiddenHeader
                       ? ''
                       : Localize({
-                          tid: column.key === 'index' ? 'index' : `${name}.${column.key}`,
+                          tid: `${name}.${column.key}`,
                           fallbackText: column.name,
                         })}
                   </th>
@@ -64,7 +77,7 @@ export function TableRoot({ name, data, columns }: ITableRootProps) {
                       <td
                         onClick={column.onClick ? () => column.onClick!(row, index) : undefined}
                         key={`${column.key}-${index}`}
-                        className={`min-w-24 overflow-ellipsis border border-[#98A2B3] px-5 py-2 ${column.width ? `w-[${column.width}px]` : 'w-24'} ${column.fixed === undefined ? '' : 'sticky left-0'}`}>
+                        className={`border border-[#98A2B3] px-5 py-2 ${column.fixed === undefined ? '' : 'sticky'}`}>
                         {column.render
                           ? column.render(row, index)
                           : column.key === 'index'

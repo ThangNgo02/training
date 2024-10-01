@@ -1,9 +1,6 @@
-import { useEffect } from 'react';
-
 import { type IApiRequest } from '@/api/api.interface';
 import { useGet } from '@/api/api.middleware';
 import { EnumApiPath } from '@/common/enum/Enums';
-import { type IStaff } from '@/common/interfaces/staff';
 import { type ITableColumns } from '@/common/interfaces/tableColumn';
 import { Localize } from '@/context/languages';
 import Config from '@/env';
@@ -36,6 +33,7 @@ const columns: ITableColumns[] = [
   },
   {
     key: 'action',
+
     name: 'Thao tác',
     isHiddenHeader: true,
     onClick: (values, index) => {
@@ -54,11 +52,7 @@ function EmployeeListIndex() {
   };
   const funcRequest = {
     handleResponse: (response: any) => {
-      try {
-        LoggerService.debug('EditBankComponent execute handleRequestSuccess receive data', response);
-      } catch (error: any) {
-        LoggerService.error('CalendarYearDetailComponent execute handleRequestSuccess receive error', error);
-      }
+      console.log(response?.data, 'Data');
     },
     handleRequestFailed: (response: any) => {
       LoggerService.error('Error', response.message);
@@ -67,14 +61,10 @@ function EmployeeListIndex() {
 
   const { data } = useGet(loginApi, funcRequest);
 
-  useEffect(() => {
-    console.log(data?.data, 'data');
-  }, [data]);
-
   return (
     <EmployeeListView
       name='staff'
-      data={data?.data as unknown as IStaff[]}
+      data={Array.isArray(data?.data) ? [...data.data] : []}
       columns={columns}
     />
   );

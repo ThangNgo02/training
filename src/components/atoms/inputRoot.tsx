@@ -19,7 +19,6 @@ export interface IInputRootProps extends React.InputHTMLAttributes<HTMLInputElem
   disabled?: boolean;
   isErrorWrongLogin?: boolean;
   errorString?: string;
-  register?: UseFormRegister<any>;
 }
 function InputRoot({
   type = 'text',
@@ -29,7 +28,6 @@ function InputRoot({
   isActive,
   isErrorWrongLogin,
   errorString,
-  register = useForm().register,
   ...props
 }: IInputRootProps) {
   const methods = useFormContext();
@@ -81,7 +79,7 @@ function InputRoot({
             props.disabled && 'bg-neutral-40 cursor-not-allowed'
           } ${classNameInput}`}
           placeholder={LocalizeTypeFunc(props.placeholder ?? '')}
-          {...register(props.name)}
+          {...methods.register(props.name)}
         />
         {/* {handleEndIcon(props.icon)} */}
       </div>

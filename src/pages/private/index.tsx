@@ -6,11 +6,7 @@ import AuthService from '@/utils/Auth';
 
 import PrivateView from './view';
 
-interface IPublicIndexProps {
-  name: string;
-}
-
-function PrivateIndex({ name }: IPublicIndexProps) {
+function PrivateIndex() {
   const language = useContext(LanguageContext);
   const auth = AuthService.getPackageAuth();
   const navigate = useNavigate();
@@ -18,7 +14,6 @@ function PrivateIndex({ name }: IPublicIndexProps) {
   return (
     <PrivateView
       language={language}
-      name={name}
       navigate={navigate}
       profile={auth ? auth.profileDetails : null}
     />

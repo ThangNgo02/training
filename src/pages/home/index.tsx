@@ -10,12 +10,6 @@ function HomeIndex() {
   const auth = AuthService.getPackageAuth();
   const navigate = useNavigate();
 
-  const [data, setData] = useState<any>();
-
-  useEffect(() => {
-    setData(auth ? auth.profileDetails : null);
-  }, []);
-
   const handleCallApi = () => {
     AuthService.removeAll();
     navigate(EnumPath.login);
@@ -25,7 +19,7 @@ function HomeIndex() {
     <HomeView
       handleCallApi={handleCallApi}
       isLoading={false}
-      data={data}
+      data={auth?.profileDetails}
     />
   );
 }

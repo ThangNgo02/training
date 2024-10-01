@@ -57,13 +57,8 @@ function LoginIndex() {
       LoggerService.error('Error', response.message);
     },
   };
-  const { isError, mutate } = useRequest(loginApi, funcRequest);
-  return (
-    <LoginView
-      isError={isError}
-      handleLogin={handleLogin}
-    />
-  );
+  const { mutate } = useRequest(loginApi, funcRequest);
+  return <LoginView handleLogin={handleLogin} />;
 }
 
 export default LoginIndex;

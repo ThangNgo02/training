@@ -8,12 +8,11 @@ import { rootRoutes } from '@/routes';
 
 interface IPublicProps {
   language: IContextLanguage;
-  name: string;
   navigate: NavigateFunction;
   profile: any;
 }
 
-function PrivateView({ language, profile, navigate, name }: IPublicProps) {
+function PrivateView({ language, profile, navigate }: IPublicProps) {
   return (
     <div className='flex w-max min-w-full flex-row'>
       <div className='flex h-screen min-w-[240px] flex-col items-center bg-sidebar pl-4 pr-4 pt-6'>
