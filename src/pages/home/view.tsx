@@ -1,9 +1,11 @@
 import { Button } from 'antd';
 import { useState } from 'react';
 
+import Form from '@/components/form';
 import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import InputRoot from '@/components/input';
+import Modal from '@/components/modal';
 import SelectRoot, { type IOption } from '@/components/select';
 import TextButton from '@/components/textbutton';
 
@@ -24,27 +26,31 @@ function HomeView({ isLoading, handleCallApi, data }: IHomeView) {
     setSelectedValue(value);
   };
 
-  const [inputValue, setInputValue] = useState<string>('');
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputValue(e.target.value);
+  const [isOpen, setIsOpen] = useState(false);
+  const handleConfirm = () => {
+    setIsOpen(false);
   };
 
   return (
     <div>
-      <InputRoot
-        label='Tên đăng nhập: '
-        value={inputValue}
-        onChange={handleInputChange}
-        placeholder='Nhập tên đăng nhập'
+      <Modal
+        isOpenModal={isOpen}
+        setIsOpenModal={setIsOpen}
+        title='Thông báo'
+        content='Token đã hết hạn. Vui lòng đăng nhập lại'
+        onConfirm={handleConfirm}
+        icon={<IconRoot icon={IconVariable.warningModal} />}
       />
       <TextButton
+        onClick={() => {
+          setIsOpen(true);
+        }}
         text='Quên mật khẩu ?'
         iconEnd={<IconRoot icon={IconVariable.closeEyes} />}
       />
       <SelectRoot
         value={selectedValue}
-        placeholder='Ngôn ngữ'
+        placeholder={options[0].label}
         options={options}
         onChange={handleOnChangeSelect}
       />
@@ -55,6 +61,21 @@ function HomeView({ isLoading, handleCallApi, data }: IHomeView) {
         AntD <br />
         <Button type='primary'>Button</Button>
       </div>
+
+      <Form
+        onSubmit={data => {
+          console.log(data);
+        }}>
+        <InputRoot
+          name='username'
+          label='username'
+        />
+        <InputRoot
+          name='password'
+          label='password'
+        />
+        <button type='submit'>Submit test</button>
+      </Form>
     </div>
   );
 }

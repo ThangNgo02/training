@@ -41,11 +41,11 @@ function SelectRoot({ options, value, onChange, ...props }: ISelectProps) {
         )}
         {isOpen ? (
           <span className='ml-2 text-black'>
-            <IconRoot icon={IconVariable.arrowDown} />
+            <IconRoot icon={IconVariable.arrowUp} />
           </span>
         ) : (
           <span className='ml-2 text-black'>
-            <IconRoot icon={IconVariable.arrowUp} />
+            <IconRoot icon={IconVariable.arrowDown} />
           </span>
         )}
       </div>
@@ -56,7 +56,7 @@ function SelectRoot({ options, value, onChange, ...props }: ISelectProps) {
             {options.map(option => (
               <li
                 key={option.value}
-                className='cursor-pointer px-2 py-2 text-sm text-gray-700 hover:bg-[#e1e1e1]'
+                className='cursor-pointer px-2 py-2 text-center text-sm text-gray-700 hover:bg-[#e1e1e1]'
                 onClick={() => {
                   handleOptionClick(option);
                 }}>

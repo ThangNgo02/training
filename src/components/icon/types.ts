@@ -10,4 +10,6 @@ export enum IconVariable {
   dot,
   copyRight,
   refresh,
+  warningModal,
+  email,
 }

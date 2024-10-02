@@ -1,7 +1,7 @@
 import { renderICon } from '@/components/icon/renderIcon';
 import { type IconVariable } from '@/components/icon/types';
 
-interface IIconComponentProps {
+export interface IIconComponentProps {
   icon: IconVariable;
   onClick?: () => void;
   className?: string;

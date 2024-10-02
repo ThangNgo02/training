@@ -16,6 +16,9 @@ export default {
         btnGroup: "0px 2px 4px 0px rgba(0, 0, 0, 0.12);",
       },
       fontSize: {},
+      backgroundColor: {
+        "overlay-modal": "rgba(0, 0, 0, 0.1)",
+      },
       colors: {
         neutral: {
           110: "#F2F2F2",

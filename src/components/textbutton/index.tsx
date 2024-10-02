@@ -1,4 +1,4 @@
-interface ITextButton {
+interface ITextButton extends React.HTMLAttributes<HTMLDivElement> {
   text?: string;
   className?: string;
   iconStart?: React.ReactNode;
@@ -7,11 +7,11 @@ interface ITextButton {
 
 function TextButton(props: ITextButton) {
   return (
-    <button
-      className={`flex items-center gap-2 px-4 py-2 text-[#2DB976] hover:opacity-85 ${props.className} `}
+    <div
+      className={`flex items-center gap-2 outline-none hover:opacity-85 ${props.className} `}
       {...props}>
       {props.iconStart} {props.text} {props.iconEnd}
-    </button>
+    </div>
   );
 }
 

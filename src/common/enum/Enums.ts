@@ -1,6 +1,8 @@
 export enum EnumPath {
   home = '/',
-  // login = '/login',
+  login = '/login',
+  forgotPassword = '/forgot-password',
+  resetPassword = '/reset-password',
 }
 
 export enum EnumRole {}
