@@ -1,3 +1,3 @@
 export function ListEmployeesView() {
-  return <div>Damh sách nhân viên</div>;
+  return <div>Damh sách nhân viên Tính</div>;
 }
