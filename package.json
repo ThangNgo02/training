@@ -14,7 +14,9 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint --fix --ext js,jsx,ts,tsx src/",
     "preview": "vite preview",
-    "test": "jest"
+    "test": "jest",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   },
   "engines": {
     "node": "v18.20.2",
@@ -47,6 +49,15 @@
   "devDependencies": {
     "@babel/core": "^7.24.5",
     "@babel/preset-env": "^7.24.5",
+    "@chromatic-com/storybook": "^1.9.0",
+    "@storybook/addon-essentials": "^8.3.4",
+    "@storybook/addon-interactions": "^8.3.4",
+    "@storybook/addon-links": "^8.3.4",
+    "@storybook/addon-onboarding": "^8.3.4",
+    "@storybook/blocks": "^8.3.4",
+    "@storybook/react": "^8.3.4",
+    "@storybook/react-vite": "^8.3.4",
+    "@storybook/test": "^8.3.4",
     "@testing-library/jest-dom": "^6.4.5",
     "@testing-library/react": "^12.1.5",
     "@types/bcryptjs": "^2.4.2",
@@ -83,7 +94,9 @@
     "postcss-nesting": "^12.1.0",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
+    "react-docgen-typescript": "^2.2.2",
     "sass": "^1.71.1",
+    "storybook": "^8.3.4",
     "tailwindcss": "^3.4.1",
     "ts-jest": "^29.1.2",
     "typescript": "^5.1.6",
