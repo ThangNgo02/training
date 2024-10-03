@@ -9,16 +9,14 @@
     ],
     "allowJs": true,
     "skipLibCheck": true,
-    "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
-    "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "ESNext",
     "moduleResolution": "Node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx",
+    "jsx": "react",
     "types": ["react", "jest","@testing-library/jest-dom"],
     "baseUrl": "./",
     "paths": {
@@ -26,6 +24,8 @@
         "src/*"
       ]
     },
+    "strict": true,
+    "esModuleInterop": true
   },
   "paths": {
     "@/*": ["src/*"]
