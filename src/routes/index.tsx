@@ -3,7 +3,9 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import { EnumPath } from '@/common/enum/Enums';
 import Notfound from '@/components/notfound';
-import FeatureComponent from '@/pages';
+import FeatureComponent from '@/pages/layouts/GeneralLayout';
+import HRLayout from '@/pages/layouts/HRLayout';
+import { ListEmployeesPage } from '@/pages/listEmployees';
 
 import PrivateRoute from './privateRoute';
 import PublicRoute from './publicRoute';
@@ -24,7 +26,7 @@ const rootRoutes: Array<{
   }>;
 }> = [
   {
-    element: <FeatureComponent />,
+    element: <HRLayout />,
     children: [
       {
         path: EnumPath.home,
@@ -74,6 +76,20 @@ const rootRoutes: Array<{
           <PublicRoute
             role={[]}
             children={<AuthPage />}
+          />
+        ),
+      },
+    ],
+  },
+  {
+    element: <HRLayout />,
+    children: [
+      {
+        path: EnumPath.listEmployees,
+        element: (
+          <PrivateRoute
+            role={[]}
+            children={<ListEmployeesPage />}
           />
         ),
       },

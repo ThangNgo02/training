@@ -12,4 +12,8 @@ export enum IconVariable {
   refresh,
   warningModal,
   email,
+  caret,
+  employee,
+  contract,
+  help,
 }
