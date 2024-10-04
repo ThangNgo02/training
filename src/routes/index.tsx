@@ -5,6 +5,8 @@ import { EnumPath } from '@/common/enum/Enums';
 import Notfound from '@/components/notfound';
 import FeatureComponent from '@/pages';
 import Authen from '@/pages/authen/view';
+import PrivateIndex from '@/pages/private';
+import EmployeePage from '@/pages/private/employee';
 
 import PrivateRoute from './privateRoute';
 import PublicRoute from './publicRoute';
@@ -19,6 +21,7 @@ const rootRoutes: Array<{
     breadcrumbText?: JSX.Element | string;
     title?: JSX.Element;
     element: JSX.Element;
+    name?: string;
     children?: Array<{
       path: string;
       breadcrumbText?: JSX.Element | string;
@@ -30,15 +33,6 @@ const rootRoutes: Array<{
   {
     element: <FeatureComponent />,
     children: [
-      {
-        path: EnumPath.home,
-        element: (
-          <PrivateRoute
-            role={[]}
-            children={<HomePage />}
-          />
-        ),
-      },
       {
         path: EnumPath.login,
         element: (
@@ -65,6 +59,41 @@ const rootRoutes: Array<{
             children={<Authen />}
           />
         ),
+      },
+      {
+        path: EnumPath.resetPassword,
+        element: (
+          <PublicRoute
+            role={[]}
+            children={<Authen />}
+          />
+        ),
+      },
+    ],
+  },
+  {
+    path: '/',
+    element: <PrivateIndex />,
+    children: [
+      {
+        path: EnumPath.home,
+        element: (
+          <PrivateRoute
+            role={[]}
+            children={<HomePage />}
+          />
+        ),
+        name: 'Homepage',
+      },
+      {
+        path: EnumPath.employee,
+        element: (
+          <PrivateRoute
+            role={[]}
+            children={<EmployeePage />}
+          />
+        ),
+        name: 'EmployeePage',
       },
     ],
   },

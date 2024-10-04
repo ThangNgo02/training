@@ -9,6 +9,7 @@ import SelectRoot from '@/components/select';
 import ForgotPassword from './components/forgot-password';
 import Login from './components/login';
 import Register from './components/register';
+import ResetPassword from './components/reset-password';
 
 function Authen() {
   const location = useLocation();
@@ -26,56 +27,55 @@ function Authen() {
 
   return (
     <>
-      <div className="bg-[url('public/theme-login.png')] bg-cover bg-center">
-        <div className='flex h-screen items-center justify-center'>
-          <div className='relative rounded-[20px] bg-white p-10'>
-            {location?.pathname === '/forgot-password' ? (
-              <ForgotPassword />
-            ) : (
-              <>
-                <div className='flex items-center justify-center px-[13px] font-medium'>
-                  <div className='px-6 py-[10px]'>
-                    <SelectRoot
-                      options={languageOptions}
-                      onChange={handleChange}
-                      value={selectedValue}
-                    />
-                  </div>
-                  <div className='px-6 py-[10px]'>
-                    <Link to='/contact'>Liên hệ</Link>
-                  </div>
-                  <div className='px-6 py-[10px]'>
-                    <Link to={`${location?.pathname === '/register' ? '/login' : '/register'}`}>
-                      {location?.pathname === '/login' ? 'Đăng ký' : 'Đăng nhập'}
-                    </Link>
-                  </div>
-                </div>
-                <div className='mt-[72px] flex items-center justify-center'>
-                  <img
-                    src='/public/logo.png'
-                    alt='logo'
+      <div className="flex min-h-screen items-center justify-center bg-[url('public/theme-login.png')] bg-cover bg-center">
+        <div className='relative rounded-[20px] bg-white p-10'>
+          {location?.pathname === '/reset-password ' && <ResetPassword />}
+          {location?.pathname === '/forgot-password' ? (
+            <ForgotPassword />
+          ) : (
+            <>
+              <div className='flex items-center justify-center px-[13px] font-medium'>
+                <div className='px-6 py-[10px]'>
+                  <SelectRoot
+                    options={languageOptions}
+                    onChange={handleChange}
+                    value={selectedValue}
                   />
                 </div>
-                <Heading
-                  children={`${location?.pathname === '/login' ? 'Đăng nhập TSP' : 'Đăng ký TSP'}`}
-                  className='mb-10 mt-3 h-11 text-center text-[36px] font-bold'
+                <div className='px-6 py-[10px]'>
+                  <Link to='/contact'>Liên hệ</Link>
+                </div>
+                <div className='px-6 py-[10px]'>
+                  <Link to={`${location?.pathname === '/register' ? '/login' : '/register'}`}>
+                    {location?.pathname === '/login' ? 'Đăng ký' : 'Đăng nhập'}
+                  </Link>
+                </div>
+              </div>
+              <div className='mt-[72px] flex items-center justify-center'>
+                <img
+                  src='/public/logo.png'
+                  alt='logo'
                 />
-                <div className='text-16x20 flex flex-col gap-8'>
-                  {location?.pathname === '/login' && <Login />}
-                  {location?.pathname === '/register' && <Register />}
-                </div>
-                <div className='mt-10 flex items-center justify-center gap-[6px] text-14x18 text-[#616161]'>
-                  <span>HRM</span>
-                  <IconRoot icon={IconVariable.noCopyRight} />
-                  <span>2024</span>
-                  <IconRoot icon={IconVariable.dot} />
-                  <span>Stg</span>
-                  <IconRoot icon={IconVariable.dot} />
-                  <span>Version 0.0.1</span>
-                </div>
-              </>
-            )}
-          </div>
+              </div>
+              <Heading
+                children={`${location?.pathname === '/login' ? 'Đăng nhập TSP' : 'Đăng ký TSP'}`}
+                className='mb-10 mt-3 h-11 text-center text-[36px] font-bold'
+              />
+              <div className='flex flex-col gap-8 text-16x20'>
+                {location?.pathname === '/login' && <Login />}
+                {location?.pathname === '/register' && <Register />}
+              </div>
+              <div className='mt-10 flex items-center justify-center gap-[6px] text-14x18 text-[#616161]'>
+                <span>HRM</span>
+                <IconRoot icon={IconVariable.noCopyRight} />
+                <span>2024</span>
+                <IconRoot icon={IconVariable.dot} />
+                <span>Stg</span>
+                <IconRoot icon={IconVariable.dot} />
+                <span>Version 0.0.1</span>
+              </div>
+            </>
+          )}
         </div>
       </div>
     </>

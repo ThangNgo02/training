@@ -17,7 +17,7 @@ export interface IRequestInterface {
 }
 
 export interface IDataResponse {
-  code: string;
+  code: number | string;
   data: object;
   message: string;
 }

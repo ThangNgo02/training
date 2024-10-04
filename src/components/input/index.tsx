@@ -43,7 +43,7 @@ function InputRoot({
   };
 
   return (
-    <div className={` flex flex-col gap-2`}>
+    <div className={`flex flex-col gap-2`}>
       {props.label && (
         <span className='text-16x20 font-medium text-[#1A1A1A]'>
           <Localize tid={props.label} />
@@ -77,7 +77,7 @@ function InputRoot({
         </div>
       )}
       {errorString && (
-        <div className='bg-danger-bg_color flex gap-1 p-1'>
+        <div className='bg-danger-bg_color flex items-center gap-1 p-1'>
           <IconRoot icon={IconVariable.error} />
           <span className='text-12x16 text-[#EF1414]'>
             <Localize tid={errorString ?? ''} />

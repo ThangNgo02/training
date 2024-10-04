@@ -1,7 +1,5 @@
-import classNames from 'classnames';
-
 export interface IButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  className?: string;
+  customClassName?: string;
   name: string;
   isLoading?: boolean;
   isFocus?: boolean;
@@ -9,13 +7,11 @@ export interface IButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   iconEnd?: React.ReactNode;
 }
 
-function ButtonRoot({ className, name, isLoading, isFocus, iconStart, iconEnd, disabled, ...props }: IButton) {
-  const buttonClassNames = classNames('rounded-lg bg-primary-pressed text-white', className);
-
+function ButtonRoot({ customClassName, name, isLoading, isFocus, iconStart, iconEnd, disabled, ...props }: IButton) {
   return (
     <button
       disabled={disabled}
-      className={buttonClassNames}
+      className={`rounded-lg bg-primary-pressed text-white ${customClassName}`}
       {...props}>
       {iconStart} {name} {iconEnd}
     </button>

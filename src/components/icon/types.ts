@@ -8,4 +8,6 @@ export enum IconVariable {
   arrowLeft,
   phone,
   refresh,
+  avatar,
+  briefcase,
 }

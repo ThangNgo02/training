@@ -163,7 +163,7 @@ function ForgotPasswordView(props: IForgotPassword) {
                   />
                   <ButtonRoot
                     name='Tiếp theo'
-                    className='h-[54px]'
+                    customClassName='h-[54px]'
                     onClick={props.handleSubmitPhone}
                   />
                 </FlexRoot>

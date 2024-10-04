@@ -1,8 +1,8 @@
 import { FormProvider, useForm } from 'react-hook-form';
 
-import RegisterView from './view';
+import ResetPasswordView from './view';
 
-function Register() {
+function ResetPassword() {
   const methods = useForm();
 
   const handleLogin = (data: any) => {
@@ -11,9 +11,9 @@ function Register() {
 
   return (
     <FormProvider {...methods}>
-      <RegisterView handleCallApi={handleLogin} />
+      <ResetPasswordView handleCallApi={handleLogin} />
     </FormProvider>
   );
 }
 
-export default Register;
+export default ResetPassword;
