@@ -1,14 +1,12 @@
 // import './styles/index.scss';
 
-// import React, { Fragment, useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 
 // import TableEmpty from '@/components/empty/table';
 // import { Localize } from '@/context/languages';
 // import { Helper } from '@/utils/Helper';
 
-// import Dropdown, { type IOption } from '../dropdown';
-// import IconRoot from '../icon';
-// import { IconVariable } from '../icon/types';
+// import DropdownRoot from '../dropdown';
 // import LoadingTable from '../loader/table';
 // import { Loading } from '../loading';
 // import Pagination from '../pagination';
@@ -102,36 +100,6 @@
 //     props.onSort && props.onSort({ by, order });
 //     setSort(sortList);
 //   };
-//   const handleItemSort = (item: IGridColumn<any>): IItemSort => {
-//     const isExistSort = sort?.find(i => item.field === i.field);
-//     return isExistSort ?? { field: '' };
-//   };
-//   const handleExistSort = (item: IGridColumn<any>) => {
-//     const isExistSort = sort?.find(i => item.field === i.field);
-//     return Boolean(isExistSort);
-//   };
-
-//   const handleRenderIconSort = (itemSort: IItemSort) => {
-//     switch (itemSort.by) {
-//       case 'asc': {
-//         return (
-//           <div className='flex h-4 w-4 rotate-0 items-center justify-center'>
-//             <IconRoot icon={IconVariable.desc} />
-//           </div>
-//         );
-//       }
-//       case 'desc': {
-//         return (
-//           <div className='flex h-4 w-4 rotate-180 items-center justify-center'>
-//             <IconRoot icon={IconVariable.asc} />
-//           </div>
-//         );
-//       }
-//       default: {
-//         return <IconRoot icon={IconVariable.sort} />;
-//       }
-//     }
-//   };
 //   return (
 //     <>
 //       <div className={` ${props.className}`}>
@@ -152,7 +120,7 @@
 //                         <span className='text-neutral-80 select-none whitespace-nowrap text-base font-bold leading-5'>
 //                           <Localize tid={item.title} />
 //                         </span>
-//                         {handleExistSort(item) && handleRenderIconSort(handleItemSort(item))}
+//                         {/* {handleExistSort(item) && handleRenderIconSort(handleItemSort(item))} */}
 //                       </div>
 //                     </td>
 //                   )
@@ -228,16 +196,11 @@
 //                 <span>
 //                   <Localize tid={'show'} />
 //                 </span>
-//                 <Dropdown
-//                   keyReset={keyReset}
-//                   isNotTick
-//                   customClassName='w-[70px]'
-//                   name='item'
-//                   defaultOption={itemsPerPage.find(item => item.value === '10')}
-//                   options={itemsPerPage}
-//                   onSelectOption={handleChangeTake}
+//                 <DropdownRoot
+//                   onSelect={() => {
+//                     console.log(1);
+//                   }}
 //                 />
-
 //                 <span>
 //                   <Localize tid={'in'} />
 //                   &nbsp;{props.total}&nbsp;
