@@ -1,62 +1,80 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import IconRoot from '../icon';
 import { IconVariable } from '../icon/types';
 
 export interface IOption {
-  value: string;
+  value: any;
   label: string;
 }
 
 export interface ISelectProps {
   options: IOption[];
-  value?: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
+  onChange: (value: any) => void;
+  firstValue?: IOption;
   className?: string;
-  classNameSelect?: string;
+  classNameSelected?: string;
   classNameItemSelect?: string;
 }
 
-function SelectRoot({ options, value, onChange, ...props }: ISelectProps) {
+function SelectRoot({ options, onChange, ...props }: ISelectProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [value, setValue] = useState<IOption>(
+    props.firstValue ?? {
+      value: options[0],
+      label: options[0].label,
+    },
+  );
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
   };
-  const handleOptionClick = (option: IOption) => {
-    onChange(option.value);
+
+  const handleOptionClick = (optionValue: IOption) => {
+    onChange(optionValue);
+    setValue(optionValue);
     setIsOpen(false);
   };
+  const selectRef = useRef<HTMLDivElement>(null);
+  const handleClickOutside = (event: MouseEvent) => {
+    if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   return (
-    <div className={`relative ${props.className ?? ''}`}>
+    <div
+      ref={selectRef}
+      className={`relative select-none outline-none ${props.className ?? ''}`}>
       <div
-        className={`flex h-10 cursor-pointer items-center justify-between px-2 text-sm text-black`}
+        className={`flex cursor-pointer items-center justify-between gap-2 px-2 text-sm text-black ${props.classNameSelected}`}
         onClick={handleToggle}>
-        {value ? (
-          <span className='text-black'>{options.find(option => option.value === value)?.label}</span>
-        ) : (
-          <span className='text-black'>{props.placeholder}</span>
-        )}
+        <span className='text-[#0F1E34]'>{value ? value.label : 'Lựa chọn'}</span>
         {isOpen ? (
-          <span className='ml-2 text-black'>
+          <span className='text-[#0F1E34]'>
             <IconRoot icon={IconVariable.arrowUp} />
           </span>
         ) : (
-          <span className='ml-2 text-black'>
+          <span className='text-[#0F1E34]'>
             <IconRoot icon={IconVariable.arrowDown} />
           </span>
         )}
       </div>
 
       {isOpen && (
-        <div className='absolute z-10 w-full rounded-md border border-gray-200 bg-white shadow-md'>
+        <div className='absolute left-0 right-0 z-10 mt-[12px] w-full rounded-md border border-gray-200 bg-white p-1 shadow-md'>
           <ul>
             {options.map(option => (
               <li
                 key={option.value}
-                className='cursor-pointer px-2 py-2 text-center text-sm text-gray-700 hover:bg-[#e1e1e1]'
+                className={`cursor-pointer rounded px-2 py-2 text-center text-sm text-gray-700 hover:bg-[#e1e1e1] ${props.classNameItemSelect}`}
                 onClick={() => {
                   handleOptionClick(option);
                 }}>

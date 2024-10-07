@@ -6,7 +6,6 @@ import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import InputRoot from '@/components/input';
 import Modal from '@/components/modal';
-import SelectRoot, { type IOption } from '@/components/select';
 import TextButton from '@/components/textbutton';
 
 interface IHomeView {
@@ -16,16 +15,6 @@ interface IHomeView {
 }
 
 function HomeView({ isLoading, handleCallApi, data }: IHomeView) {
-  const options: IOption[] = [
-    { value: 'VN', label: 'Tiếng Việt' },
-    { value: 'ENG', label: 'Tiếng Anh' },
-  ];
-  const [selectedValue, setSelectedValue] = useState<string | undefined>();
-
-  const handleOnChangeSelect = (value: string) => {
-    setSelectedValue(value);
-  };
-
   const [isOpen, setIsOpen] = useState(false);
   const handleConfirm = () => {
     setIsOpen(false);
@@ -47,12 +36,6 @@ function HomeView({ isLoading, handleCallApi, data }: IHomeView) {
         }}
         text='Quên mật khẩu ?'
         iconEnd={<IconRoot icon={IconVariable.closeEyes} />}
-      />
-      <SelectRoot
-        value={selectedValue}
-        placeholder={options[0].label}
-        options={options}
-        onChange={handleOnChangeSelect}
       />
       <div className='home-text_900 text-red-900'>Well come to our company</div>
       <button onClick={handleCallApi}>Click here to example call api</button>

@@ -1,5 +1,6 @@
 import 'react-toastify/dist/ReactToastify.css';
 import './index.scss';
+import '@/styles/_customUI.scss';
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ConfigProvider } from 'antd';

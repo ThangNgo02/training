@@ -1,11 +1,43 @@
+import { useState } from 'react';
+
 import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 
-import { ItemSideBar } from './ItemSideBar';
+import { type IItemSideBar, ItemSideBar } from './ItemSideBar';
 
-export function SideBarHR() {
+interface ISideBarProps {
+  className?: string;
+}
+const itemSidebar: IItemSideBar[] = [
+  {
+    id: 0,
+    to: '/',
+    title: 'Trang chủ',
+    iconStart: <IconRoot icon={IconVariable.home} />,
+  },
+  {
+    id: 1,
+    to: '/employees',
+    title: 'Danh sách nhân viên',
+    iconStart: <IconRoot icon={IconVariable.employee} />,
+  },
+  {
+    id: 2,
+    to: '/contracts',
+    title: 'Hợp đồng',
+    iconStart: <IconRoot icon={IconVariable.contract} />,
+  },
+  {
+    id: 3,
+    to: '/help',
+    title: 'Trợ giúp',
+    iconStart: <IconRoot icon={IconVariable.help} />,
+  },
+];
+export function SideBarHR(props: ISideBarProps) {
+  const [activeItem, setActiveItem] = useState<number>(0);
   return (
-    <div className='flex w-[18%] flex-col border bg-[#289E65] px-4 py-10'>
+    <div className={`flex flex-col border bg-[#289E65] px-4 py-10 ${props.className}`}>
       <a
         href='/'
         className='outline-none hover:cursor-pointer'>
@@ -40,25 +72,20 @@ export function SideBarHR() {
       </div>
 
       <div className='my-[20px] flex flex-col'>
-        <ItemSideBar
-          iconStart={<IconRoot icon={IconVariable.employee} />}
-          to='/'
-          title='Danh sách nhân viên'
-          className='font-medium text-white hover:bg-[#1e724ada]'
-        />
-        <ItemSideBar
-          iconStart={<IconRoot icon={IconVariable.contract} />}
-          to='/'
-          title='Hợp đồng'
-          className='font-medium text-white hover:bg-[#1e724ada]'
-        />
+        {itemSidebar.map(item => (
+          <ItemSideBar
+            key={item.id}
+            id={item.id}
+            onClick={() => {
+              setActiveItem(item.id);
+            }}
+            iconStart={item.iconStart}
+            to={item.to}
+            title={item.title}
+            className={`mt-2 font-medium text-white hover:bg-[#1e724ada] ${item.id === 3 && 'mt-2 font-normal text-[#C8ECDA] '} ${activeItem === item.id && 'border border-white'}`}
+          />
+        ))}
       </div>
-      <ItemSideBar
-        iconStart={<IconRoot icon={IconVariable.help} />}
-        to='/'
-        title='Trợ giúp'
-        className='mt-2 font-normal text-[#C8ECDA] hover:bg-[#1e724ada]'
-      />
     </div>
   );
 }

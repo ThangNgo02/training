@@ -4,11 +4,14 @@ import { LoggerService } from '@/utils/Logger';
 import { type IDataResponse, type State } from './api.interface';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const REQUEST = {
-  REQUEST_200: '200',
+  REQUEST_200: '2000',
+  REQUEST_400: '400',
+  REQUEST_500: '500',
 };
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const REQUEST_PARSE = {
   [REQUEST.REQUEST_200]: 'handleRequestSuccess',
+  [REQUEST.REQUEST_400]: 'handleRequestFailed',
 };
 
 class ResponseCode {
@@ -26,7 +29,7 @@ class ResponseCode {
       LoggerService.debug('ResponseCode execute find receive state', state);
       LoggerService.debug('ResponseCode execute find receive funcName', state);
       const code = { ...REQUEST_PARSE };
-      const funcName = code[response.code];
+      const funcName = code[response.code as keyof typeof REQUEST_PARSE];
       if (Helper.isEmpty(funcName)) {
         throw new Error(`ResponseCode code ${response.code} with funcName not defined`);
       }
@@ -34,7 +37,7 @@ class ResponseCode {
       if (Helper.isEmpty(stateFunc)) {
         throw new Error(`ResponseCode code ${response.code} key of funcRequest not defined`);
       }
-      stateFunc(response.data);
+      stateFunc(response);
     } catch (error: any) {
       LoggerService.error('ResponseCode execute find receive error', error.toString());
       throw error;

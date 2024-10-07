@@ -3,8 +3,11 @@ import { createBrowserRouter } from 'react-router-dom';
 
 import { EnumPath } from '@/common/enum/Enums';
 import Notfound from '@/components/notfound';
-import FeatureComponent from '@/pages/layouts/GeneralLayout';
-import HRLayout from '@/pages/layouts/HRLayout';
+import FeatureComponent from '@/layouts/GeneralLayout';
+import HRLayout from '@/layouts/HRLayout';
+import { Contact } from '@/pages/contact';
+import { ContractsPage } from '@/pages/contract';
+import { Help } from '@/pages/help';
 import { ListEmployeesPage } from '@/pages/listEmployees';
 
 import PrivateRoute from './privateRoute';
@@ -31,7 +34,7 @@ const rootRoutes: Array<{
       {
         path: EnumPath.home,
         element: (
-          <PrivateRoute
+          <PublicRoute
             role={[]}
             children={<HomePage />}
           />
@@ -87,9 +90,51 @@ const rootRoutes: Array<{
       {
         path: EnumPath.listEmployees,
         element: (
-          <PrivateRoute
+          <PublicRoute
             role={[]}
             children={<ListEmployeesPage />}
+          />
+        ),
+      },
+    ],
+  },
+  {
+    element: <HRLayout />,
+    children: [
+      {
+        path: EnumPath.contracts,
+        element: (
+          <PublicRoute
+            role={[]}
+            children={<ContractsPage />}
+          />
+        ),
+      },
+    ],
+  },
+  {
+    element: <HRLayout />,
+    children: [
+      {
+        path: EnumPath.help,
+        element: (
+          <PublicRoute
+            role={[]}
+            children={<Help />}
+          />
+        ),
+      },
+    ],
+  },
+  {
+    element: <HRLayout />,
+    children: [
+      {
+        path: EnumPath.contact,
+        element: (
+          <PublicRoute
+            role={[]}
+            children={<Contact />}
           />
         ),
       },

@@ -17,9 +17,12 @@ function AuthView() {
     { value: 'vn', label: 'Tiếng Việt' },
     { value: 'en', label: 'Tiếng Anh' },
   ];
-  const [selectedValue, setSelectedValue] = useState<string>('vn');
+  const [selectedValue, setSelectedValue] = useState<IOption>({
+    label: 'Tiếng Việt',
+    value: 'vn',
+  });
 
-  const handleOnChangeSelect = (value: string) => {
+  const handleOnChangeSelect = (value: IOption) => {
     setSelectedValue(value);
     console.log(value);
   };
@@ -34,9 +37,8 @@ function AuthView() {
             <div className='flex h-10 justify-around'>
               <SelectRoot
                 className='rounded-md hover:bg-gray-100'
-                value={selectedValue}
-                placeholder={options[0].label}
                 options={options}
+                firstValue={selectedValue}
                 onChange={handleOnChangeSelect}
               />
 
