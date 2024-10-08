@@ -28,31 +28,36 @@ function SelectRoot({ options, onChange, ...props }: ISelectProps) {
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
+    setIsFocus(!isFocus);
   };
 
   const handleOptionClick = (optionValue: IOption) => {
     onChange(optionValue);
     setValue(optionValue);
     setIsOpen(false);
+    setIsFocus(false);
   };
   const selectRef = useRef<HTMLDivElement>(null);
   const handleClickOutside = (event: MouseEvent) => {
     if (selectRef.current && !selectRef.current.contains(event.target as Node)) {
       setIsOpen(false);
+      setIsFocus(false);
     }
   };
 
   useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener('click', handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
+
+  const [isFocus, setIsFocus] = useState<boolean>(false);
 
   return (
     <div
       ref={selectRef}
-      className={`relative select-none outline-none ${props.className ?? ''}`}>
+      className={`relative select-none outline-none ${props.className ?? ''} ${isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'}`}>
       <div
         className={`flex cursor-pointer items-center justify-between gap-2 px-2 text-sm text-black ${props.classNameSelected}`}
         onClick={handleToggle}>
@@ -69,7 +74,7 @@ function SelectRoot({ options, onChange, ...props }: ISelectProps) {
       </div>
 
       {isOpen && (
-        <div className='absolute left-0 right-0 z-10 mt-[12px] w-full rounded-md border border-gray-200 bg-white p-1 shadow-md'>
+        <div className='absolute left-0 right-0 z-10 mt-[14px] w-full rounded-md border border-gray-200 bg-white p-1 shadow-md'>
           <ul>
             {options.map(option => (
               <li

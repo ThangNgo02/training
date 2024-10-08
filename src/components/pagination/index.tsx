@@ -24,6 +24,7 @@ export function Pagination() {
         onBlur={() => {
           setIsActive(false);
         }}
+        value={1}
         className={`no-spin w-[68px] rounded-md border border-[#C7D2E3] px-3 py-1 text-center outline-none ${isActive && 'custom-shadow'}`}
       />{' '}
       / 4

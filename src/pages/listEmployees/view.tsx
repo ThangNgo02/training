@@ -1,12 +1,15 @@
 import { Table } from 'antd';
+import { useRef, useState } from 'react';
 
 import Button from '@/components/button';
 import { Header } from '@/components/header';
 import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
+import { ModalFilter } from '@/components/modalFilter';
 import { Pagination } from '@/components/pagination';
 import { Search } from '@/components/search';
 import SelectRoot from '@/components/select';
+import useClickOutside from '@/hooks/useClickOutside';
 
 import { type IDataType } from '.';
 
@@ -25,9 +28,15 @@ const options = [
 ];
 
 export function ListEmployeesView({ data, columns }: IListEmployeesViewProps) {
+  const refBtn = useRef(null);
+  useClickOutside(refBtn, () => {
+    setIsOpenModalFilter(false);
+  });
   const handleSelect = (value: any) => {
     console.log(value);
   };
+
+  const [isOpenModalFilter, setIsOpenModalFilter] = useState<boolean>(false);
   return (
     <div className='flex h-full flex-col'>
       <Header
@@ -49,8 +58,13 @@ export function ListEmployeesView({ data, columns }: IListEmployeesViewProps) {
               />
               <Button
                 text='Bộ lọc'
-                className='flex items-center gap-2 rounded-lg border px-4 py-[10px] hover:border-[#2DB976]'
+                reff={refBtn}
+                className='relative box-border flex items-center gap-2 rounded-lg border px-4 py-[10px] hover:border-[#2DB976]'
                 iconStart={<IconRoot icon={IconVariable.filter} />}
+                children={isOpenModalFilter && <ModalFilter setIsOpenModalFilter={setIsOpenModalFilter} />}
+                onClick={() => {
+                  setIsOpenModalFilter(!isOpenModalFilter);
+                }}
               />
               <Button
                 text='Xuất dữ liệu'

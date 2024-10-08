@@ -7,13 +7,15 @@ export interface IButton extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   iconEnd?: React.ReactNode;
   children?: React.ReactNode;
   disabled?: boolean;
+  reff?: any;
 }
 
 function Button({ disabled = false, ...props }: IButton) {
   return (
     <button
+      ref={props.reff}
       disabled={disabled}
-      className={`relative text-center text-black ${props.className}`}
+      className={`relative box-border text-center text-black ${props.className}`}
       {...props}>
       {props.iconStart} {props.text} {props.iconEnd}
       {props.children}
