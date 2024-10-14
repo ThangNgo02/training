@@ -26,4 +26,5 @@ export enum IconVariable {
   filter,
   setting,
   download,
+  upload,
 }

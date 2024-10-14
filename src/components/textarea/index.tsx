@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { Localize, LocalizeTypeFunc } from '@/context/languages';
@@ -6,14 +6,12 @@ import { Helper } from '@/utils/Helper';
 
 import IconRoot from '../icon';
 import { IconVariable } from '../icon/types';
-export interface IInputRootProps extends React.InputHTMLAttributes<HTMLInputElement> {
+export interface ITextAreaRootProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   label?: string;
   iconEnd?: React.ReactNode;
   iconStart?: React.ReactNode;
   className?: string;
   text?: string;
-  type?: string;
-  isReset?: boolean;
   classNameInput?: string;
   classNameLabel?: string;
   name: string;
@@ -23,29 +21,20 @@ export interface IInputRootProps extends React.InputHTMLAttributes<HTMLInputElem
   isErrorWrongLogin?: boolean;
   errorString?: string;
 }
-function InputRoot({
-  type = 'text',
+function TextAreaRoot({
   isError = false,
   classNameInput,
   isActive,
   isErrorWrongLogin,
   errorString,
   ...props
-}: IInputRootProps) {
+}: ITextAreaRootProps) {
   const methods = useFormContext();
   const isErrorVariable =
     (!Helper.isEmpty(methods?.formState?.errors[props.name]) || isError || isErrorWrongLogin) ?? errorString;
   const [state, setState] = React.useState<string | number>(methods?.getValues()[props.name]);
-  const handleReset = () => {
-    methods?.reset();
-    setState('');
-  };
-  useEffect(() => {
-    if (props.isReset) {
-      handleReset();
-    }
-  }, [props.isReset]);
-  const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+
+  const handleOnChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     const value = event.target.value;
     setState(value);
     methods?.setValue(props.name, value);
@@ -58,22 +47,21 @@ function InputRoot({
     setIsFocus(false);
   };
   return (
-    <div className={`flex w-full flex-col gap-2`}>
+    <div className={` flex h-full w-full flex-col gap-2`}>
       {props.label && (
         <span className={`text-16x20 text-start font-medium text-[#1A1A1A] ${props.classNameLabel}`}>
           <Localize tid={props.label} />
         </span>
       )}
       <div
-        className={` text-16x20 text-neutral-80 flex h-11 items-center gap-2 rounded-lg border p-3 transition ${props.className} ${isError ? 'border-red-500' : 'border-neutral-40 hover:border-primary-hover hover:bg-primary-bg_color focus:border-primary-hover active:border-primary-hover '} ${
+        className={` text-16x20 text-neutral-80 flex h-full items-center gap-2 rounded-lg border p-3 transition ${props.className} ${isError ? 'border-red-500' : 'border-neutral-40 hover:border-primary-hover hover:bg-primary-bg_color focus:border-primary-hover active:border-primary-hover '} ${
           props.disabled && 'bg-neutral-40  hover:bg-neutral-40  cursor-not-allowed  border-none'
         } ${isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'}`}>
         {props.iconStart}
-        <input
+        <textarea
+          onChange={handleOnChange}
           autoFocus={props.autoFocus}
           value={state}
-          type={type}
-          onChange={handleOnChange}
           onFocus={handleFocus}
           onBlur={handleBlur}
           {...props}
@@ -104,4 +92,4 @@ function InputRoot({
   );
 }
 
-export default InputRoot;
+export default TextAreaRoot;

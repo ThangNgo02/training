@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 interface ISearchProps {
-  onChangeText?: (query: string) => void;
+  onChangeText: (query: string) => void;
   iconStart?: React.ReactNode;
   iconEnd?: React.ReactNode;
   placeholder?: string;

@@ -22,11 +22,6 @@ function AuthView() {
     value: 'vn',
   });
 
-  const handleOnChangeSelect = (value: IOption) => {
-    setSelectedValue(value);
-    console.log(value);
-  };
-
   return (
     <div className="fixed flex h-full w-full items-center justify-center bg-[url('@/public/background_theme_auth.png')] bg-cover bg-center">
       <div className='relative flex h-[86%] w-[40%] items-center justify-center rounded-[20px] bg-white'>
@@ -36,10 +31,11 @@ function AuthView() {
           <div className='flex h-full w-full flex-col px-32 py-6'>
             <div className='flex h-10 justify-around'>
               <SelectRoot
-                className='rounded-md hover:bg-gray-100'
+                className='flex items-center rounded-md hover:bg-gray-100'
+                classNameOptionList='top-8'
                 options={options}
                 firstValue={selectedValue}
-                onChange={handleOnChangeSelect}
+                name='language'
               />
 
               <TextLink

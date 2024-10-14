@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import { useFormContext } from 'react-hook-form';
 
 import IconRoot from '../icon';
 import { IconVariable } from '../icon/types';
@@ -10,14 +11,19 @@ export interface IOption {
 
 export interface ISelectProps {
   options: IOption[];
-  onChange: (value: any) => void;
   firstValue?: IOption;
+  name: string;
+  isReset?: boolean;
   className?: string;
   classNameSelected?: string;
   classNameItemSelect?: string;
+  classNameOptionList?: string;
+  onChange?: (value: any) => void;
 }
 
 function SelectRoot({ options, onChange, ...props }: ISelectProps) {
+  const methods = useFormContext();
+
   const [isOpen, setIsOpen] = useState(false);
   const [value, setValue] = useState<IOption>(
     props.firstValue ?? {
@@ -25,6 +31,20 @@ function SelectRoot({ options, onChange, ...props }: ISelectProps) {
       label: options[0].label,
     },
   );
+  const handleReset = () => {
+    methods?.reset();
+    setValue(
+      props.firstValue ?? {
+        value: options[0],
+        label: options[0].label,
+      },
+    );
+  };
+  useEffect(() => {
+    if (props.isReset) {
+      handleReset();
+    }
+  }, [props.isReset]);
 
   const handleToggle = () => {
     setIsOpen(!isOpen);
@@ -32,7 +52,10 @@ function SelectRoot({ options, onChange, ...props }: ISelectProps) {
   };
 
   const handleOptionClick = (optionValue: IOption) => {
-    onChange(optionValue);
+    methods?.setValue(props.name, optionValue.value);
+    if (onChange) {
+      onChange(optionValue.value);
+    }
     setValue(optionValue);
     setIsOpen(false);
     setIsFocus(false);
@@ -59,7 +82,7 @@ function SelectRoot({ options, onChange, ...props }: ISelectProps) {
       ref={selectRef}
       className={`relative select-none outline-none ${props.className ?? ''} ${isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'}`}>
       <div
-        className={`flex cursor-pointer items-center justify-between gap-2 px-2 text-sm text-black ${props.classNameSelected}`}
+        className={`flex w-full cursor-pointer items-center justify-between gap-2 px-2 text-sm text-black ${props.classNameSelected}`}
         onClick={handleToggle}>
         <span className='text-[#0F1E34]'>{value ? value.label : 'Lựa chọn'}</span>
         {isOpen ? (
@@ -74,12 +97,13 @@ function SelectRoot({ options, onChange, ...props }: ISelectProps) {
       </div>
 
       {isOpen && (
-        <div className='absolute left-0 right-0 z-10 mt-[14px] w-full rounded-md border border-gray-200 bg-white p-1 shadow-md'>
+        <div
+          className={`absolute left-0 right-0 z-10 mt-[14px] w-full overflow-y-auto rounded-md border border-gray-200 bg-white p-1 text-start shadow-md ${props.classNameOptionList}`}>
           <ul>
             {options.map(option => (
               <li
                 key={option.value}
-                className={`cursor-pointer rounded px-2 py-2 text-center text-sm text-gray-700 hover:bg-[#e1e1e1] ${props.classNameItemSelect}`}
+                className={`cursor-pointer rounded px-2 py-2 text-sm text-gray-700 hover:bg-[#e1e1e1] ${props.classNameItemSelect}`}
                 onClick={() => {
                   handleOptionClick(option);
                 }}>
