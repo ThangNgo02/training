@@ -10,7 +10,9 @@ import InputRoot from '@/components/input';
 import SelectRoot, { type IOption } from '@/components/select';
 import TextAreaRoot from '@/components/textarea';
 
-export function ModalAddEmployeeView() {
+import { type IModalAddEmployeeProps } from './type';
+
+export function ModalAddEmployeeView({ setIsLoading, setIsOpenModalAdd }: IModalAddEmployeeProps) {
   const handleChangeDepartment = (value: IOption) => {};
   const handleChangeGender = (value: IOption) => {};
   const onChangeBirthday: DatePickerProps['onChange'] = (date, dateString) => {
@@ -33,13 +35,17 @@ export function ModalAddEmployeeView() {
     },
     fileList,
   };
+
   return (
-    <div className='fixed bottom-0 left-0 right-0 top-0 bg-black p-1'>
-      <div className='relative m-5 max-h-[95vh] overflow-y-auto rounded-xl bg-white'>
+    <div className='fixed bottom-0 left-0 right-0 top-0 z-50 bg-black p-1'>
+      <div className='relative max-h-[100vh] overflow-y-auto rounded-xl bg-white'>
         <div className='sticky top-0 z-50 flex items-center justify-between border-b-[1px] border-[#E4E7EC] bg-white px-6  py-6'>
           <span className='text-[18px] font-semibold text-[#344054]'>Thêm hồ sơ nhân viên</span>
           <div className='flex items-center gap-4'>
             <Button
+              onClick={() => {
+                setIsOpenModalAdd(false);
+              }}
               text='Đóng'
               className='w-[90px] rounded-lg border border-[#98A2B3] px-4 py-2 text-center text-sm font-medium text-[#344054] hover:cursor-pointer hover:border-[#2DB976] hover:text-[#2DB976]'
             />
@@ -96,15 +102,22 @@ export function ModalAddEmployeeView() {
                 </div>
                 <div className='mt-4 box-border flex justify-between gap-4'>
                   <div className='w-[50%]'>
-                    <p className='text-sm font-normal text-[#344054]'>Phòng ban</p>
+                    <p className='text-sm font-normal text-[#344054]'>Bậc</p>
                     <SelectRoot
                       className='mt-2 flex justify-between rounded-lg border bg-white p-[11px]'
                       classNameOptionList='top-8'
                       options={[
-                        { label: 'IT', value: 'IT' },
-                        { label: 'Nhân sự', value: 'Nhân sự' },
+                        { label: '0', value: '0' },
+                        { label: '1', value: '1' },
+                        { label: '2', value: '2' },
+                        { label: '3', value: '3' },
+                        { label: '4', value: '4' },
+                        { label: '5', value: '5' },
+                        { label: '6', value: '6' },
+                        { label: '7', value: '7' },
+                        { label: '8', value: '8' },
                       ]}
-                      firstValue={{ label: 'Phòng ban', value: '' }}
+                      firstValue={{ label: 'Chọn bậc', value: '' }}
                       name='deparmentCode'
                     />
                   </div>

@@ -10,7 +10,13 @@ import InputRoot from '@/components/input';
 import SelectRoot, { type IOption } from '@/components/select';
 import TextAreaRoot from '@/components/textarea';
 
-export function ModalEditEmployeeView() {
+import { type IModalEditEmployeeProps } from './type';
+
+export function ModalEditEmployeeView({
+  setIsLoading,
+  setIsOpenModalEdit,
+  employeeIdSelected,
+}: IModalEditEmployeeProps) {
   const handleChangeDepartment = (value: IOption) => {};
   const handleChangeGender = (value: IOption) => {};
   const onChangeBirthday: DatePickerProps['onChange'] = (date, dateString) => {
@@ -33,17 +39,25 @@ export function ModalEditEmployeeView() {
     },
     fileList,
   };
+
+  const handleSave = () => {
+    console.log('employee id:', employeeIdSelected);
+  };
   return (
-    <div className='fixed bottom-0 left-0 right-0 top-0 bg-black p-1'>
-      <div className='relative m-5 max-h-[95vh] overflow-y-auto rounded-xl bg-white'>
+    <div className='fixed bottom-0 left-0 right-0 top-0 z-50 bg-black p-1'>
+      <div className='relative max-h-[100vh] overflow-y-auto rounded-xl bg-white'>
         <div className='sticky top-0 z-50 flex items-center justify-between border-b-[1px] border-[#E4E7EC] bg-white px-6 py-6'>
           <span className='text-[18px] font-semibold text-[#344054]'>Hồ sơ nhân viên</span>
           <div className='flex items-center gap-4'>
             <Button
+              onClick={() => {
+                setIsOpenModalEdit(false);
+              }}
               text='Đóng'
               className='w-[90px] rounded-lg border border-[#98A2B3] px-4 py-2 text-center text-sm font-medium text-[#344054] hover:cursor-pointer hover:border-[#2DB976] hover:text-[#2DB976]'
             />
             <Button
+              onClick={handleSave}
               text='Lưu'
               className='w-[90px] rounded-lg border border-[#2DB976] bg-[#2DB976] px-4 py-2 text-center text-sm font-medium text-[#fafafa] hover:cursor-pointer hover:bg-[#2db975d7] hover:text-white'
             />

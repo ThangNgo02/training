@@ -18,7 +18,6 @@ interface IListEmployeesViewProps {
   data: IDataTableType[];
   columns: IColumnsTableProps[];
   listDepartment: IOption[];
-  listEmployee: any[];
   currentPage: number;
   totalPages: number;
   checkboxStates: Record<string, boolean>;
@@ -28,8 +27,14 @@ interface IListEmployeesViewProps {
   onPageChange: (newPage: number) => void;
   handleOnChangeSearch: (textSearch: string) => void;
   handleFormFilter: (value: any) => void;
+  handleExportStaff: () => Promise<void>;
+  setIsOpenModalAdd: (value: boolean) => void;
 }
-const optionsRowDisplay = [
+interface IOptionRowDisplay {
+  label: string;
+  value: number;
+}
+const optionsRowDisplay: IOptionRowDisplay[] = [
   { label: '5 Dòng', value: 5 },
   { label: '10 Dòng', value: 10 },
   { label: '20 Dòng', value: 20 },
@@ -42,7 +47,6 @@ export function ListEmployeesView({
   data,
   columns,
   listDepartment,
-  listEmployee,
   currentPage,
   totalPages,
   checkboxStates,
@@ -52,6 +56,8 @@ export function ListEmployeesView({
   onPageChange,
   handleOnChangeSearch,
   handleFormFilter,
+  handleExportStaff,
+  setIsOpenModalAdd,
 }: IListEmployeesViewProps) {
   const refBtn = useRef(null);
   const refSelectCheckbox = useRef(null);
@@ -112,12 +118,17 @@ export function ListEmployeesView({
                   )}
                 </Button>
                 <Button
+                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                  onClick={handleExportStaff}
                   text='Xuất dữ liệu'
                   className='flex items-center gap-2 rounded-lg border px-4 py-[10px] hover:border-[#2DB976]'
                   iconStart={<IconRoot icon={IconVariable.download} />}
                 />
 
                 <Button
+                  onClick={() => {
+                    setIsOpenModalAdd(true);
+                  }}
                   className='flex items-center rounded-lg border bg-[#2DB976] px-4 py-[10px] text-white hover:border-[#2DB976]'
                   text='Thêm mới'
                   iconStart={<IconRoot icon={IconVariable.plus} />}

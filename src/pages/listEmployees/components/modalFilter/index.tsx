@@ -1,22 +1,24 @@
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import Button from '@/components/button';
 import Form, { type IFormRef } from '@/components/form';
 import InputRoot from '@/components/input';
 import SelectRoot, { type IOption } from '@/components/select';
 
+export interface IFilterType {
+  position: string;
+  taxCode: string;
+  socialInsuranceCode: string;
+  status: string;
+  departmentCode: string;
+}
 interface IModalFilterProps {
   handleSubmitFormFilter: (value: any) => void;
   listDepartment: IOption[];
-  initialValues: any;
+  initialValues: IFilterType;
 }
 export function ModalFilter({ handleSubmitFormFilter, listDepartment, initialValues }: IModalFilterProps) {
   const formRef = useRef<IFormRef>(null);
-  // useEffect(() => {
-  //   if (formRef.current) {
-  //     formRef.current.reset(initialValues);
-  //   }
-  // }, [initialValues]);
 
   const [isReset, setIsReset] = useState<boolean>(false);
   const handleResetForm = () => {

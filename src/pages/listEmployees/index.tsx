@@ -1,18 +1,27 @@
 import { useEffect, useState } from 'react';
-import { number } from 'yup';
 
 import { type IApiRequest } from '@/api/api.interface';
 import { useRequest } from '@/api/api.middleware';
 import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
-import { Popover } from '@/components/popover';
+import { Loading } from '@/components/loading';
 import { type IOption } from '@/components/select';
 import { Tag } from '@/components/tag';
-import toastDefault, { EnumToast } from '@/components/toast';
 import Config from '@/env';
+import { handleExportStaff } from '@/utils/ExportFile';
 import { LoggerService } from '@/utils/Logger';
 
-import { type IColumnsTableProps, type IDataTableType } from './type';
+import { ModalAddEmployee } from './components/ModalAddEmployee';
+import { ModalEditEmployee } from './components/ModalEditEmployee';
+import { type IFilterType } from './components/modalFilter';
+import {
+  type IColumnsTableProps,
+  type IDataEmployeeType,
+  type IDataResponseAPIType,
+  type IDataTableType,
+  type IQueryParamsExportFileType,
+  type IQueryParamsType,
+} from './type';
 import { ListEmployeesView } from './view';
 export function ListEmployeesPage() {
   const initStateColumns: IColumnsTableProps[] = [
@@ -26,11 +35,15 @@ export function ListEmployeesPage() {
       title: 'Mã NV',
       dataIndex: 'code',
       key: 'code',
-      render: text => (
-        <Popover
-          text={text}
-          children={<span className='text-[#4072D0] underline hover:cursor-pointer'>{text}</span>}
-        />
+      render: (_, text) => (
+        <div
+          className='text-[#4072D0] underline hover:cursor-pointer'
+          onClick={() => {
+            setEmployeeIdSelected(text.id);
+            setIsOpenModalEdit(true);
+          }}>
+          {text.code}
+        </div>
       ),
     },
     {
@@ -61,8 +74,8 @@ export function ListEmployeesPage() {
     },
     {
       title: 'Bậc',
-      key: 'level',
-      dataIndex: 'level',
+      key: 'staffMetaDataLevel',
+      dataIndex: 'staffMetaDataLevel',
     },
     {
       title: 'BHXH',
@@ -95,14 +108,14 @@ export function ListEmployeesPage() {
     },
   ];
 
+  const [employeeIdSelected, setEmployeeIdSelected] = useState<number>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [listDepartment, setListDepartment] = useState<IOption[]>([]);
   const [listEmployee, setListEmployee] = useState<IDataTableType[]>([]);
   const [columns, setColumns] = useState<IColumnsTableProps[]>(initStateColumns);
-  const [data, setData] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [rowDisplay, setRowDisplay] = useState<number>(25);
   const [totalPages, setTotalPages] = useState<number>(0);
-  const [checkboxStates, setCheckboxStates] = useState<any>(() => ({
+  const [checkboxStates, setCheckboxStates] = useState<Record<string, boolean>>(() => ({
     stt: true,
     code: true,
     timekeepingCode: false,
@@ -116,16 +129,16 @@ export function ListEmployeesPage() {
     phoneNumber: false,
     status: true,
   }));
-  const [filterValues, setFilterValues] = useState({
+  const [filterValues, setFilterValues] = useState<IFilterType>({
     position: '',
     taxCode: '',
     status: '',
     socialInsuranceCode: '',
     departmentCode: '',
   });
-  const [queryParams, setQueryParams] = useState({
+  const [queryParams, setQueryParams] = useState<IQueryParamsType>({
     page: 0,
-    size: rowDisplay,
+    size: 25,
     position: '',
     socialInsuranceCode: '',
     taxCode: '',
@@ -134,17 +147,21 @@ export function ListEmployeesPage() {
     codeOrFullName: '',
   });
   const [queryParamsString, setQueryParamsString] = useState<string>('');
-  useEffect(() => {
-    const params = new URLSearchParams();
-    for (const key of Object.keys(queryParams)) {
-      const value = (queryParams as any)[key];
-      if (value) params.append(key, value);
-    }
-    setQueryParamsString(params.toString());
-  }, [queryParams]);
+  const [queryParamsExportFile, setQueryParamsExportFile] = useState<IQueryParamsExportFileType>({
+    position: '',
+    socialInsuranceCode: '',
+    taxCode: '',
+    departmentCode: '',
+    status: '',
+    codeOrFullName: '',
+  });
+  const [queryParamsStringExportFile, setQueryParamsStringExportFile] = useState<string>('');
+  const [isOpenModalAdd, setIsOpenModalAdd] = useState<boolean>(false);
+  const [isOpenModalEdit, setIsOpenModalEdit] = useState<boolean>(false);
 
+  const config = new Config().getState();
   const getAllEmployeeApi: IApiRequest = {
-    url: `${Config.getInstance().getState().api.host}${Config.getInstance().getState().api.apiPath.getInfoEmployees}?${queryParamsString}`,
+    url: `${config.api.apiPath.getInfoEmployees}?${queryParamsString}`,
     method: 'get',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -153,56 +170,59 @@ export function ListEmployeesPage() {
     },
   };
 
-  const handlegetAllEmployee = async () => {
-    mutate({});
-  };
-
   const handleResponse = {
-    handleRequestSuccess: (response: any) => {
+    handleRequestSuccess: (response: IDataResponseAPIType) => {
       try {
+        setIsLoading(true);
         if (response.code === 2000) {
-          const listDepartmentData = response.data.map((item: any) => {
-            return {
+          console.log('res:', response);
+          const listDepartmentData = response?.data
+            ?.map((item: any) => ({
               label: item.department.name,
               value: item.department.code,
-            };
-          });
-          const dataTable: IDataTableType[] = response.data.map((item: any) => {
-            return {
-              code: item.code,
-              timekeepingCode: item.timekeepingCode,
-              fullName: item.fullName,
-              gender: item.gender === 'MALE' ? 'Nam' : 'Nữ',
-              position: item.position,
-              departmentName: item.department.name,
-              level: item.level,
-              socialInsuranceCode: item.socialInsuranceCode,
-              taxCode: item.taxCode,
-              phoneNumber: item.phoneNumber,
-              status: item.status === 'ACTIVE' ? 'Hoạt động' : 'Đã khóa',
-            };
-          });
+            }))
+            .filter(
+              (item: any, index: any, self: any) =>
+                index === self.findIndex((option: any) => option.value === item.value),
+            );
+
+          const dataTable: IDataTableType[] =
+            response?.data?.map((item: IDataEmployeeType) => {
+              return {
+                id: item.id,
+                code: item.code,
+                timekeepingCode: item.timekeepingCode,
+                fullName: item.fullName,
+                gender: item.gender === 'MALE' ? 'Nam' : 'Nữ',
+                position: item.position,
+                departmentName: item?.department?.name,
+                staffMetaDataLevel: item?.staffMetaDataLevel,
+                socialInsuranceCode: item.socialInsuranceCode,
+                taxCode: item.taxCode,
+                phoneNumber: item.phoneNumber,
+                status: item.status === 'ACTIVE' ? 'Hoạt động' : 'Đã khóa',
+              };
+            }) ?? [];
+
           setColumns(initStateColumns.filter(column => checkboxStates[column.key]));
           setListEmployee(dataTable);
-          setListDepartment(listDepartmentData);
-          setData(response.data);
-          setTotalPages(Math.ceil(response.data.length / rowDisplay));
-          toastDefault(EnumToast.SUCCESS, 'Lấy thông tin thành công');
+          setListDepartment(listDepartmentData ?? []);
+          setTotalPages(response?.totalPages ?? 0);
         }
       } catch (error: any) {
         LoggerService.error('error when get info employees', error);
+      } finally {
+        setIsLoading(false);
       }
     },
     handleRequestFailed: (response: any) => {
       LoggerService.error('Error', response.message);
     },
   };
-
-  const { mutate } = useRequest(getAllEmployeeApi, handleResponse);
-
-  useEffect(() => {
-    handlegetAllEmployee();
-  }, [queryParamsString]);
+  const { mutate: mutateGetAllEmployees } = useRequest(getAllEmployeeApi, handleResponse);
+  const handlegetAllEmployee = async () => {
+    mutateGetAllEmployees({});
+  };
 
   const handleCheckboxChange = (updatedStates: Record<string, boolean>) => {
     setCheckboxStates(updatedStates);
@@ -213,22 +233,26 @@ export function ListEmployeesPage() {
   }, [checkboxStates]);
 
   const handleChangeRowDisplay = (value: number) => {
-    setRowDisplay(value);
-    const totalPage = Math.ceil(20 / value);
-    console.log('Total', totalPage);
     setQueryParams(prev => ({ ...prev, size: value }));
-    setTotalPages(totalPage);
     setCurrentPage(1);
   };
 
   const handlePageChange = (newPage: number) => {
-    setQueryParams(prev => ({ ...prev, page: newPage }));
+    setQueryParams(prev => ({ ...prev, page: newPage - 1 }));
     setCurrentPage(newPage);
   };
 
-  const handleFormFilter = (value: any) => {
+  const handleFormFilter = (value: IFilterType) => {
     setFilterValues(value);
     setQueryParams(prev => ({
+      ...prev,
+      departmentCode: value.departmentCode || '',
+      position: value.position || '',
+      status: value.status || '',
+      socialInsuranceCode: value.socialInsuranceCode || '',
+      taxCode: value.taxCode || '',
+    }));
+    setQueryParamsExportFile(prev => ({
       ...prev,
       departmentCode: value.departmentCode || '',
       position: value.position || '',
@@ -240,23 +264,72 @@ export function ListEmployeesPage() {
 
   const handleOnChangeSearch = (textSearch: string) => {
     setQueryParams(prev => ({ ...prev, codeOrFullName: textSearch }));
+    setQueryParamsExportFile(prev => ({ ...prev, codeOrFullName: textSearch }));
   };
 
+  const handleExportClick = async () => {
+    const url = `${config.api.host}${config.api.apiPath.exportStaff}?${queryParamsStringExportFile}`;
+    const currentDate = new Date();
+    const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
+    const fileName = `hosonhanvien_${formattedDate}`;
+
+    await handleExportStaff(url, fileName, setIsLoading);
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    for (const key of Object.keys(queryParams)) {
+      const value = (queryParams as any)[key];
+      if (value) params.append(key, value);
+    }
+    setQueryParamsString(params.toString());
+  }, [queryParams]);
+
+  useEffect(() => {
+    const params = new URLSearchParams();
+    for (const key of Object.keys(queryParamsExportFile)) {
+      const value = (queryParamsExportFile as any)[key];
+      if (value) params.append(key, value);
+    }
+    setQueryParamsStringExportFile(params.toString());
+  }, [queryParamsExportFile]);
+
+  useEffect(() => {
+    handlegetAllEmployee();
+  }, [queryParamsString]);
+
   return (
-    <ListEmployeesView
-      data={listEmployee}
-      columns={columns}
-      listEmployee={data}
-      listDepartment={listDepartment}
-      currentPage={currentPage}
-      totalPages={totalPages}
-      checkboxStates={checkboxStates}
-      initialValues={filterValues}
-      onCheckboxChange={handleCheckboxChange}
-      onChangeRowDisplay={handleChangeRowDisplay}
-      onPageChange={handlePageChange}
-      handleFormFilter={handleFormFilter}
-      handleOnChangeSearch={handleOnChangeSearch}
-    />
+    <>
+      {isLoading && <Loading />}
+      {isOpenModalAdd && (
+        <ModalAddEmployee
+          setIsLoading={setIsLoading}
+          setIsOpenModalAdd={setIsOpenModalAdd}
+        />
+      )}
+      {isOpenModalEdit && (
+        <ModalEditEmployee
+          employeeIdSelected={employeeIdSelected}
+          setIsLoading={setIsLoading}
+          setIsOpenModalEdit={setIsOpenModalEdit}
+        />
+      )}
+      <ListEmployeesView
+        data={listEmployee}
+        columns={columns}
+        listDepartment={listDepartment}
+        currentPage={currentPage}
+        totalPages={totalPages}
+        checkboxStates={checkboxStates}
+        initialValues={filterValues}
+        onCheckboxChange={handleCheckboxChange}
+        onChangeRowDisplay={handleChangeRowDisplay}
+        onPageChange={handlePageChange}
+        handleFormFilter={handleFormFilter}
+        handleOnChangeSearch={handleOnChangeSearch}
+        handleExportStaff={handleExportClick}
+        setIsOpenModalAdd={setIsOpenModalAdd}
+      />
+    </>
   );
 }
