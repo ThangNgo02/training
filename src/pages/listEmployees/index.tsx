@@ -175,7 +175,6 @@ export function ListEmployeesPage() {
       try {
         setIsLoading(true);
         if (response.code === 2000) {
-          console.log('res:', response);
           const listDepartmentData = response?.data
             ?.map((item: any) => ({
               label: item.department.name,
@@ -303,6 +302,7 @@ export function ListEmployeesPage() {
       {isLoading && <Loading />}
       {isOpenModalAdd && (
         <ModalAddEmployee
+          listDepartment={listDepartment}
           setIsLoading={setIsLoading}
           setIsOpenModalAdd={setIsOpenModalAdd}
         />

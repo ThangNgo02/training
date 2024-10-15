@@ -22,6 +22,7 @@ export interface IInputRootProps extends React.InputHTMLAttributes<HTMLInputElem
   disabled?: boolean;
   isErrorWrongLogin?: boolean;
   errorString?: string;
+  isRequire?: boolean;
 }
 function InputRoot({
   type = 'text',
@@ -30,6 +31,7 @@ function InputRoot({
   isActive,
   isErrorWrongLogin,
   errorString,
+  isRequire = false,
   ...props
 }: IInputRootProps) {
   const methods = useFormContext();
@@ -61,7 +63,7 @@ function InputRoot({
     <div className={`flex w-full flex-col gap-2`}>
       {props.label && (
         <span className={`text-16x20 text-start font-medium text-[#1A1A1A] ${props.classNameLabel}`}>
-          <Localize tid={props.label} />
+          {isRequire && <span className='text-red-500'>*</span>} <Localize tid={props.label} />
         </span>
       )}
       <div
