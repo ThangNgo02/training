@@ -35,8 +35,8 @@ function InputRoot({
   ...props
 }: IInputRootProps) {
   const methods = useFormContext();
-  const isErrorVariable =
-    (!Helper.isEmpty(methods?.formState?.errors[props.name]) || isError || isErrorWrongLogin) ?? errorString;
+  const err =
+    (!Helper.isEmpty(methods?.formState?.errors[props.name]?.message) || isError || isErrorWrongLogin) ?? errorString;
   const [state, setState] = React.useState<string | number>(methods?.getValues()[props.name]);
   const handleReset = () => {
     methods?.reset();
@@ -51,6 +51,7 @@ function InputRoot({
     const value = event.target.value;
     setState(value);
     methods?.setValue(props.name, value);
+    methods?.trigger(props.name);
   };
   const [isFocus, setIsFocus] = useState<boolean>(false);
   const handleFocus = () => {
@@ -86,22 +87,19 @@ function InputRoot({
         />
         {props.iconEnd}
       </div>
-      {!Helper.isEmpty(methods?.formState?.errors[props.name]) && (
-        <div className='bg-danger-bg_color flex gap-1 p-1'>
-          <IconRoot icon={IconVariable.error} />
-          <span className='text-12x16 text-neutral-100'>
-            <Localize tid={methods?.formState?.errors[props.name]?.message ?? ''} />
-          </span>
-        </div>
-      )}
-      {errorString && (
-        <div className='bg-danger-bg_color flex gap-1 p-1'>
-          <IconRoot icon={IconVariable.error} />
-          <span className='text-12x16 text-neutral-100'>
-            <Localize tid={errorString ?? ''} />
-          </span>
-        </div>
-      )}
+      <div className='flex items-center text-sm'>
+        {err && (
+          <div className='bg-danger-bg_color flex gap-1 p-1'>
+            <IconRoot icon={IconVariable.error} />
+            <span className='text-12x16 text-neutral-100'>
+              <Localize tid={err ?? ''} />
+            </span>
+          </div>
+        )}
+        {methods?.formState?.errors[props.name]?.message && (
+          <p className='text-red-500'>{methods?.formState?.errors[props.name]?.message}</p>
+        )}
+      </div>
     </div>
   );
 }

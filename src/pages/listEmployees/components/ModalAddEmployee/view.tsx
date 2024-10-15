@@ -15,37 +15,54 @@ import TextAreaRoot from '@/components/textarea';
 
 import { type IModalAddEmployeeProps } from './type';
 
-export function ModalAddEmployeeView({ setIsLoading, setIsOpenModalAdd, listDepartment }: IModalAddEmployeeProps) {
+export function ModalAddEmployeeView({
+  setIsOpenModalAdd,
+  listDepartment,
+  handleSubmit,
+  fileList,
+  setFileList,
+}: IModalAddEmployeeProps) {
   const methods = useFormContext();
+  const phoneRegExp = /(84|0[357-9|])+(\d{8})\b/g;
+  const cccdRegExp = /^\d{9}$|^\d{12}$/;
   const [isQuitJob, setIsQuitJob] = useState<boolean>(false);
 
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-  const props: UploadProps = {
-    onRemove: file => {
-      const index = fileList.indexOf(file);
-      const newFileList = [...fileList];
-      newFileList.splice(index, 1);
+  const handleChange: UploadProps['onChange'] = info => {
+    let newFileList = [...info.fileList];
+    newFileList = newFileList.map(file => {
+      if (file.response) {
+        file.url = file.response.url;
+      }
+      return file;
+    });
+    if (setFileList) {
       setFileList(newFileList);
-    },
-    beforeUpload: file => {
-      setFileList([...fileList, file]);
-
-      return false;
-    },
-    fileList,
-  };
-
-  const handleSubmit = (data: any) => {
-    console.log('data ne:', data);
+    }
+    return false;
   };
 
   return (
-    <div className='fixed bottom-0 left-0 right-0 top-0 z-50 bg-black p-1'>
-      <Form
-        onSubmit={handleSubmit}
-        validator={{
-          code: yup.number().typeError('Please enter employee code').required(),
-        }}>
+    <Form
+      onSubmit={handleSubmit}
+      validator={{
+        code: yup.string().typeError('Vui lòng nhập mã nhân viên').required('Vui lòng nhập mã nhân viên'),
+        fullName: yup
+          .string()
+          .typeError('Vui lòng nhập họ tên cho nhân viên')
+          .required('Vui lòng nhập họ tên cho nhân viên'),
+        gender: yup
+          .string()
+          .typeError('Vui lòng chọn giới tính cho nhân viên')
+          .required('Vui lòng chọn giới tính cho nhân viên'),
+        departmentCode: yup
+          .string()
+          .typeError('Vui lòng chọn phòng ban cho nhân viên')
+          .required('Vui lòng chọn phòng ban cho nhân viên'),
+        phoneNumber: yup.string().nullable().notRequired().matches(phoneRegExp, 'Số điện thoại không hợp lệ'),
+        email: yup.string().nullable().notRequired().email('Email không hợp lệ. Vui lòng nhập email khác'),
+        identityCard: yup.string().nullable().notRequired().matches(cccdRegExp, 'CCCD hoặc CMND không hợp lệ'),
+      }}>
+      <div className='fixed bottom-0 left-0 right-0 top-0 z-50 bg-black p-1'>
         <div className='relative max-h-[100vh] overflow-y-auto rounded-xl bg-white'>
           <div className='sticky top-0 z-50 flex items-center justify-between border-b-[1px] border-[#E4E7EC] bg-white px-6  py-6'>
             <span className='text-[18px] font-semibold text-[#344054]'>Thêm hồ sơ nhân viên</span>
@@ -77,7 +94,6 @@ export function ModalAddEmployeeView({ setIsLoading, setIsOpenModalAdd, listDepa
                         name='code'
                         className='bg-white'
                         label='Mã nhân viên'
-                        type='number'
                         placeholder='Mã nhân viên'
                         classNameLabel='text-[#344054] text-sm font-normal'
                         errorString={methods?.formState?.errors?.code?.toString()}
@@ -91,6 +107,7 @@ export function ModalAddEmployeeView({ setIsLoading, setIsOpenModalAdd, listDepa
                         label='Tên nhân viên'
                         placeholder='Tên nhân viên'
                         classNameLabel='text-[#344054] text-sm font-normal'
+                        errorString={methods?.formState?.errors?.fullName?.toString()}
                       />
                     </div>
                   </div>
@@ -114,6 +131,7 @@ export function ModalAddEmployeeView({ setIsLoading, setIsOpenModalAdd, listDepa
                         options={listDepartment}
                         firstValue={{ label: 'Phòng ban', value: '' }}
                         name='departmentCode'
+                        errorString={methods?.formState?.errors?.departmentCode?.toString()}
                       />
                     </div>
                   </div>
@@ -145,6 +163,7 @@ export function ModalAddEmployeeView({ setIsLoading, setIsOpenModalAdd, listDepa
                         label='Số điện thoại'
                         placeholder='Số điện thoại'
                         classNameLabel='text-[#344054] text-sm font-normal'
+                        errorString={methods?.formState?.errors?.phoneNumber?.toString()}
                       />
                     </div>
                   </div>
@@ -185,11 +204,12 @@ export function ModalAddEmployeeView({ setIsLoading, setIsOpenModalAdd, listDepa
                         className='mt-2 flex justify-between rounded-lg border bg-white p-[11px]'
                         classNameOptionList='top-8'
                         options={[
-                          { label: 'Nam', value: 'Nam' },
-                          { label: 'Nữ', value: 'Nữ' },
+                          { label: 'Nam', value: 'MALE' },
+                          { label: 'Nữ', value: 'FEMALE' },
                         ]}
                         firstValue={{ label: 'Giới tính', value: '' }}
                         name='gender'
+                        errorString={methods?.formState?.errors?.gender?.toString()}
                       />
                     </div>
                   </div>
@@ -217,6 +237,7 @@ export function ModalAddEmployeeView({ setIsLoading, setIsOpenModalAdd, listDepa
                         label='CCCD'
                         placeholder='Điền CCCD'
                         classNameLabel='text-[#344054] text-sm font-normal'
+                        errorString={methods?.formState?.errors?.identityCard?.toString()}
                       />
                     </div>
 
@@ -266,7 +287,7 @@ export function ModalAddEmployeeView({ setIsLoading, setIsOpenModalAdd, listDepa
                   <p className='text-sm font-normal text-[#344054]'>Ngày bắt đầu làm</p>
                   <DatePicker
                     name='hireDate'
-                    placeholder='Chọn ngày'
+                    placeholder='Chọn ngày bắt đầu làm việc'
                     className='mt-2 flex justify-between rounded-lg border bg-white p-[11px]'
                   />
                 </div>
@@ -275,7 +296,7 @@ export function ModalAddEmployeeView({ setIsLoading, setIsOpenModalAdd, listDepa
                   <DatePicker
                     name='resignDate'
                     disabled={!isQuitJob}
-                    placeholder='Chọn ngày'
+                    placeholder='Chọn ngày thôi việc'
                     className='mt-2 flex justify-between rounded-lg border bg-white p-[11px]'
                   />
                 </div>
@@ -291,19 +312,34 @@ export function ModalAddEmployeeView({ setIsLoading, setIsOpenModalAdd, listDepa
             </div>
             <div className='mt-5'>
               <span className='text-base font-semibold text-[#344054]'>Tài liệu, chứng từ</span>
-              <div className='mt-4 flex items-end gap-6'>
-                <Upload {...props}>
+              <div className='mt-4 flex items-center gap-8'>
+                <Upload
+                  showUploadList={false}
+                  onChange={handleChange}
+                  fileList={fileList}
+                  multiple={true}>
                   <Button
+                    type='button'
                     className='flex items-center gap-2 rounded-lg border bg-[#F1F6FD] px-[14px] py-2 text-sm font-semibold text-[#365FBF] hover:cursor-pointer hover:border-[#365FBF]'
                     iconStart={<IconRoot icon={IconVariable.upload} />}>
                     Tải lên
                   </Button>
                 </Upload>
+
+                <div className='flex flex-wrap gap-[10px]'>
+                  {fileList?.map(file => (
+                    <div
+                      key={file.uid}
+                      className='rounded-md bg-[#f0f0f0] px-2 py-1 text-sm'>
+                      {file.name}
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </Form>
-    </div>
+      </div>
+    </Form>
   );
 }

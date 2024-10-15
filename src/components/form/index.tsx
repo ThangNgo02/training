@@ -18,6 +18,7 @@ export interface IFormRef {
 // eslint-disable-next-line @typescript-eslint/naming-convention, react/display-name
 const Form = forwardRef<IFormRef, IFormProps>(({ validator = {}, defaultValues = {}, ...props }, ref) => {
   const methods = useForm({
+    mode: 'onChange',
     resolver: yupResolver(yup.object().shape(validator)),
     defaultValues,
   });
