@@ -13,8 +13,8 @@ export function ModalEmployee({
   setIsOpenModal,
   setIsLoading,
   handleGetAllEmployee,
-  isUpdateNotAdd,
-  setIsUpdateNotAdd,
+  isAddNotUpdate,
+  setIsAddNotUpdate,
   fileList,
   setIsReset,
   setFileList,
@@ -162,6 +162,7 @@ export function ModalEmployee({
   };
   const { mutate: mutateUpdateEmployee } = useRequest(updateEmployeeApi, handleResponseUpdateEmployee);
   const handleUpdateEmployee = (data: IUpdateEmployeeDataType) => {
+    console.log("tao zo update nè");
     const formattedData = {
       ...data,
       birthDate: data.birthDate ? dayjs(data.birthDate).format('DD-MM-YYYY') : null,
@@ -256,7 +257,7 @@ export function ModalEmployee({
 
   return (
     <ModalEmployeeView
-      isUpdateNotAdd={isUpdateNotAdd}
+      isAddNotUpdate={isAddNotUpdate}
       handleSubmitAdd={handleAddNewEmployee}
       handleSubmitUpdate={handleUpdateEmployee}
       setIsOpenModal={setIsOpenModal}

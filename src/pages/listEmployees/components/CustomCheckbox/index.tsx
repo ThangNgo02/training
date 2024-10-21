@@ -1,8 +1,10 @@
+import { useEffect } from 'react';
 import { Controller } from 'react-hook-form';
 
 export interface ICheckboxProps {
   label?: string;
   name: string;
+  disabled?: boolean;
   control: any;
   className?: string;
   classNameCheckbox?: string;
@@ -14,11 +16,16 @@ export function CustomCheckbox({
   label,
   name,
   control,
+  disabled,
   className,
   classNameCheckbox,
   classNameTicked,
   onChange,
 }: ICheckboxProps) {
+  useEffect(() => {
+
+  }, []);
+
   return (
     <Controller
       name={name}
@@ -26,10 +33,11 @@ export function CustomCheckbox({
       defaultValue={false}
       render={({ field }) => (
         <div
-          className={`my-1 flex items-center gap-2 rounded-md px-2 py-1 text-sm hover:cursor-pointer hover:bg-gray-200 ${className}`}>
+          className={`my-1 flex items-center gap-2 rounded-md px-2 py-1 text-sm hover:cursor-pointer hover:bg-gray-200 ${className} ${disabled && 'bg-[#f5f5f5] border-none hover:cursor-default'}`}>
           <input
             type='checkbox'
             checked={field.value}
+            disabled={disabled}
             onChange={e => {
               field.onChange(e.target.checked);
               if (onChange) {

@@ -10,10 +10,10 @@ export interface IModalEmployeeProps {
   fileListUpdate?: UploadFile[];
   setFileListUpdate?: (files: UploadFile[]) => void;
   handleGetAllEmployee?: () => Promise<void>;
-  isUpdateNotAdd?: boolean;
+  isAddNotUpdate?: boolean;
   isReset?: boolean;
   setIsReset?: (value: boolean) => void;
-  setIsUpdateNotAdd?: (value: boolean) => void;
+  setIsAddNotUpdate?: (value: boolean) => void;
   setEmployeeIdSelected: (value: number) => void;
   employeeIdSelected?: number;
   setFilesDeleted?: (value: any) => void;

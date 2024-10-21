@@ -31,7 +31,7 @@ interface IListEmployeesViewProps {
   handleFormFilter: (value: any) => void;
   handleExportStaff: () => Promise<void>;
   setIsOpenModal: (value: boolean) => void;
-  setIsUpdateNotAdd: (value: boolean) => void;
+  setIsAddNotUpdate: (value: boolean) => void;
 }
 interface IOptionRowDisplay {
   label: string;
@@ -61,7 +61,7 @@ export function ListEmployeesView({
   handleFormFilter,
   handleExportStaff,
   setIsOpenModal,
-  setIsUpdateNotAdd,
+  setIsAddNotUpdate,
 }: IListEmployeesViewProps) {
   const refBtn = useRef(null);
   const refSelectCheckbox = useRef(null);
@@ -135,7 +135,7 @@ export function ListEmployeesView({
                   onClick={() => {
                     handleSetEmployeeDetail({});
                     setIsOpenModal(true);
-                    setIsUpdateNotAdd(true);
+                    setIsAddNotUpdate(true);
                     if (setIsReset) {
                       setIsReset(true);
                     }

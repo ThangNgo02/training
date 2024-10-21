@@ -43,7 +43,7 @@ export function ListEmployeesPage() {
         <div
           className='text-[#4072D0] underline hover:cursor-pointer'
           onClick={() => {
-            setIsUpdateNotAdd(false);
+            setIsAddNotUpdate(false);
             setEmployeeIdSelected(text.id);
           }}>
           {text.code}
@@ -121,7 +121,7 @@ export function ListEmployeesPage() {
   const [employeeIdSelected, setEmployeeIdSelected] = useState<number>(0);
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [fileListUpdate, setFileListUpdate] = useState<UploadFile[]>([]);
-  const [isUpdateNotAdd, setIsUpdateNotAdd] = useState<boolean>(true);
+  const [isAddNotUpdate, setIsAddNotUpdate] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [listEmployee, setListEmployee] = useState<IDataTableType[]>([]);
   const [columns, setColumns] = useState<IColumnsTableProps[]>(initStateColumns);
@@ -200,7 +200,7 @@ export function ListEmployeesPage() {
                 socialInsuranceCode: item.socialInsuranceCode,
                 taxCode: item.taxCode,
                 phoneNumber: item.phoneNumber,
-                status: item.status === 'ACTIVE' ? 'Hoạt động' : item.status === 'DEACTIVE' ? 'Đã khóa' : 'Nghỉ việc',
+                status: item.status === 'ACTIVE' ? 'Hoạt động' : (item.status === 'DEACTIVE' ? 'Đã khóa' : 'Nghỉ việc'),
               };
             }) ?? [];
 
@@ -347,8 +347,8 @@ export function ListEmployeesPage() {
           setIsLoading={setIsLoading}
           setIsOpenModal={setIsOpenModal}
           handleGetAllEmployee={handleGetAllEmployee}
-          isUpdateNotAdd={isUpdateNotAdd}
-          setIsUpdateNotAdd={setIsUpdateNotAdd}
+          isAddNotUpdate={isAddNotUpdate}
+          setIsAddNotUpdate={setIsAddNotUpdate}
           fileList={fileList}
           setFileList={setFileList}
           fileListUpdate={fileListUpdate}
@@ -373,7 +373,7 @@ export function ListEmployeesPage() {
         handleOnChangeSearch={handleOnChangeSearch}
         handleExportStaff={handleExportClick}
         setIsOpenModal={setIsOpenModal}
-        setIsUpdateNotAdd={setIsUpdateNotAdd}
+        setIsAddNotUpdate={setIsAddNotUpdate}
         setIsReset={setIsReset}
       />
     </>

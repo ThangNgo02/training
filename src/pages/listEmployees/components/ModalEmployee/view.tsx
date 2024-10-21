@@ -30,7 +30,7 @@ export function ModalEmployeeView({
   handleSubmitUpdate,
   fileList,
   setFileList,
-  isUpdateNotAdd,
+  isAddNotUpdate,
   fileListUpdate,
   isReset,
   setIsReset,
@@ -139,10 +139,25 @@ export function ModalEmployeeView({
   }
 
   return (
-    <Form
-      onSubmit={isUpdateNotAdd === true ? handleSubmitAdd : handleSubmitUpdate}
+    <>
+    <Modal 
+        isOpenModal={isOpenModalLock || false} 
+        setIsOpenModal={setOpenModalLock} 
+        title='Khóa người dùng' 
+        content='Xác nhận khóa nguời dùng' 
+        onClose={handleCloseModalLock}
+        onConfirm={handleConfirmModalLock}/>
+        <Modal 
+        isOpenModal={isOpenModalUnLock || false} 
+        setIsOpenModal={setOpenModalUnLock} 
+        title='Mở khóa người dùng' 
+        content='Xác nhận mở khóa nguời dùng' 
+        onClose={handleCloseModalUnLock}
+        onConfirm={handleConfirmModalUnLock}/>
+        <Form
+      onSubmit={isAddNotUpdate === true ? handleSubmitAdd : handleSubmitUpdate}
       defaultValues={
-        isUpdateNotAdd
+        isAddNotUpdate
           ? {}
           : {
               code: detailEmployee?.code || '',
@@ -161,13 +176,13 @@ export function ModalEmployeeView({
               issueDateIdentityCard: formatDate(detailEmployee?.issueDateIdentityCard) ?? null,
               birthDate: formatDate(detailEmployee?.birthDate) ?? null,
               hireDate: formatDate(detailEmployee?.hireDate) ?? null,
-              resignDate: formatDate(detailEmployee?.resignDate) ?? null,
+              resignDate: detailEmployee?.isResigned ? formatDate(detailEmployee?.resignDate) : null,
 
               departmentCode: detailEmployee?.department?.code || '',
               gender: detailEmployee?.gender || '',
               staffMetaDataLevel: detailEmployee?.staffMetaDataLevel || '',
 
-              isResigned: detailEmployee?.isResigned !== 'RESIGNED',
+              isResigned: detailEmployee?.isResigned || false,
             }
       }
       validator={{
@@ -217,25 +232,11 @@ export function ModalEmployeeView({
             return isCheck;
           }),
       }}>
-      <Modal 
-        isOpenModal={isOpenModalLock || false} 
-        setIsOpenModal={setOpenModalLock} 
-        title='Khóa người dùng' 
-        content='Xác nhận khóa nguời dùng' 
-        onClose={handleCloseModalLock}
-        onConfirm={handleConfirmModalLock}/>
-        <Modal 
-        isOpenModal={isOpenModalUnLock || false} 
-        setIsOpenModal={setOpenModalUnLock} 
-        title='Mở khóa người dùng' 
-        content='Xác nhận mở khóa nguời dùng' 
-        onClose={handleCloseModalUnLock}
-        onConfirm={handleConfirmModalUnLock}/>
       <div className='fixed bottom-0 left-0 right-0 top-0 z-50 bg-black p-1'>
         <div className='relative max-h-[100vh] overflow-y-auto rounded-xl bg-white'>
           <div className='sticky top-0 z-50 flex items-center justify-between border-b-[1px] border-[#E4E7EC] bg-white px-6  py-6'>
             <span className='text-[18px] font-semibold text-[#344054]'>
-              {isUpdateNotAdd === false ? 'Chi tiết nhân viên' : 'Thêm hồ sơ nhân viên'}
+              {isAddNotUpdate === false ? 'Chi tiết nhân viên' : 'Thêm hồ sơ nhân viên'}
             </span>
             <div className='flex items-center gap-4'>
               <Button
@@ -244,11 +245,15 @@ export function ModalEmployeeView({
                 text='Đóng'
                 className='w-[90px] rounded-lg border border-[#98A2B3] px-4 py-2 text-center text-sm font-medium text-[#344054] hover:cursor-pointer hover:border-[#2DB976] hover:text-[#2DB976]'
               />
-              <Button
-                text='Lưu'
-                type='submit'
-                className='w-[90px] rounded-lg border border-[#2DB976] bg-[#2DB976] px-4 py-2 text-center text-sm font-medium text-[#fafafa] hover:cursor-pointer hover:bg-[#2db975d7] hover:text-white'
-              />
+              {
+                detailEmployee?.status !== 'DEACTIVE' && 
+                <Button
+                  text='Lưu'
+                  type='submit'
+                  className='w-[90px] rounded-lg border border-[#2DB976] bg-[#2DB976] px-4 py-2 text-center text-sm font-medium text-[#fafafa] hover:cursor-pointer hover:bg-[#2db975d7] hover:text-white'
+                />
+              }
+              
             </div>
           </div>
           <div className='p-5'>
@@ -259,6 +264,7 @@ export function ModalEmployeeView({
                   <div className='box-border flex justify-between gap-4'>
                     <div className='w-[50%]'>
                       <InputRoot
+                        disabled={detailEmployee?.status === 'DEACTIVE'}
                         isRequire={true}
                         name='code'
                         className='bg-white'
@@ -273,6 +279,7 @@ export function ModalEmployeeView({
                     </div>
                     <div className='w-[50%]'>
                       <InputRoot
+                        disabled={detailEmployee?.status === 'DEACTIVE'}
                         isRequire={true}
                         name='fullName'
                         className='bg-white'
@@ -289,6 +296,7 @@ export function ModalEmployeeView({
                   <div className='mt-4 box-border flex justify-between gap-4'>
                     <div className='w-[50%]'>
                       <InputRoot
+                        disabled={detailEmployee?.status === 'DEACTIVE'}
                         name='position'
                         className='bg-white'
                         label='Chức vụ'
@@ -302,6 +310,7 @@ export function ModalEmployeeView({
                       </p>
                       <SelectRoot
                         isReset={isReset}
+                        disabled={detailEmployee?.status === 'DEACTIVE'}
                         className='mt-2 flex justify-between rounded-lg border bg-white p-[11px]'
                         classNameOptionList='top-8 max-h-[226px] overflow-y-auto'
                         options={listDepartments}
@@ -326,6 +335,7 @@ export function ModalEmployeeView({
                       <p className='text-sm font-normal text-[#344054]'>Bậc</p>
                       <SelectRoot
                         isReset={isReset}
+                        disabled={detailEmployee?.status === 'DEACTIVE'}
                         className='mt-2 flex justify-between rounded-lg border bg-white p-[11px]'
                         classNameOptionList='top-8'
                         options={arrLevel}
@@ -339,6 +349,7 @@ export function ModalEmployeeView({
                     </div>
                     <div className='w-[50%]'>
                       <InputRoot
+                        disabled={detailEmployee?.status === 'DEACTIVE'}
                         name='phoneNumber'
                         className='bg-white'
                         label='Số điện thoại'
@@ -356,6 +367,7 @@ export function ModalEmployeeView({
                   </div>
                   <div className='mt-4 box-border flex justify-between gap-4'>
                     <InputRoot
+                      disabled={detailEmployee?.status === 'DEACTIVE'}
                       name='email'
                       className='bg-white'
                       label='Email'
@@ -365,6 +377,7 @@ export function ModalEmployeeView({
                   </div>
                   <div className='mt-4 box-border flex justify-between gap-4'>
                     <TextAreaRoot
+                      disabled={detailEmployee?.status === 'DEACTIVE'}
                       name='note'
                       className='h-[136px] bg-white'
                       label='Ghi chú'
@@ -378,6 +391,7 @@ export function ModalEmployeeView({
                     <div className='w-[50%]'>
                       <p className='text-sm font-normal text-[#344054]'>Ngày sinh</p>
                       <DatePickerField
+                        disabled={detailEmployee?.status === 'DEACTIVE'}
                         name='birthDate'
                         placeholder='Ngày sinh'
                         className='mt-2 flex justify-between rounded-lg border bg-white p-[11px]'
@@ -390,6 +404,7 @@ export function ModalEmployeeView({
                       </p>
                       <SelectRoot
                         isReset={isReset}
+                        disabled={detailEmployee?.status === 'DEACTIVE'}
                         className='mt-2 flex justify-between rounded-lg border bg-white p-[11px]'
                         classNameOptionList='top-8'
                         options={arrGender}
@@ -411,6 +426,7 @@ export function ModalEmployeeView({
                   </div>
                   <div className='mt-4 box-border flex justify-between gap-4'>
                     <InputRoot
+                      disabled={detailEmployee?.status === 'DEACTIVE'}
                       name='socialInsuranceCode'
                       className='bg-white'
                       label='BHXH'
@@ -418,6 +434,7 @@ export function ModalEmployeeView({
                       classNameLabel='text-[#344054] text-sm font-normal'
                     />
                     <InputRoot
+                      disabled={detailEmployee?.status === 'DEACTIVE'}
                       name='taxCode'
                       className='bg-white'
                       label='Mã số thuế'
@@ -428,6 +445,7 @@ export function ModalEmployeeView({
                   <div className='mt-4 box-border flex justify-between gap-4'>
                     <div className='w-[50%]'>
                       <InputRoot
+                        disabled={detailEmployee?.status === 'DEACTIVE'}
                         name='identityCard'
                         className='bg-white'
                         label='CCCD'
@@ -446,6 +464,7 @@ export function ModalEmployeeView({
                     <div className='w-[50%]'>
                       <p className='text-sm font-normal text-[#344054]'>Ngày cấp</p>
                       <DatePickerField
+                        disabled={detailEmployee?.status === 'DEACTIVE'}
                         name='issueDateIdentityCard'
                         placeholder='Ngày cấp'
                         className='mt-2 flex justify-between rounded-lg border bg-white p-[11px]'
@@ -455,6 +474,7 @@ export function ModalEmployeeView({
                   </div>
                   <div className='mt-4 box-border flex justify-between gap-4'>
                     <InputRoot
+                      disabled={detailEmployee?.status === 'DEACTIVE'}
                       name='issuePlaceIdentityCard'
                       className='bg-white'
                       label='Nơi cấp'
@@ -464,6 +484,7 @@ export function ModalEmployeeView({
                   </div>
                   <div className='mt-4 box-border flex justify-between gap-4'>
                     <InputRoot
+                      disabled={detailEmployee?.status === 'DEACTIVE'}
                       name='permanentAddress'
                       className='bg-white'
                       label='Địa chỉ thường trú'
@@ -473,6 +494,7 @@ export function ModalEmployeeView({
                   </div>
                   <div className='mt-4 box-border flex justify-between gap-4'>
                     <InputRoot
+                      disabled={detailEmployee?.status === 'DEACTIVE'}
                       name='temporaryAddress'
                       className='bg-white'
                       label='Địa chỉ tạm trú'
@@ -489,6 +511,7 @@ export function ModalEmployeeView({
                 <div className='w-[34%]'>
                   <p className='text-sm font-normal text-[#344054]'>Ngày bắt đầu làm</p>
                   <DatePickerField
+                    disabled={detailEmployee?.status === 'DEACTIVE'}
                     name='hireDate'
                     placeholder='Chọn ngày bắt đầu làm việc'
                     className='mt-2 flex justify-between rounded-lg border bg-white p-[11px]'
@@ -499,13 +522,14 @@ export function ModalEmployeeView({
                   <p className='text-sm font-normal text-[#344054]'>Ngày nghỉ việc</p>
                   <DatePickerField
                     name='resignDate'
-                    disabled={!isQuitJob && isUpdateNotAdd}
+                    disabled={!isQuitJob && isAddNotUpdate || detailEmployee?.status === 'DEACTIVE'}
                     placeholder='Chọn ngày thôi việc'
                     className='mt-2 flex justify-between rounded-lg border bg-white p-[11px]'
                     displayFormat='DD/MM/YYYY'
                   />
                 </div>
                 <CustomCheckbox
+                  disabled={detailEmployee?.status === 'DEACTIVE'}
                   control={methods?.control}
                   name='isResigned'
                   label='Nghỉ việc'
@@ -515,19 +539,21 @@ export function ModalEmployeeView({
                 />
               </div>
             </div>
-            <div className='mt-5'>
-              <span className='text-base font-semibold text-[#344054]'>Tài liệu, chứng từ</span>
-              {isUpdateNotAdd === true ? (
+            <div className={`mt-5 ${detailEmployee?.status === 'DEACTIVE' && 'bg-[#f5f5f5] p-2 rounded-lg'}`}>
+              <p className='text-base font-semibold text-[#344054]'>Tài liệu, chứng từ</p>
+              {isAddNotUpdate === true ? (
                 <div className='mt-4 flex items-center gap-8'>
                   <Upload
+                    disabled={detailEmployee?.status === 'DEACTIVE'}
                     showUploadList={false}
                     onChange={handleChange}
                     fileList={fileList}
                     beforeUpload={beforeUpload}
                     multiple={true}>
                     <Button
+                      disabled={detailEmployee?.status === 'DEACTIVE'}
                       type='button'
-                      className='flex items-center gap-2 rounded-lg border bg-[#F1F6FD] px-[14px] py-2 text-sm font-semibold text-[#365FBF] hover:cursor-pointer hover:border-[#365FBF]'
+                      className='flex items-center gap-2 rounded-lg border bg-[#F1F6FD] px-[14px] py-2 text-sm font-semibold text-[#365FBF]'
                       iconStart={<IconRoot icon={IconVariable.upload} />}>
                       Tải lên
                     </Button>
@@ -540,6 +566,7 @@ export function ModalEmployeeView({
                         className='flex items-center gap-2 rounded-md bg-[#f0f0f0] px-2 py-1 text-sm'>
                         <span>{file.name}</span>
                         <Button
+                          disabled={detailEmployee?.status === 'DEACTIVE'}
                           type='button'
                           className='text-red-500'
                           onClick={() => {
@@ -552,8 +579,9 @@ export function ModalEmployeeView({
                   </div>
                 </div>
               ) : (
-                <div className='mt-4 flex items-center gap-8'>
-                  <Upload
+                <div className='mt-4 inline-flex items-center gap-8'>
+                  <Upload 
+                    disabled={detailEmployee?.status === 'DEACTIVE'}
                     showUploadList={false}
                     onChange={handleChangeUpdate}
                     fileList={fileListUpdate}
@@ -561,7 +589,8 @@ export function ModalEmployeeView({
                     multiple={true}>
                     <Button
                       type='button'
-                      className='flex items-center gap-2 rounded-lg border bg-[#F1F6FD] px-[14px] py-2 text-sm font-semibold text-[#365FBF] hover:cursor-pointer hover:border-[#365FBF]'
+                      disabled={detailEmployee?.status === 'DEACTIVE'}
+                      className='flex items-center gap-2 rounded-lg border bg-[#F1F6FD] px-[14px] py-2 text-sm font-semibold text-[#365FBF]'
                       iconStart={<IconRoot icon={IconVariable.upload} />}>
                       Tải lên
                     </Button>
@@ -575,6 +604,7 @@ export function ModalEmployeeView({
                         <span>{file.name}</span>
                         <Button
                           type='button'
+                          disabled={detailEmployee?.status === 'DEACTIVE'}
                           className='text-red-500'
                           onClick={() => {
                             handleRemoveFileUpdate(file.uid);
@@ -587,7 +617,7 @@ export function ModalEmployeeView({
                 </div>
               )}
             </div>
-            {isUpdateNotAdd === false && (
+            {isAddNotUpdate === false && (
               <div className='mt-5 flex items-center justify-between'>
                 {
                   detailEmployee.status === 'DEACTIVE' ? (
@@ -624,5 +654,7 @@ export function ModalEmployeeView({
         </div>
       </div>
     </Form>
+    </>
+    
   );
 }

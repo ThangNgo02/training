@@ -17,6 +17,7 @@ export interface ISelectProps {
   firstValue?: IOption;
   name: string;
   isReset?: boolean;
+  disabled?: boolean;
   isErrorWrongLogin?: boolean;
   errorString?: string;
   isError?: boolean;
@@ -27,7 +28,7 @@ export interface ISelectProps {
   onChange?: (value: any) => void;
 }
 
-function SelectRoot({ options, onChange, isError = false, isErrorWrongLogin, errorString, ...props }: ISelectProps) {
+function SelectRoot({ options, onChange, isError = false, isErrorWrongLogin, disabled = false, errorString, ...props }: ISelectProps) {
   const methods = useFormContext();
   const err =
     (!Helper.isEmpty(methods?.formState?.errors[props.name]?.message) || isError || isErrorWrongLogin) ?? errorString;
@@ -91,10 +92,10 @@ function SelectRoot({ options, onChange, isError = false, isErrorWrongLogin, err
     <>
       <div
         ref={selectRef}
-        className={`relative select-none outline-none ${props.className ?? ''} ${isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'}`}>
+        className={`relative select-none outline-none ${props.className ?? ''} ${isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'} ${disabled && 'bg-[#d7efe1] border-none'}`}>
         <div
-          className={`flex w-full cursor-pointer items-center justify-between gap-2 px-2 text-sm text-black ${props.classNameSelected}`}
-          onClick={handleToggle}>
+          className={`flex w-full items-center justify-between gap-2 px-2 text-sm text-black ${props.classNameSelected} ${!disabled && 'cursor-pointer'}`}
+          onClick={disabled ? () => void 0 : handleToggle}>
           <span className='text-[#0F1E34]'>{value ? value.label : 'Lựa chọn'}</span>
           {isOpen ? (
             <span className='text-[#0F1E34]'>
