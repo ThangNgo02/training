@@ -1,18 +1,19 @@
-import { useEffect, useState } from 'react';
+import { type UploadFile } from 'antd';
+import { useContext, useEffect, useState } from 'react';
 
 import { type IApiRequest } from '@/api/api.interface';
 import { useRequest } from '@/api/api.middleware';
 import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import { Loading } from '@/components/loading';
-import { type IOption } from '@/components/select';
 import { Tag } from '@/components/tag';
+import toastDefault, { EnumToast } from '@/components/toast';
+import { ModalContext } from '@/context/contextStore';
 import Config from '@/env';
 import { handleExportStaff } from '@/utils/ExportFile';
 import { LoggerService } from '@/utils/Logger';
 
-import { ModalAddEmployee } from './components/ModalAddEmployee';
-import { ModalEditEmployee } from './components/ModalEditEmployee';
+import { ModalEmployee } from './components/ModalEmployee';
 import { type IFilterType } from './components/modalFilter';
 import {
   type IColumnsTableProps,
@@ -23,7 +24,10 @@ import {
   type IQueryParamsType,
 } from './type';
 import { ListEmployeesView } from './view';
+
 export function ListEmployeesPage() {
+  const { handleSetEmployeeDetail, detailEmployee } = useContext(ModalContext);
+
   const initStateColumns: IColumnsTableProps[] = [
     {
       title: 'STT',
@@ -39,8 +43,8 @@ export function ListEmployeesPage() {
         <div
           className='text-[#4072D0] underline hover:cursor-pointer'
           onClick={() => {
+            setIsUpdateNotAdd(false);
             setEmployeeIdSelected(text.id);
-            setIsOpenModalEdit(true);
           }}>
           {text.code}
         </div>
@@ -98,19 +102,27 @@ export function ListEmployeesPage() {
       dataIndex: 'status',
       render: text => (
         <Tag
-          className={`w-[100px] text-center ${text === 'Hoạt động' ? 'bg-[#ECFDF3] text-[#027A48]' : 'bg-[#FEF3F2] text-[#B42318]'} `}
+          className={`w-[100px] text-center ${text === 'Hoạt động' ? 'bg-[#ECFDF3] text-[#027A48]' : text === 'Đã khóa' ? 'bg-[#FEF3F2] text-[#B42318]' : 'bg-[#F2F4F7] text-[#344054]'} `}
           text={text}
           iconStart={
-            text === 'Hoạt động' ? <IconRoot icon={IconVariable.tick} /> : <IconRoot icon={IconVariable.lock} />
+            text === 'Hoạt động' ? (
+              <IconRoot icon={IconVariable.tick} />
+            ) : text === 'Đã khóa' ? (
+              <IconRoot icon={IconVariable.lock} />
+            ) : (
+              <IconRoot icon={IconVariable.layoff} />
+            )
           }
         />
       ),
     },
   ];
-
-  const [employeeIdSelected, setEmployeeIdSelected] = useState<number>();
+  const [isReset, setIsReset] = useState<boolean>(false);
+  const [employeeIdSelected, setEmployeeIdSelected] = useState<number>(0);
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [fileListUpdate, setFileListUpdate] = useState<UploadFile[]>([]);
+  const [isUpdateNotAdd, setIsUpdateNotAdd] = useState<boolean>(true);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [listDepartment, setListDepartment] = useState<IOption[]>([]);
   const [listEmployee, setListEmployee] = useState<IDataTableType[]>([]);
   const [columns, setColumns] = useState<IColumnsTableProps[]>(initStateColumns);
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -156,8 +168,7 @@ export function ListEmployeesPage() {
     codeOrFullName: '',
   });
   const [queryParamsStringExportFile, setQueryParamsStringExportFile] = useState<string>('');
-  const [isOpenModalAdd, setIsOpenModalAdd] = useState<boolean>(false);
-  const [isOpenModalEdit, setIsOpenModalEdit] = useState<boolean>(false);
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
 
   const config = new Config().getState();
   const getAllEmployeeApi: IApiRequest = {
@@ -175,16 +186,6 @@ export function ListEmployeesPage() {
       try {
         setIsLoading(true);
         if (response.code === 2000) {
-          const listDepartmentData = response?.data
-            ?.map((item: any) => ({
-              label: item.department.name,
-              value: item.department.code,
-            }))
-            .filter(
-              (item: any, index: any, self: any) =>
-                index === self.findIndex((option: any) => option.value === item.value),
-            );
-
           const dataTable: IDataTableType[] =
             response?.data?.map((item: IDataEmployeeType) => {
               return {
@@ -199,13 +200,12 @@ export function ListEmployeesPage() {
                 socialInsuranceCode: item.socialInsuranceCode,
                 taxCode: item.taxCode,
                 phoneNumber: item.phoneNumber,
-                status: item.status === 'ACTIVE' ? 'Hoạt động' : 'Đã khóa',
+                status: item.status === 'ACTIVE' ? 'Hoạt động' : item.status === 'DEACTIVE' ? 'Đã khóa' : 'Nghỉ việc',
               };
             }) ?? [];
 
           setColumns(initStateColumns.filter(column => checkboxStates[column.key]));
           setListEmployee(dataTable);
-          setListDepartment(listDepartmentData ?? []);
           setTotalPages(response?.totalPages ?? 0);
         }
       } catch (error: any) {
@@ -219,9 +219,51 @@ export function ListEmployeesPage() {
     },
   };
   const { mutate: mutateGetAllEmployees } = useRequest(getAllEmployeeApi, handleResponse);
-  const handlegetAllEmployee = async () => {
+  const handleGetAllEmployee = async () => {
     mutateGetAllEmployees({});
   };
+
+  const getEmployeeByIdApi: IApiRequest = {
+    url: `${config.api.host}/${config.api.apiPath.getEmployeeById}/${employeeIdSelected}`,
+    method: 'get',
+    headers: {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+    },
+  };
+  const handleResponseDetailEmployee = {
+    handleRequestSuccess: (response: any) => {
+      try {
+        if (response.code === 2000) {
+          handleSetEmployeeDetail(response.data);
+
+          const files = response.data.staffMetaDataFiles.map((file: any) => ({
+            uid: file.id.toString(),
+            name: file.filePath.split('/').pop(),
+            url: `${config.api.host}/${file.filePath}`,
+            status: 'done',
+            originFileObj: new File([], file.filePath.split('/').pop(), { type: file.contentType }),
+          }));
+          setFileList([]);
+          setFileListUpdate(files);
+          setIsOpenModal(true);
+        }
+      } catch (error: any) {
+        toastDefault(EnumToast.ERROR, 'Lấy thông tin nhân viên thất bại.', error);
+      }
+    },
+    handleRequestFailed: (response: any) => {
+      toastDefault(EnumToast.ERROR, 'Lỗi khi gửi yêu cầu.', response.code);
+    },
+  };
+  const { mutate: mutateGetEmployeeById } = useRequest(getEmployeeByIdApi, handleResponseDetailEmployee);
+
+  useEffect(() => {
+    if (employeeIdSelected && employeeIdSelected !== 0) {
+      mutateGetEmployeeById({});
+    }
+  }, [employeeIdSelected]);
 
   const handleCheckboxChange = (updatedStates: Record<string, boolean>) => {
     setCheckboxStates(updatedStates);
@@ -294,30 +336,32 @@ export function ListEmployeesPage() {
   }, [queryParamsExportFile]);
 
   useEffect(() => {
-    handlegetAllEmployee();
+    handleGetAllEmployee();
   }, [queryParamsString]);
 
   return (
     <>
       {isLoading && <Loading />}
-      {isOpenModalAdd && (
-        <ModalAddEmployee
-          listDepartment={listDepartment}
+      {isOpenModal && (
+        <ModalEmployee
           setIsLoading={setIsLoading}
-          setIsOpenModalAdd={setIsOpenModalAdd}
-        />
-      )}
-      {isOpenModalEdit && (
-        <ModalEditEmployee
+          setIsOpenModal={setIsOpenModal}
+          handleGetAllEmployee={handleGetAllEmployee}
+          isUpdateNotAdd={isUpdateNotAdd}
+          setIsUpdateNotAdd={setIsUpdateNotAdd}
+          fileList={fileList}
+          setFileList={setFileList}
+          fileListUpdate={fileListUpdate}
+          setFileListUpdate={setFileListUpdate}
           employeeIdSelected={employeeIdSelected}
-          setIsLoading={setIsLoading}
-          setIsOpenModalEdit={setIsOpenModalEdit}
+          setEmployeeIdSelected={setEmployeeIdSelected}
+          isReset={isReset}
+          setIsReset={setIsReset}
         />
       )}
       <ListEmployeesView
         data={listEmployee}
         columns={columns}
-        listDepartment={listDepartment}
         currentPage={currentPage}
         totalPages={totalPages}
         checkboxStates={checkboxStates}
@@ -328,7 +372,9 @@ export function ListEmployeesPage() {
         handleFormFilter={handleFormFilter}
         handleOnChangeSearch={handleOnChangeSearch}
         handleExportStaff={handleExportClick}
-        setIsOpenModalAdd={setIsOpenModalAdd}
+        setIsOpenModal={setIsOpenModal}
+        setIsUpdateNotAdd={setIsUpdateNotAdd}
+        setIsReset={setIsReset}
       />
     </>
   );

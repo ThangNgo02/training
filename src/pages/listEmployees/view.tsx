@@ -1,5 +1,5 @@
 import { Table } from 'antd';
-import { useRef, useState } from 'react';
+import { useContext, useRef, useState } from 'react';
 
 import Button from '@/components/button';
 import { Header } from '@/components/header';
@@ -7,8 +7,10 @@ import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import { Pagination } from '@/components/pagination';
 import { Search } from '@/components/search';
-import SelectRoot, { type IOption } from '@/components/select';
+import SelectRoot from '@/components/select';
+import { ModalContext } from '@/context/contextStore';
 import useClickOutside from '@/hooks/useClickOutside';
+import { useDepartments } from '@/hooks/useDepartments';
 import { SelectCheckboxs } from '@/pages/listEmployees/components/selectCheckboxs';
 
 import { ModalFilter } from './components/modalFilter';
@@ -17,18 +19,19 @@ import { type IColumnsTableProps, type IDataTableType } from './type';
 interface IListEmployeesViewProps {
   data: IDataTableType[];
   columns: IColumnsTableProps[];
-  listDepartment: IOption[];
   currentPage: number;
   totalPages: number;
   checkboxStates: Record<string, boolean>;
   initialValues: any;
+  setIsReset?: (valueL: boolean) => void;
   onCheckboxChange: (updatedStates: Record<string, boolean>) => void;
   onChangeRowDisplay: (value: number) => void;
   onPageChange: (newPage: number) => void;
   handleOnChangeSearch: (textSearch: string) => void;
   handleFormFilter: (value: any) => void;
   handleExportStaff: () => Promise<void>;
-  setIsOpenModalAdd: (value: boolean) => void;
+  setIsOpenModal: (value: boolean) => void;
+  setIsUpdateNotAdd: (value: boolean) => void;
 }
 interface IOptionRowDisplay {
   label: string;
@@ -46,18 +49,19 @@ const optionsRowDisplay: IOptionRowDisplay[] = [
 export function ListEmployeesView({
   data,
   columns,
-  listDepartment,
   currentPage,
   totalPages,
   checkboxStates,
   initialValues,
+  setIsReset,
   onCheckboxChange,
   onChangeRowDisplay,
   onPageChange,
   handleOnChangeSearch,
   handleFormFilter,
   handleExportStaff,
-  setIsOpenModalAdd,
+  setIsOpenModal,
+  setIsUpdateNotAdd,
 }: IListEmployeesViewProps) {
   const refBtn = useRef(null);
   const refSelectCheckbox = useRef(null);
@@ -70,6 +74,8 @@ export function ListEmployeesView({
 
   const [isOpenModalFilter, setIsOpenModalFilter] = useState<boolean>(false);
   const [isOpenSelectCheckbox, setIsOpenSelectCheckbox] = useState<boolean>(false);
+  const listDepartments = useDepartments();
+  const { handleSetEmployeeDetail } = useContext(ModalContext);
   return (
     <div className='flex h-full flex-col'>
       <>
@@ -111,7 +117,7 @@ export function ListEmployeesView({
                   }}>
                   {isOpenModalFilter && (
                     <ModalFilter
-                      listDepartment={listDepartment}
+                      listDepartment={listDepartments}
                       handleSubmitFormFilter={handleFormFilter}
                       initialValues={initialValues}
                     />
@@ -127,7 +133,12 @@ export function ListEmployeesView({
 
                 <Button
                   onClick={() => {
-                    setIsOpenModalAdd(true);
+                    handleSetEmployeeDetail({});
+                    setIsOpenModal(true);
+                    setIsUpdateNotAdd(true);
+                    if (setIsReset) {
+                      setIsReset(true);
+                    }
                   }}
                   className='flex items-center rounded-lg border bg-[#2DB976] px-4 py-[10px] text-white hover:border-[#2DB976]'
                   text='Thêm mới'

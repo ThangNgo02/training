@@ -27,4 +27,5 @@ export enum IconVariable {
   setting,
   download,
   upload,
+  layoff,
 }

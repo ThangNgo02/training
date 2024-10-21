@@ -32,21 +32,23 @@ function SelectRoot({ options, onChange, isError = false, isErrorWrongLogin, err
   const err =
     (!Helper.isEmpty(methods?.formState?.errors[props.name]?.message) || isError || isErrorWrongLogin) ?? errorString;
   const [isOpen, setIsOpen] = useState(false);
-  const [value, setValue] = useState<IOption>(
-    props.firstValue ?? {
-      value: options[0],
-      label: options[0].label,
-    },
-  );
+  const [value, setValue] = useState<IOption>(props.firstValue?.value ?? props.firstValue);
   const handleReset = () => {
     methods?.reset();
     setValue(
       props.firstValue ?? {
-        value: options[0],
+        value: options[0].value,
         label: options[0].label,
       },
     );
   };
+
+  useEffect(() => {
+    if (props.firstValue?.value) {
+      setValue(props.firstValue);
+    }
+  }, [props.firstValue?.value]);
+
   useEffect(() => {
     if (props.isReset) {
       handleReset();
