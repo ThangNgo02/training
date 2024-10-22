@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import { type AnyObject } from 'yup';
 
 import { type IApiRequest } from '@/api/api.interface';
 import { useRequest } from '@/api/api.middleware';
@@ -134,7 +133,7 @@ function DepartmentPage() {
   }, [queryParams]);
 
   const getAllDepartmentsApi: IApiRequest = {
-    url: `${config.api.apiPath.apiEmployee}?${queryParamsString}`,
+    url: `${config.api.apiPath.apiDepartment}?${queryParamsString}`,
     method: 'get',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -182,7 +181,7 @@ function DepartmentPage() {
   }, [queryParamsString]);
 
   const getDepartmentByIdApi: IApiRequest = {
-    url: `${config.api.host}/${config.api.apiPath.apiEmployee}/${departmentIdSelected}`,
+    url: `${config.api.host}/${config.api.apiPath.apiDepartment}/${departmentIdSelected}`,
     method: 'get',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
