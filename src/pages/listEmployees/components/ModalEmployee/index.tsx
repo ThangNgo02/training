@@ -25,10 +25,9 @@ export function ModalEmployee({
 }: IModalEmployeeProps) {
   const [idEmployee, setIdEmployee] = useState(employeeIdSelected);
   const config = Config.getInstance().getState();
-  
 
   const addNewEmployeeApi: IApiRequest = {
-    url: `${config.api.host}${config.api.apiPath.addNewEmployee}`,
+    url: `${config.api.host}${config.api.apiPath.apiEmployee}`,
     method: 'post',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -82,7 +81,7 @@ export function ModalEmployee({
   const handleResponseUpload = {
     handleRequestSuccess: (response: any) => {},
     handleRequestFailed: (response: any) => {
-      console.log('Lỗi khi gửi yêu cầu. ', response.code);
+      console.log('Lỗi khi gửi yêu cầu.', response.code);
     },
   };
   const { mutate: mutateUpload } = useRequest(uploadApi, handleResponseUpload);
@@ -110,7 +109,6 @@ export function ModalEmployee({
 
   const [filesDeleted, setFilesDeleted] = useState<string[]>([]);
 
-
   const uploadDeleteApi: IApiRequest = {
     url: `${config.api.host}${config.api.apiPath.uploadFiles}/delete/${idEmployee}?staffMetaDataFileIds=${filesDeleted.join(',')}`,
     method: 'delete',
@@ -129,7 +127,7 @@ export function ModalEmployee({
   const { mutate: mutateUploadDelete } = useRequest(uploadDeleteApi, handleResponseUploadDelete);
 
   const updateEmployeeApi: IApiRequest = {
-    url: `${config.api.host}${config.api.apiPath.updateEmployee}/${employeeIdSelected}`,
+    url: `${config.api.host}${config.api.apiPath.apiEmployee}/${employeeIdSelected}`,
     method: 'put',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -162,7 +160,6 @@ export function ModalEmployee({
   };
   const { mutate: mutateUpdateEmployee } = useRequest(updateEmployeeApi, handleResponseUpdateEmployee);
   const handleUpdateEmployee = (data: IUpdateEmployeeDataType) => {
-    console.log("tao zo update nè");
     const formattedData = {
       ...data,
       birthDate: data.birthDate ? dayjs(data.birthDate).format('DD-MM-YYYY') : null,
@@ -185,7 +182,7 @@ export function ModalEmployee({
           hasFilesToUpload = true;
         }
       }
-      if (hasFilesToUpload && Array.from(formData.entries()).length > 0) {
+      if (hasFilesToUpload && [...formData.entries()].length > 0) {
         mutateUpload(formData);
       }
     }
@@ -193,10 +190,10 @@ export function ModalEmployee({
       mutateUploadDelete({});
     }
   };
-  
+
   const [isOpenModalLock, setIsOpenModalLock] = useState<boolean>(false);
   const lockAccountApi: IApiRequest = {
-    url: `${config.api.host}${config.api.apiPath.lockAccount}/${employeeIdSelected}`,
+    url: `${config.api.host}${config.api.apiPath.changeStatusEmployee}/${employeeIdSelected}`,
     method: 'put',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -221,12 +218,12 @@ export function ModalEmployee({
   const { mutate: mutateLockAccount } = useRequest(lockAccountApi, handleResponseLockAccount);
   const handleConfirmModalLock = () => {
     mutateLockAccount({
-      status: "DEACTIVE"
-    })
-  }
+      status: 'DEACTIVE',
+    });
+  };
   const [isOpenModalUnLock, setIsOpenModalUnLock] = useState<boolean>(false);
   const unLockAccountApi: IApiRequest = {
-    url: `${config.api.host}${config.api.apiPath.lockAccount}/${employeeIdSelected}`,
+    url: `${config.api.host}${config.api.apiPath.changeStatusEmployee}/${employeeIdSelected}`,
     method: 'put',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -251,9 +248,9 @@ export function ModalEmployee({
   const { mutate: mutateUnLockAccount } = useRequest(unLockAccountApi, handleResponseUnLockAccount);
   const handleConfirmModalUnLock = () => {
     mutateUnLockAccount({
-      status: "ACTIVE"
-    })
-  }
+      status: 'ACTIVE',
+    });
+  };
 
   return (
     <ModalEmployeeView

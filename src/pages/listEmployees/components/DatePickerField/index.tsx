@@ -9,6 +9,8 @@ interface IDatePickerFieldProps {
   className: string;
   displayFormat?: string;
   disabled?: boolean;
+  initialValue?: string | null;
+  isChecked?: boolean;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -18,12 +20,11 @@ export const DatePickerField = ({
   className,
   displayFormat = 'DD/MM/YYYY',
   disabled = false,
+  initialValue = null,
   ...props
 }: IDatePickerFieldProps) => {
   const methods = useFormContext();
-  const initialValue = methods?.getValues(name);
   const [state, setState] = useState(initialValue ? dayjs(initialValue) : null);
-
   useEffect(() => {
     const formValue = methods?.watch(name);
     if (formValue) {
@@ -35,9 +36,15 @@ export const DatePickerField = ({
     if (disabled) {
       setState(null);
       methods?.setValue(name, null);
-      methods?.trigger(name);
     }
   }, [disabled]);
+
+  useEffect(() => {
+    if (name === 'resignDate' && initialValue) {
+      setState(dayjs(initialValue));
+      methods?.setValue('resignDate', initialValue);
+    }
+  }, []);
 
   const onChange: DatePickerProps['onChange'] = date => {
     if (date) {

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
@@ -17,18 +18,24 @@ const itemSidebar: IItemSideBar[] = [
   },
   {
     id: 1,
+    to: '/department',
+    title: 'Phòng ban',
+    iconStart: <IconRoot icon={IconVariable.home} />,
+  },
+  {
+    id: 2,
     to: '/employees',
     title: 'Danh sách nhân viên',
     iconStart: <IconRoot icon={IconVariable.employee} />,
   },
   {
-    id: 2,
+    id: 3,
     to: '/contracts',
     title: 'Hợp đồng',
     iconStart: <IconRoot icon={IconVariable.contract} />,
   },
   {
-    id: 3,
+    id: 4,
     to: '/help',
     title: 'Trợ giúp',
     iconStart: <IconRoot icon={IconVariable.help} />,
@@ -38,8 +45,8 @@ export function SideBarHR(props: ISideBarProps) {
   const [activeItem, setActiveItem] = useState<number>(0);
   return (
     <div className={`flex flex-col border bg-[#289E65] px-4 py-10 ${props.className}`}>
-      <a
-        href='/'
+      <Link
+        to='/'
         className='outline-none hover:cursor-pointer'>
         <div className='flex items-center justify-center gap-2 '>
           <img
@@ -53,7 +60,7 @@ export function SideBarHR(props: ISideBarProps) {
           </div>
         </div>
         <hr className='mt-4 border-[#c8c8c8]' />
-      </a>
+      </Link>
 
       <div className='mt-[20px] flex items-center justify-between rounded-[12px] bg-[#a9d8c1] p-2 hover:cursor-pointer'>
         <div className='flex items-center justify-center gap-2'>

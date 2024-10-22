@@ -28,7 +28,15 @@ export interface ISelectProps {
   onChange?: (value: any) => void;
 }
 
-function SelectRoot({ options, onChange, isError = false, isErrorWrongLogin, disabled = false, errorString, ...props }: ISelectProps) {
+function SelectRoot({
+  options,
+  onChange,
+  isError = false,
+  isErrorWrongLogin,
+  disabled = false,
+  errorString,
+  ...props
+}: ISelectProps) {
   const methods = useFormContext();
   const err =
     (!Helper.isEmpty(methods?.formState?.errors[props.name]?.message) || isError || isErrorWrongLogin) ?? errorString;
@@ -92,11 +100,12 @@ function SelectRoot({ options, onChange, isError = false, isErrorWrongLogin, dis
     <>
       <div
         ref={selectRef}
-        className={`relative select-none outline-none ${props.className ?? ''} ${isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'} ${disabled && 'bg-[#d7efe1] border-none'}`}>
+        className={`relative select-none outline-none ${props.className ?? ''} ${isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'} ${disabled && 'border-none bg-[#d7efe1]'}`}>
         <div
           className={`flex w-full items-center justify-between gap-2 px-2 text-sm text-black ${props.classNameSelected} ${!disabled && 'cursor-pointer'}`}
+          // eslint-disable-next-line no-void
           onClick={disabled ? () => void 0 : handleToggle}>
-          <span className='text-[#0F1E34]'>{value ? value.label : 'Lựa chọn'}</span>
+          <span className={`text-[#0F1E34] ${!value && 'text-gray-400'}`}>{value ? value.label : 'Lựa chọn'}</span>
           {isOpen ? (
             <span className='text-[#0F1E34]'>
               <IconRoot icon={IconVariable.arrowUp} />

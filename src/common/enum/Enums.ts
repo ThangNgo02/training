@@ -7,6 +7,7 @@ export enum EnumPath {
   contracts = '/contracts',
   help = '/help',
   contact = '/contact',
+  department = '/department',
 }
 
 export enum EnumRole {}

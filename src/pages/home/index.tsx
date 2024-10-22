@@ -9,7 +9,6 @@ import { LoggerService } from '@/utils/Logger';
 import HomeView from './view';
 
 function HomeIndex() {
-  const config = new Config().getState();
   const auth = AuthService.getPackageAuth();
   const exampleApi: IApiRequest = {
     headers: { token: auth?.token },

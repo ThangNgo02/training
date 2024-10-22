@@ -14,8 +14,8 @@ export function Pagination({ currentPage, totalPages, onPageChange }: IPaginatio
   const [isActive, setIsActive] = useState<boolean>(false);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const page = Math.max(1, Math.min(Number(event.target.value), totalPages));
-    onPageChange(page);
+    const newPage = Number(event.target.value);
+    onPageChange(newPage);
   };
 
   const goToPreviousPage = () => {
@@ -41,10 +41,21 @@ export function Pagination({ currentPage, totalPages, onPageChange }: IPaginatio
       Trang
       <input
         type='number'
+        onKeyPress={e => {
+          if (e.code === 'Enter') {
+            if (currentPage > totalPages || currentPage < 1) {
+              onPageChange(1);
+            }
+            e.preventDefault();
+          }
+        }}
         onFocus={() => {
           setIsActive(true);
         }}
-        onBlur={() => {
+        onBlur={e => {
+          if (+e.target.value > totalPages || +e.target.value < 1) {
+            onPageChange(1);
+          }
           setIsActive(false);
         }}
         value={currentPage}

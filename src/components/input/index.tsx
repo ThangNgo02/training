@@ -61,20 +61,21 @@ function InputRoot({
     setIsFocus(false);
   };
   return (
-    <div className={`flex w-full flex-col gap-2`}>
+    <div className={`flex h-[96px] w-full flex-col gap-2`}>
       {props.label && (
         <span className={`text-16x20 text-start font-medium text-[#1A1A1A] ${props.classNameLabel}`}>
           {isRequire && <span className='text-red-500'>*</span>} <Localize tid={props.label} />
         </span>
       )}
       <div
-        className={` text-16x20 text-neutral-80 flex h-11 items-center gap-2 rounded-lg border p-3 transition ${props.className} ${isError ? 'border-red-500' : 'border-neutral-40 hover:border-primary-hover hover:bg-primary-bg_color focus:border-primary-hover active:border-primary-hover '} ${
-          props.disabled && 'bg-[#d7efe1]  hover:bg-neutral-40  cursor-not-allowed  border-none'
-        } ${isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'}`}>
+        className={` text-neutral-80 flex h-11 items-center gap-2 rounded-lg border px-3 py-[6px] text-base transition ${props.className} ${isError ? 'border-red-500' : 'border-neutral-40 hover:border-primary-hover hover:bg-primary-bg_color focus:border-primary-hover active:border-primary-hover '} ${
+          props.disabled && 'hover:bg-neutral-40  cursor-not-allowed  border-none  bg-[#d7efe1]'
+        } ${methods?.formState?.errors[props.name]?.message ? 'border-red-500' : isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'}`}>
         {props.iconStart}
         <input
           autoFocus={props.autoFocus}
           value={state}
+          disabled={props.disabled}
           type={type}
           onChange={handleOnChange}
           onFocus={handleFocus}
@@ -87,7 +88,7 @@ function InputRoot({
         />
         {props.iconEnd}
       </div>
-      <div className='flex items-center text-sm'>
+      <div className='mb-2 flex items-center'>
         {err && (
           <div className='bg-danger-bg_color flex gap-1 p-1'>
             <IconRoot icon={IconVariable.error} />
@@ -97,7 +98,7 @@ function InputRoot({
           </div>
         )}
         {methods?.formState?.errors[props.name]?.message && (
-          <p className='text-red-500'>{methods?.formState?.errors[props.name]?.message}</p>
+          <span className='text-sm text-red-500'>{methods?.formState?.errors[props.name]?.message}</span>
         )}
       </div>
     </div>

@@ -1,24 +1,11 @@
-import { Checkbox, type ICheckboxProps } from '../../../../components/checkbox';
-import TextButton from '../../../../components/textbutton';
+import { Checkbox, type ICheckboxProps } from '../checkbox';
+import TextButton from '../textbutton';
 
 interface ISelectCheckboxsProps {
   checkboxStates: Record<string, boolean>;
   onChangeCheckboxs: (value: any) => void;
+  arrOptions: ICheckboxProps[];
 }
-const arrOptions: ICheckboxProps[] = [
-  { label: 'STT', checked: true, name: 'stt' },
-  { label: 'Mã nhân viên', checked: true, name: 'code' },
-  { label: 'Mã chấm công', checked: false, name: 'timekeepingCode' },
-  { label: 'Tên nhân viên', checked: true, name: 'fullName' },
-  { label: 'Giới tính', checked: true, name: 'gender' },
-  { label: 'Chức vụ', checked: true, name: 'position' },
-  { label: 'Phòng ban', checked: true, name: 'departmentName' },
-  { label: 'Bậc', checked: true, name: 'level' },
-  { label: 'BHXH', checked: false, name: 'socialInsuranceCode' },
-  { label: 'MST', checked: false, name: 'taxCode' },
-  { label: 'SĐT', checked: false, name: 'phoneNumber' },
-  { label: 'Trạng thái', checked: true, name: 'status' },
-];
 
 export function SelectCheckboxs(props: ISelectCheckboxsProps) {
   const onChangeCheckbox = (name: string, checked: boolean) => {
@@ -30,7 +17,7 @@ export function SelectCheckboxs(props: ISelectCheckboxsProps) {
   };
 
   const handleReset = () => {
-    const resetStates = arrOptions.reduce<Record<string, boolean>>((acc, option) => {
+    const resetStates = props.arrOptions.reduce<Record<string, boolean>>((acc, option) => {
       acc[option.name] = option.checked;
       return acc;
     }, {});
@@ -50,10 +37,10 @@ export function SelectCheckboxs(props: ISelectCheckboxsProps) {
       </div>
       <div>
         <div className='border-b pb-2 text-sm font-normal text-[#0f1e34]'>
-          {displayedCount}/{arrOptions.length} được hiển thị
+          {displayedCount}/{props.arrOptions.length} được hiển thị
         </div>
         <div className='my-2'>
-          {arrOptions.map(item => (
+          {props.arrOptions.map(item => (
             <Checkbox
               key={item.name}
               onChange={checked => {

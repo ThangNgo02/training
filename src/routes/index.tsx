@@ -7,6 +7,7 @@ import FeatureComponent from '@/layouts/GeneralLayout';
 import HRLayout from '@/layouts/HRLayout';
 import { Contact } from '@/pages/contact';
 import { ContractsPage } from '@/pages/contract';
+import DepartmentPage from '@/pages/department';
 import { Help } from '@/pages/help';
 import { ListEmployeesPage } from '@/pages/listEmployees';
 
@@ -79,6 +80,20 @@ const rootRoutes: Array<{
           <PublicRoute
             role={[]}
             children={<AuthPage />}
+          />
+        ),
+      },
+    ],
+  },
+  {
+    element: <HRLayout />,
+    children: [
+      {
+        path: EnumPath.department,
+        element: (
+          <PublicRoute
+            role={[]}
+            children={<DepartmentPage />}
           />
         ),
       },

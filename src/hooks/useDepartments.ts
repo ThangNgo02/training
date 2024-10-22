@@ -10,7 +10,7 @@ export const useDepartments = () => {
   const [listDepartments, setListDepartments] = useState<IOption[]>([]);
   const config = new Config().getState();
   const getAllDepartmentsApi: IApiRequest = {
-    url: `${config.api.apiPath.getAllDepartments}?page=0&size=1000`,
+    url: `${config.api.apiPath.apiDepartment}?page=0&size=1000`,
     method: 'get',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention

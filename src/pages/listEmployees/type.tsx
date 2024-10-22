@@ -1,17 +1,5 @@
-export interface IDepartmentType {
-  active?: boolean;
-  blockForTimesheet?: string;
-  code?: string;
-  createdBy?: string;
-  dateCreated?: string;
-  id?: number;
-  lastUpdated?: string;
-  modifiedBy?: string;
-  name?: string;
-  note?: string;
-  phoneNumber?: string;
-  tenantId?: number;
-}
+import { type IDepartmentType } from '../department/type';
+
 export interface IStaffMetaDataFilesType {
   contentType?: string;
   createdBy?: string;
@@ -77,15 +65,6 @@ export interface IDataTableType {
   phoneNumber: string | null | undefined;
   status: string | null | undefined;
 }
-
-export interface IColumnsTableProps {
-  title: string;
-  dataIndex: string;
-  key: string;
-  render?: (text: any, data: any, index: number) => React.ReactNode;
-  width?: number | string;
-}
-
 export interface ICheckboxType {
   stt: boolean;
   code: boolean;

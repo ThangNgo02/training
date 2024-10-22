@@ -22,9 +22,7 @@ export function CustomCheckbox({
   classNameTicked,
   onChange,
 }: ICheckboxProps) {
-  useEffect(() => {
-
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <Controller
@@ -33,7 +31,7 @@ export function CustomCheckbox({
       defaultValue={false}
       render={({ field }) => (
         <div
-          className={`my-1 flex items-center gap-2 rounded-md px-2 py-1 text-sm hover:cursor-pointer hover:bg-gray-200 ${className} ${disabled && 'bg-[#f5f5f5] border-none hover:cursor-default'}`}>
+          className={`my-1 flex items-center gap-2 rounded-md px-2 py-1 text-sm hover:cursor-pointer hover:bg-gray-200 ${className} ${disabled && 'border-none bg-[#f5f5f5] hover:cursor-default'}`}>
           <input
             type='checkbox'
             checked={field.value}

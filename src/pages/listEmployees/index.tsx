@@ -10,13 +10,13 @@ import { Tag } from '@/components/tag';
 import toastDefault, { EnumToast } from '@/components/toast';
 import { ModalContext } from '@/context/contextStore';
 import Config from '@/env';
+import { type IColumnsTableProps } from '@/types';
 import { handleExportStaff } from '@/utils/ExportFile';
 import { LoggerService } from '@/utils/Logger';
 
 import { ModalEmployee } from './components/ModalEmployee';
 import { type IFilterType } from './components/modalFilter';
 import {
-  type IColumnsTableProps,
   type IDataEmployeeType,
   type IDataResponseAPIType,
   type IDataTableType,
@@ -26,14 +26,13 @@ import {
 import { ListEmployeesView } from './view';
 
 export function ListEmployeesPage() {
-  const { handleSetEmployeeDetail, detailEmployee } = useContext(ModalContext);
-
+  const { handleSetEmployeeDetail } = useContext(ModalContext);
   const initStateColumns: IColumnsTableProps[] = [
     {
       title: 'STT',
       dataIndex: 'stt',
       key: 'stt',
-      render: (_, __, index) => index + 1,
+      render: (_, __, index) => (currentPage - 1) * totalPages + index + 1,
     },
     {
       title: 'Mã NV',
@@ -41,7 +40,7 @@ export function ListEmployeesPage() {
       key: 'code',
       render: (_, text) => (
         <div
-          className='text-[#4072D0] underline hover:cursor-pointer'
+          className='text-[#2bb371] underline hover:cursor-pointer'
           onClick={() => {
             setIsAddNotUpdate(false);
             setEmployeeIdSelected(text.id);
@@ -172,7 +171,7 @@ export function ListEmployeesPage() {
 
   const config = new Config().getState();
   const getAllEmployeeApi: IApiRequest = {
-    url: `${config.api.apiPath.getInfoEmployees}?${queryParamsString}`,
+    url: `${config.api.apiPath.apiEmployee}?${queryParamsString}`,
     method: 'get',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -200,7 +199,7 @@ export function ListEmployeesPage() {
                 socialInsuranceCode: item.socialInsuranceCode,
                 taxCode: item.taxCode,
                 phoneNumber: item.phoneNumber,
-                status: item.status === 'ACTIVE' ? 'Hoạt động' : (item.status === 'DEACTIVE' ? 'Đã khóa' : 'Nghỉ việc'),
+                status: item.status === 'ACTIVE' ? 'Hoạt động' : item.status === 'DEACTIVE' ? 'Đã khóa' : 'Nghỉ việc',
               };
             }) ?? [];
 
@@ -224,7 +223,7 @@ export function ListEmployeesPage() {
   };
 
   const getEmployeeByIdApi: IApiRequest = {
-    url: `${config.api.host}/${config.api.apiPath.getEmployeeById}/${employeeIdSelected}`,
+    url: `${config.api.host}/${config.api.apiPath.apiEmployee}/${employeeIdSelected}`,
     method: 'get',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
