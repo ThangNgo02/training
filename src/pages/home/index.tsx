@@ -1,42 +1,30 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-import { type IApiRequest } from '@/api/api.interface';
-import { useRequest } from '@/api/api.middleware';
-import Config from '@/env';
+import { EnumPath } from '@/common/enum/Enums';
 import AuthService from '@/utils/Auth';
-import { LoggerService } from '@/utils/Logger';
 
 import HomeView from './view';
 
 function HomeIndex() {
   const auth = AuthService.getPackageAuth();
-  const exampleApi: IApiRequest = {
-    headers: { token: auth?.token },
-    // url: config.api.host,
-    url: 'https://reqres.in/api/users',
-    method: 'get',
-  };
+  const navigate = useNavigate();
 
   const [data, setData] = useState<any>();
-  const funcRequest = {
-    handleRequestSuccess: (data: any) => {
-      try {
-        setData(data);
-        LoggerService.debug('EditBankComponent execute handleRequestSuccess receive data', data);
-      } catch (error: any) {
-        LoggerService.error('CalendarYearDetailComponent execute handleRequestSuccess receive error', error);
-      }
-    },
+
+  useEffect(() => {
+    setData(auth ? auth.profileDetails : null);
+  }, []);
+
+  const handleCallApi = () => {
+    AuthService.removeAll();
+    navigate(EnumPath.login);
   };
 
-  const { isLoading, mutate } = useRequest(exampleApi, funcRequest);
-  const handleCallApi = () => {
-    mutate({});
-  };
   return (
     <HomeView
       handleCallApi={handleCallApi}
-      isLoading={isLoading}
+      isLoading={false}
       data={data}
     />
   );

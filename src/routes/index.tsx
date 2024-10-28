@@ -35,7 +35,7 @@ const rootRoutes: Array<{
       {
         path: EnumPath.home,
         element: (
-          <PublicRoute
+          <PrivateRoute
             role={[]}
             children={<HomePage />}
           />
@@ -91,7 +91,7 @@ const rootRoutes: Array<{
       {
         path: EnumPath.department,
         element: (
-          <PublicRoute
+          <PrivateRoute
             role={[]}
             children={<DepartmentPage />}
           />
@@ -105,7 +105,7 @@ const rootRoutes: Array<{
       {
         path: EnumPath.listEmployees,
         element: (
-          <PublicRoute
+          <PrivateRoute
             role={[]}
             children={<ListEmployeesPage />}
           />
@@ -119,7 +119,7 @@ const rootRoutes: Array<{
       {
         path: EnumPath.contracts,
         element: (
-          <PublicRoute
+          <PrivateRoute
             role={[]}
             children={<ContractsPage />}
           />
@@ -133,7 +133,7 @@ const rootRoutes: Array<{
       {
         path: EnumPath.help,
         element: (
-          <PublicRoute
+          <PrivateRoute
             role={[]}
             children={<Help />}
           />
@@ -147,7 +147,7 @@ const rootRoutes: Array<{
       {
         path: EnumPath.contact,
         element: (
-          <PublicRoute
+          <PrivateRoute
             role={[]}
             children={<Contact />}
           />

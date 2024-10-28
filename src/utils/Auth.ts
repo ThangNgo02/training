@@ -76,7 +76,6 @@ class AuthService {
     cookie.remove(config.cookie.auth, { path: '/' });
     cookie.remove(config.cookie.profile, { path: '/' });
     cookie.remove(config.cookie.expireAt, { path: '/' });
-    // remove 2 times for sure :))
     cookie.remove(config.cookie.auth, { path: '/' });
     cookie.remove(config.cookie.profile, { path: '/' });
     cookie.remove(config.cookie.expireAt, { path: '/' });
