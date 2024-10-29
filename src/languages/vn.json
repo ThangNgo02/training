@@ -1,3 +1,14 @@
 {
-  "dashboard": "Tổng quan"
+  "Login Page": "",
+  
+  "Login": "Đăng nhập",
+  "Username": "Tên đăng nhập",
+  "Password": "Mật khẩu",
+  "Forget password": "Quên mật khẩu?",
+  "Register": "Đăng ký",
+  "Language": "Ngôn ngữ",
+  "Contact": "Liên hệ",
+  "English": "",
+  "Vietnamese": "Tiếng Việt",
+  "welcome.to": "Welcome to"
 }

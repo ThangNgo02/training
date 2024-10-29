@@ -1,5 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 
+import toastDefault, { EnumToast } from '@/components/toast';
+
 import { type IAuth } from '../utils/Auth';
 import { LoggerService } from '../utils/Logger';
 import { type IApiRequest, type IDataResponse, type State } from './api.interface';
@@ -118,7 +120,7 @@ export const useRequest = (
       },
       onError: () => {
         callbackWhenError && callbackWhenError();
-        // toastDefault(EnumToast.ERROR, 'Network error, please check your network!');
+        toastDefault(EnumToast.ERROR, 'Network error, please check your network!');
       },
     },
   );

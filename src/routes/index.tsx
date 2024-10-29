@@ -6,8 +6,11 @@ import Notfound from '@/components/notfound';
 import FeatureComponent from '@/pages';
 
 import PrivateRoute from './privateRoute';
+import PublicRoute from './publicRoute';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const HomePage = React.lazy(async () => import('@/pages/home'));
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const LoginPage = React.lazy(async () => import('@/pages/login'));
 
 const rootRoutes: Array<{
   element: JSX.Element;
@@ -28,6 +31,15 @@ const rootRoutes: Array<{
           <PrivateRoute
             role={[]}
             children={<HomePage />}
+          />
+        ),
+      },
+      {
+        path: EnumPath.login,
+        element: (
+          <PublicRoute
+            role={[]}
+            children={<LoginPage />}
           />
         ),
       },

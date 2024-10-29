@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 import { EnumPath, type EnumRole } from '@/common/enum/Enums';
@@ -16,10 +16,12 @@ function PrivateRoute({ role, children }: IPrivateRoute) {
   const profile = AuthService.getPackageProfile();
   const navigate = useNavigate();
   const roleProfile = profile?.role;
-  if (Helper.isEmpty(auth)) {
-    LoggerService.info('Navigate to LOGIN PAGE because user is not authenticated');
-    navigate(EnumPath.home);
-  }
+
+  useEffect(() => {
+    if (Helper.isEmpty(auth)) {
+      navigate(EnumPath.login);
+    }
+  }, [Helper.isEmpty(auth)]);
 
   const isAllow = role?.length > 0 ? role?.some(r => roleProfile?.includes(r)) : true;
   if (!isAllow) {
