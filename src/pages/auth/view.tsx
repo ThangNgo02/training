@@ -17,24 +17,23 @@ function AuthView() {
     { value: 'vn', label: 'Tiếng Việt' },
     { value: 'en', label: 'Tiếng Anh' },
   ];
-  const [selectedValue, setSelectedValue] = useState<IOption>({
-    label: 'Tiếng Việt',
-    value: 'vn',
-  });
-
+  const handleChangeLanguage = (value: string) => {
+    console.log(value);
+  };
   return (
     <div className="fixed flex h-full w-full items-center justify-center bg-[url('@/public/background_theme_auth.png')] bg-cover bg-center">
-      <div className='relative flex h-[86%] w-[40%] items-center justify-center rounded-[20px] bg-white'>
+      <div className='relative flex h-[86%] w-[90%] items-center justify-center rounded-[20px] bg-white md:w-[60%] xl:w-[40%]'>
         {location.pathname === '/forgot-password' ? (
           <ForgotPassword />
         ) : (
-          <div className='flex h-full w-full flex-col px-32 py-6'>
+          <div className='md:py:4 flex h-full w-full flex-col px-4 py-5 md:px-20 xl:px-32 xl:py-6'>
             <div className='flex h-10 justify-around'>
               <SelectRoot
                 className='flex items-center rounded-md hover:bg-gray-100'
                 classNameOptionList='top-8'
                 options={options}
-                firstValue={selectedValue}
+                firstValue={options[0]}
+                onChange={handleChangeLanguage}
                 name='language'
               />
 
@@ -43,6 +42,7 @@ function AuthView() {
                 text='Liên hệ'
                 className='rounded-md bg-transparent px-2 text-sm text-black hover:cursor-pointer hover:bg-gray-100'
               />
+
               {location.pathname === '/login' ? (
                 <TextLink
                   to='/forgot-password'
@@ -66,7 +66,7 @@ function AuthView() {
                   className='h-10 w-20'
                 />
               </Link>
-              <span className='mt-2 text-3xl font-bold'>
+              <span className='mt-2 text-xl font-bold md:text-2xl xl:text-3xl'>
                 {location.pathname === '/login' ? 'Đăng nhập TSP' : 'Cập nhật mật khẩu mới'}
               </span>
             </div>

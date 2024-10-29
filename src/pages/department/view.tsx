@@ -3,7 +3,6 @@ import { useRef, useState } from 'react';
 
 import Button from '@/components/button';
 import { type ICheckboxProps } from '@/components/checkbox';
-import { Header } from '@/components/header';
 import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import { Pagination } from '@/components/pagination';
@@ -97,10 +96,6 @@ function DepartmentView({
         />
       )}
       <div className='flex h-full flex-col'>
-        <Header
-          title='Danh sách phòng ban'
-          className='text-2xl font-bold text-[#1A1A1A]'
-        />
         <div className='p-3'>
           <div className='flex-col rounded-xl bg-white p-6'>
             <div className='flex items-center justify-between'>

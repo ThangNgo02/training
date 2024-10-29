@@ -28,4 +28,6 @@ export enum IconVariable {
   download,
   upload,
   layoff,
+  toggle,
+  department,
 }

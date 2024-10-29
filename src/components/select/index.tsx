@@ -135,19 +135,21 @@ function SelectRoot({
           </div>
         )}
       </div>
-      <div className='mt-2 flex items-center text-sm'>
-        {err && (
-          <div className='bg-danger-bg_color flex gap-1 p-1'>
-            <IconRoot icon={IconVariable.error} />
-            <span className='text-12x16 text-neutral-100'>
-              <Localize tid={err ?? ''} />
-            </span>
-          </div>
-        )}
-        {methods?.formState?.errors[props.name]?.message && (
-          <p className='text-red-500'>{methods?.formState?.errors[props.name]?.message}</p>
-        )}
-      </div>
+      {err && (
+        <div className='mt-2 flex items-center text-sm'>
+          {err && (
+            <div className='bg-danger-bg_color flex gap-1 p-1'>
+              <IconRoot icon={IconVariable.error} />
+              <span className='text-12x16 text-neutral-100'>
+                <Localize tid={err ?? ''} />
+              </span>
+            </div>
+          )}
+          {methods?.formState?.errors[props.name]?.message && (
+            <p className='text-red-500'>{methods?.formState?.errors[props.name]?.message}</p>
+          )}
+        </div>
+      )}
     </>
   );
 }

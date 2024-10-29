@@ -30,7 +30,7 @@ const rootRoutes: Array<{
   }>;
 }> = [
   {
-    element: <HRLayout />,
+    element: <HRLayout title='Trang chủ' />,
     children: [
       {
         path: EnumPath.home,
@@ -86,7 +86,7 @@ const rootRoutes: Array<{
     ],
   },
   {
-    element: <HRLayout />,
+    element: <HRLayout title='Danh sách phòng ban' />,
     children: [
       {
         path: EnumPath.department,
@@ -100,7 +100,7 @@ const rootRoutes: Array<{
     ],
   },
   {
-    element: <HRLayout />,
+    element: <HRLayout title='Danh sách nhân viên' />,
     children: [
       {
         path: EnumPath.listEmployees,
@@ -114,7 +114,7 @@ const rootRoutes: Array<{
     ],
   },
   {
-    element: <HRLayout />,
+    element: <HRLayout title='Danh sách hợp đồng' />,
     children: [
       {
         path: EnumPath.contracts,
@@ -128,7 +128,7 @@ const rootRoutes: Array<{
     ],
   },
   {
-    element: <HRLayout />,
+    element: <HRLayout title='Trợ giúp' />,
     children: [
       {
         path: EnumPath.help,
@@ -142,7 +142,7 @@ const rootRoutes: Array<{
     ],
   },
   {
-    element: <HRLayout />,
+    element: <HRLayout title='Liên hệ' />,
     children: [
       {
         path: EnumPath.contact,

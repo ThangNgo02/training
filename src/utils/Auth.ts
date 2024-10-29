@@ -19,7 +19,6 @@ export interface IAuth {
   refreshAt: number;
   profileDetails: IAuthProfile;
 }
-
 class AuthService {
   static setPackageAuth(auth: IAuth, expireAt: number) {
     const config = new Config().getState();
@@ -28,7 +27,7 @@ class AuthService {
       path: '/',
       expires: new Date(expireAt),
     };
-    cookie.set(config.cookie.auth, auth, options);
+    cookie.set(config.cookie.auth, auth.token, options);
   }
 
   static setPackageProfile(profile: IAuthProfile, expireAt: number) {
