@@ -7,12 +7,14 @@ interface IContextLanguage {
   userLanguage: string;
   dictionary: object;
   userLanguageChange: (selected: any) => void;
+  handleChangeLanguage: (value: string) => void;
 }
 const config = new Config().getState();
 const initContextLanguage: IContextLanguage = {
   userLanguage: config.locale,
   dictionary: dictionaryList.en,
   userLanguageChange: (selected: any) => {},
+  handleChangeLanguage: (value: string) => {},
 };
 export const LanguageContext = createContext(initContextLanguage);
 interface IPropsProviderLanguage {
@@ -21,7 +23,11 @@ interface IPropsProviderLanguage {
 export const LanguageProvider = ({ children }: IPropsProviderLanguage) => {
   const defaultLanguage = localStorage.getItem('locale');
   const [userLanguage, setUserLanguage] = useState(defaultLanguage ?? config.locale);
-
+  const handleChangeLanguage = (value: string) => {
+    if (value) {
+      setUserLanguage(value);
+    }
+  };
   const value = React.useMemo(
     () => ({
       userLanguage,
@@ -32,6 +38,7 @@ export const LanguageProvider = ({ children }: IPropsProviderLanguage) => {
         setUserLanguage(newLanguage);
         localStorage.setItem('locale', newLanguage);
       },
+      handleChangeLanguage,
     }),
     [userLanguage],
   );

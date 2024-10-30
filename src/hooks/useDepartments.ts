@@ -4,6 +4,7 @@ import { type IApiRequest } from '@/api/api.interface';
 import { useRequest } from '@/api/api.middleware';
 import { type IOption } from '@/components/select';
 import Config from '@/env';
+import AuthService from '@/utils/Auth';
 import { LoggerService } from '@/utils/Logger';
 
 export const useDepartments = () => {
@@ -15,7 +16,7 @@ export const useDepartments = () => {
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
 

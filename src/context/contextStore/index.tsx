@@ -37,7 +37,6 @@ function ModalProvider(props: IModalProviderProps) {
     }),
     [state, detailEmployee],
   );
-
   return <ModalContext.Provider value={value}>{props.children}</ModalContext.Provider>;
 }
 

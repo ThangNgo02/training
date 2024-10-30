@@ -10,6 +10,7 @@ import Modal from '@/components/modal';
 import SelectRoot from '@/components/select';
 import toastDefault, { EnumToast } from '@/components/toast';
 import Config from '@/env';
+import AuthService from '@/utils/Auth';
 
 import { type IDataSubmitDepartmentType } from '../../type';
 
@@ -56,12 +57,12 @@ function ModalDepartment({
 
   // add department
   const addNewDepartmentApi: IApiRequest = {
-    url: `${config.api.host}${config.api.apiPath.apiDepartment}`,
+    url: `${config.api.apiPath.apiDepartment}`,
     method: 'post',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
   const handleResponseNewDepartment = {
@@ -86,12 +87,12 @@ function ModalDepartment({
   const { mutate: mutateAddNewDepartment } = useRequest(addNewDepartmentApi, handleResponseNewDepartment);
   // update department
   const updateDepartmentApi: IApiRequest = {
-    url: `${config.api.host}${config.api.apiPath.apiDepartment}/${departmentIdSelected}`,
+    url: `${config.api.apiPath.apiDepartment}/${departmentIdSelected}`,
     method: 'put',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
   const handleResponseUpdateDepartment = {
@@ -128,12 +129,12 @@ function ModalDepartment({
 
   // lock department
   const lockDepartmentApi: IApiRequest = {
-    url: `${config.api.host}${config.api.apiPath.apiDepartment}/${departmentIdSelected}/deactivate`,
+    url: `${config.api.apiPath.apiDepartment}/${departmentIdSelected}/deactivate`,
     method: 'post',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
   const handleResponseLockDepartment = {
@@ -166,12 +167,12 @@ function ModalDepartment({
 
   // unlock department
   const unlockDepartmentApi: IApiRequest = {
-    url: `${config.api.host}${config.api.apiPath.apiDepartment}/${departmentIdSelected}/activate`,
+    url: `${config.api.apiPath.apiDepartment}/${departmentIdSelected}/activate`,
     method: 'post',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
   const handleResponseUnlockDepartment = {
@@ -247,14 +248,14 @@ function ModalDepartment({
             .matches(phoneRegExp, 'Số điện thoại không hợp lệ'),
         }}
         onSubmit={handleSubmit}>
-        <div className='fixed bottom-0 left-0 right-0 top-0 z-40 flex items-center justify-center'>
+        <div className='fixed inset-0 z-50 flex items-center justify-center'>
           <div
-            className='absolute bottom-0 left-0 right-0 top-0 bg-[#000] opacity-40'
+            className='fixed inset-0 bg-[#000] opacity-40'
             onClick={handleCloseModal}
           />
 
           <div
-            className='relative z-50 h-[54%] w-[54%] rounded-xl bg-white px-8 py-4 text-black'
+            className='relative z-50 w-[90%] rounded-xl bg-white px-8 py-4 text-black sm:w-[65%] xl:w-[54%]'
             onClick={e => {
               e.stopPropagation();
             }}>
@@ -326,10 +327,10 @@ function ModalDepartment({
                 </div>
               </div>
 
-              <div className='flex items-center justify-between'>
+              <div className='flex items-center justify-end'>
                 {isModalUpdate &&
                   (initialValues?.active ? (
-                    <div className='mx-8 mb-[28px] flex items-center'>
+                    <div className='mb-[28px] flex items-center'>
                       <Button
                         text='Khóa'
                         type='button'
@@ -340,7 +341,7 @@ function ModalDepartment({
                       />
                     </div>
                   ) : (
-                    <div className='mx-8 mb-[28px] flex items-center'>
+                    <div className='mb-[28px] flex items-center'>
                       <Button
                         text='Mở khóa'
                         onClick={() => {
@@ -351,12 +352,12 @@ function ModalDepartment({
                       />
                     </div>
                   ))}
-                <div className='mx-8 mb-[28px] flex items-center justify-end gap-6'>
+                <div className='mx-4 mb-[28px] flex items-center justify-center gap-6 sm:mx-8 sm:justify-end'>
                   <Button
                     type='button'
                     onClick={handleCloseModal}
                     text='Đóng'
-                    className='w-20 rounded-lg border-[1.6px] border-[#98a2b3] bg-white px-4 py-1 font-medium text-[#5b5f66] hover:cursor-pointer hover:border-[#2db976] hover:text-[#2db976]'
+                    className='ml-2 w-20 rounded-lg border-[1.6px] border-[#98a2b3] bg-white px-4 py-1 font-medium text-[#5b5f66] hover:cursor-pointer hover:border-[#2db976] hover:text-[#2db976]'
                   />
                   <Button
                     type='submit'

@@ -761,4 +761,319 @@ export const renderICon: Record<IconVariable, React.ReactNode> = {
       />
     </svg>
   ),
+  [IconVariable.cake]: (
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'>
+      <path
+        d='M20 21V13C20 12.4696 19.7893 11.9609 19.4142 11.5858C19.0391 11.2107 18.5304 11 18 11H6C5.46957 11 4.96086 11.2107 4.58579 11.5858C4.21071 11.9609 4 12.4696 4 13V21'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M4 16C4 16 4.5 15 6 15C7.5 15 8.5 17 10 17C11.5 17 12.5 15 14 15C15.5 15 16.5 17 18 17C19.5 17 20 16 20 16'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M2 21H22'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M7 8V10'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M12 8V10'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M17 8V10'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M7 4H7.01'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M12 4H12.01'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M17 4H17.01'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  ),
+  [IconVariable.gender]: (
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'>
+      <mask
+        id='mask0_205_4091'
+        maskUnits='userSpaceOnUse'
+        x='1'
+        y='1'
+        width='22'
+        height='22'>
+        <path
+          d='M1 1H23V23H1V1Z'
+          fill='white'
+        />
+      </mask>
+      <g mask='url(#mask0_205_4091)'>
+        <path
+          d='M12 6.84375C12 9.69146 9.69146 12 6.84375 12C3.99604 12 1.64453 9.69146 1.64453 6.84375C1.64453 3.99604 3.99604 1.64453 6.84375 1.64453C9.69146 1.64453 12 3.99604 12 6.84375Z'
+          stroke='#475467'
+          strokeWidth='1.5'
+          strokeMiterlimit='10'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+        <path
+          d='M22.3555 17.1562C22.3555 20.004 20.004 22.3555 17.1562 22.3555C14.3085 22.3555 12 20.004 12 17.1562C12 14.3085 14.3085 12 17.1562 12C20.004 12 22.3555 14.3085 22.3555 17.1562Z'
+          stroke='#475467'
+          strokeWidth='1.5'
+          strokeMiterlimit='10'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+        <path
+          d='M6.84375 12V19.7344'
+          stroke='#475467'
+          strokeWidth='1.5'
+          strokeMiterlimit='10'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+        <path
+          d='M4.26562 17.1562H9.42188'
+          stroke='#475467'
+          strokeWidth='1.5'
+          strokeMiterlimit='10'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+        <path
+          d='M17.1562 4.43754V12'
+          stroke='#475467'
+          strokeWidth='1.5'
+          strokeMiterlimit='10'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+        <path
+          d='M14.5781 6.84375L17.1563 4.26562L19.7344 6.84375'
+          stroke='#475467'
+          strokeWidth='1.5'
+          strokeMiterlimit='10'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+      </g>
+    </svg>
+  ),
+  [IconVariable.office]: (
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'>
+      <path
+        d='M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21M23 21V19C22.9993 18.1137 22.7044 17.2528 22.1614 16.5523C21.6184 15.8519 20.8581 15.3516 20 15.13M16 3.13C16.8604 3.3503 17.623 3.8507 18.1676 4.55231C18.7122 5.25392 19.0078 6.11683 19.0078 7.005C19.0078 7.89317 18.7122 8.75608 18.1676 9.45769C17.623 10.1593 16.8604 10.6597 16 10.88M13 7C13 9.20914 11.2091 11 9 11C6.79086 11 5 9.20914 5 7C5 4.79086 6.79086 3 9 3C11.2091 3 13 4.79086 13 7Z'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  ),
+  [IconVariable.phoneProfile]: (
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'>
+      <path
+        d='M22.0004 16.9201V19.9201C22.0016 20.1986 21.9445 20.4743 21.8329 20.7294C21.7214 20.9846 21.5577 21.2137 21.3525 21.402C21.1473 21.5902 20.905 21.7336 20.6412 21.8228C20.3773 21.912 20.0978 21.9452 19.8204 21.9201C16.7433 21.5857 13.7874 20.5342 11.1904 18.8501C8.77425 17.3148 6.72576 15.2663 5.19042 12.8501C3.5004 10.2413 2.44866 7.27109 2.12042 4.1801C2.09543 3.90356 2.1283 3.62486 2.21692 3.36172C2.30555 3.09859 2.44799 2.85679 2.63519 2.65172C2.82238 2.44665 3.05023 2.28281 3.30421 2.17062C3.5582 2.05843 3.83276 2.00036 4.11042 2.0001H7.11042C7.59573 1.99532 8.06621 2.16718 8.43418 2.48363C8.80215 2.80008 9.0425 3.23954 9.11042 3.7201C9.23704 4.68016 9.47187 5.62282 9.81042 6.5301C9.94497 6.88802 9.97408 7.27701 9.89433 7.65098C9.81457 8.02494 9.62928 8.36821 9.36042 8.6401L8.09042 9.9101C9.51398 12.4136 11.5869 14.4865 14.0904 15.9101L15.3604 14.6401C15.6323 14.3712 15.9756 14.1859 16.3495 14.1062C16.7235 14.0264 17.1125 14.0556 17.4704 14.1901C18.3777 14.5286 19.3204 14.7635 20.2804 14.8901C20.7662 14.9586 21.2098 15.2033 21.527 15.5776C21.8441 15.9519 22.0126 16.4297 22.0004 16.9201Z'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  ),
+  [IconVariable.mail]: (
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'>
+      <path
+        d='M22 6C22 4.9 21.1 4 20 4H4C2.9 4 2 4.9 2 6M22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6M22 6L12 13L2 6'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  ),
+  [IconVariable.calendar]: (
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'>
+      <path
+        d='M21 10V6C21 5.46957 20.7893 4.96086 20.4142 4.58579C20.0391 4.21071 19.5304 4 19 4H5C4.46957 4 3.96086 4.21071 3.58579 4.58579C3.21071 4.96086 3 5.46957 3 6V20C3 21.1 3.9 22 5 22H12'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M16 2V6'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M8 2V6'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M3 10H21'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M21.2902 14.7002C20.9494 14.3611 20.5158 14.1307 20.044 14.0382C19.5723 13.9456 19.0838 13.995 18.6402 14.1802C18.3402 14.3002 18.0702 14.4802 17.8402 14.7102L17.5002 15.0502L17.1502 14.7102C16.8105 14.3694 16.3774 14.1372 15.9056 14.0428C15.4339 13.9485 14.9447 13.9963 14.5002 14.1802C14.2002 14.3002 13.9402 14.4802 13.7102 14.7102C12.7602 15.6502 12.7102 17.2402 13.9102 18.4502L17.5002 22.0002L21.1002 18.4502C22.3002 17.2402 22.2402 15.6502 21.2902 14.7102V14.7002Z'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  ),
+  [IconVariable.userPrivate]: (
+    <svg
+      width='16'
+      height='16'
+      viewBox='0 0 16 16'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'>
+      <path
+        d='M13.3337 14V12.6667C13.3337 11.9594 13.0527 11.2811 12.5526 10.781C12.0525 10.281 11.3742 10 10.667 10H5.33366C4.62641 10 3.94814 10.281 3.44804 10.781C2.94794 11.2811 2.66699 11.9594 2.66699 12.6667V14M10.667 4.66667C10.667 6.13943 9.47308 7.33333 8.00033 7.33333C6.52757 7.33333 5.33366 6.13943 5.33366 4.66667C5.33366 3.19391 6.52757 2 8.00033 2C9.47308 2 10.667 3.19391 10.667 4.66667Z'
+        stroke='#344054'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  ),
+  [IconVariable.changePassword]: (
+    <svg
+      width='14'
+      height='16'
+      viewBox='0 0 14 16'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'>
+      <path
+        d='M3.66667 7.3335V4.66683C3.66667 3.78277 4.01786 2.93493 4.64298 2.30981C5.2681 1.68469 6.11595 1.3335 7 1.3335C7.88406 1.3335 8.7319 1.68469 9.35702 2.30981C9.98214 2.93493 10.3333 3.78277 10.3333 4.66683V7.3335M2.33333 7.3335H11.6667C12.403 7.3335 13 7.93045 13 8.66683V13.3335C13 14.0699 12.403 14.6668 11.6667 14.6668H2.33333C1.59695 14.6668 1 14.0699 1 13.3335V8.66683C1 7.93045 1.59695 7.3335 2.33333 7.3335Z'
+        stroke='#344054'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  ),
+  [IconVariable.logoutRed]: (
+    <svg
+      width='14'
+      height='14'
+      viewBox='0 0 14 14'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'>
+      <path
+        d='M5 13H2.33333C1.97971 13 1.64057 12.8595 1.39052 12.6095C1.14048 12.3594 1 12.0203 1 11.6667V2.33333C1 1.97971 1.14048 1.64057 1.39052 1.39052C1.64057 1.14048 1.97971 1 2.33333 1H5M9.66667 10.3333L13 7M13 7L9.66667 3.66667M13 7H5'
+        stroke='#D92D20'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  ),
+  [IconVariable.avatarDefault]: (
+    <svg
+      width='24'
+      height='24'
+      viewBox='0 0 24 24'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'>
+      <path
+        d='M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21M16 7C16 9.20914 14.2091 11 12 11C9.79086 11 8 9.20914 8 7C8 4.79086 9.79086 3 12 3C14.2091 3 16 4.79086 16 7Z'
+        stroke='#3c9d66'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  ),
+  [IconVariable.changePasswordModal]: (
+    <svg
+      width='14'
+      height='16'
+      viewBox='0 0 14 16'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'>
+      <path
+        d='M3.66667 7.3335V4.66683C3.66667 3.78277 4.01786 2.93493 4.64298 2.30981C5.2681 1.68469 6.11595 1.3335 7 1.3335C7.88406 1.3335 8.7319 1.68469 9.35702 2.30981C9.98214 2.93493 10.3333 3.78277 10.3333 4.66683V7.3335M2.33333 7.3335H11.6667C12.403 7.3335 13 7.93045 13 8.66683V13.3335C13 14.0699 12.403 14.6668 11.6667 14.6668H2.33333C1.59695 14.6668 1 14.0699 1 13.3335V8.66683C1 7.93045 1.59695 7.3335 2.33333 7.3335Z'
+        stroke='#535456FF'
+        strokeWidth='1.5'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  ),
 };

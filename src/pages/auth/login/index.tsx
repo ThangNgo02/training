@@ -6,7 +6,6 @@ import { useRequest } from '@/api/api.middleware';
 import { EnumPath } from '@/common/enum/Enums';
 import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
-import toastDefault, { EnumToast } from '@/components/toast';
 import Config from '@/env';
 import AuthService from '@/utils/Auth';
 import { LoggerService } from '@/utils/Logger';
@@ -16,19 +15,19 @@ import LoginView from './view';
 
 function Login() {
   const navigate = useNavigate();
+  const config = new Config().getState();
 
   const loginApi: IApiRequest = {
-    url: `${Config.getInstance().getState().api.host}${Config.getInstance().getState().api.apiPath.login}`,
+    url: `${config.api.apiPath.login}`,
     method: 'post',
   };
 
-  const handleSubmitLogin = async (data: any) => {
+  const handleSubmitLogin = (data: any) => {
     mutate({ ...data, tenant: 'ebst' });
   };
 
   const handleResponse = {
     handleRequestSuccess: (response: IRootObject) => {
-      localStorage.setItem('tokenLogin', response.accessToken);
       try {
         const auth = {
           token: `${response.accessToken}`,
@@ -54,7 +53,6 @@ function Login() {
 
         AuthService.setAllPackage(auth, profile);
         navigate(EnumPath.home);
-        toastDefault(EnumToast.SUCCESS, 'Đăng nhập thành công');
       } catch (error: any) {
         LoggerService.error('HandleLogin execute handleRequestSuccess receive error', error);
       }

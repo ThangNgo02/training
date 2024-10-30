@@ -11,6 +11,7 @@ import toastDefault, { EnumToast } from '@/components/toast';
 import { ModalContext } from '@/context/contextStore';
 import Config from '@/env';
 import { type IColumnsTableProps } from '@/types';
+import AuthService from '@/utils/Auth';
 import { handleExportStaff } from '@/utils/ExportFile';
 import { LoggerService } from '@/utils/Logger';
 
@@ -176,7 +177,7 @@ export function ListEmployeesPage() {
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
 
@@ -223,12 +224,12 @@ export function ListEmployeesPage() {
   };
 
   const getEmployeeByIdApi: IApiRequest = {
-    url: `${config.api.host}/${config.api.apiPath.apiEmployee}/${employeeIdSelected}`,
+    url: `${config.api.apiPath.apiEmployee}/${employeeIdSelected}`,
     method: 'get',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
   const handleResponseDetailEmployee = {
@@ -308,7 +309,7 @@ export function ListEmployeesPage() {
   };
 
   const handleExportClick = async () => {
-    const url = `${config.api.host}${config.api.apiPath.exportStaff}?${queryParamsStringExportFile}`;
+    const url = `${config.api.apiPath.exportStaff}?${queryParamsStringExportFile}`;
     const currentDate = new Date();
     const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
     const fileName = `hosonhanvien_${formattedDate}`;

@@ -8,6 +8,7 @@ import { Loading } from '@/components/loading';
 import { Tag } from '@/components/tag';
 import Config from '@/env';
 import { type IColumnsTableProps } from '@/types';
+import AuthService from '@/utils/Auth';
 import { LoggerService } from '@/utils/Logger';
 
 import { type IDataSubmitDepartmentType, type IDataTableDepartmentType, type IQueryParamsDepartmentType } from './type';
@@ -138,7 +139,7 @@ function DepartmentPage() {
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
   const handleResponseGetAllDepartments = {
@@ -181,12 +182,12 @@ function DepartmentPage() {
   }, [queryParamsString]);
 
   const getDepartmentByIdApi: IApiRequest = {
-    url: `${config.api.host}/${config.api.apiPath.apiDepartment}/${departmentIdSelected}`,
+    url: `${config.api.apiPath.apiDepartment}/${departmentIdSelected}`,
     method: 'get',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
   const handleResponseDetailDepartment = {

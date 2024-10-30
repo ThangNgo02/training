@@ -50,7 +50,11 @@ export interface IDataResponseAPIType {
   totalElements?: number;
   totalPages?: number;
 }
-
+export interface IDetailEmployeeResponseAPIType {
+  code?: number;
+  data?: IDataEmployeeType;
+  message?: string;
+}
 export interface IDataTableType {
   id: number | null | undefined;
   code: string | null | undefined;

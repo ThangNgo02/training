@@ -8,6 +8,17 @@ export enum EnumPath {
   help = '/help',
   contact = '/contact',
   department = '/department',
+  userProfile = '/user-profile',
+}
+
+export enum EnumSidebar {
+  home = 'Trang chủ',
+  employees = 'Danh sách nhân viên',
+  contracts = 'Danh sách hợp đồng',
+  help = 'Trợ giúp',
+  contact = 'Liên hệ',
+  department = 'Danh sách phòng ban',
+  userProfile = 'Thông tin cá nhân',
 }
 
 export enum EnumRole {}

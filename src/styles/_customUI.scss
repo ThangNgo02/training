@@ -145,3 +145,13 @@ input::-webkit-inner-spin-button {
 input[type="number"] {
   -moz-appearance: textfield;
 }
+
+.sidebar-transition {
+  transition:
+    box-shadow 0.3s 0.15s,
+    transform 0.3s,
+    margin-left 0.3s,
+    margin-right 0.3s,
+    width 0.3s,
+    z-index 0s ease 0.3s;
+}

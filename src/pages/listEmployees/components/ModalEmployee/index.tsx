@@ -5,6 +5,7 @@ import { type IApiRequest } from '@/api/api.interface';
 import { useRequest } from '@/api/api.middleware';
 import toastDefault, { EnumToast } from '@/components/toast';
 import Config from '@/env';
+import AuthService from '@/utils/Auth';
 
 import { type IAddNewEmployeeDataType, type IModalEmployeeProps, type IUpdateEmployeeDataType } from './type';
 import { ModalEmployeeView } from './view';
@@ -14,9 +15,7 @@ export function ModalEmployee({
   setIsLoading,
   handleGetAllEmployee,
   isAddNotUpdate,
-  setIsAddNotUpdate,
   fileList,
-  setIsReset,
   setFileList,
   fileListUpdate,
   setFileListUpdate,
@@ -24,15 +23,15 @@ export function ModalEmployee({
   employeeIdSelected,
 }: IModalEmployeeProps) {
   const [idEmployee, setIdEmployee] = useState(employeeIdSelected);
-  const config = Config.getInstance().getState();
+  const config = new Config().getState();
 
   const addNewEmployeeApi: IApiRequest = {
-    url: `${config.api.host}${config.api.apiPath.apiEmployee}`,
+    url: `${config.api.apiPath.apiEmployee}`,
     method: 'post',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
   const handleResponseNewEmployee = {
@@ -70,12 +69,12 @@ export function ModalEmployee({
     mutateAddNewEmployee({ ...cleanedData });
   };
   const uploadApi: IApiRequest = {
-    url: `${config.api.host}${config.api.apiPath.uploadFiles}/${idEmployee}`,
+    url: `${config.api.apiPath.uploadFiles}/${idEmployee}`,
     method: 'post',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'multipart/form-data',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
   const handleResponseUpload = {
@@ -110,12 +109,12 @@ export function ModalEmployee({
   const [filesDeleted, setFilesDeleted] = useState<string[]>([]);
 
   const uploadDeleteApi: IApiRequest = {
-    url: `${config.api.host}${config.api.apiPath.uploadFiles}/delete/${idEmployee}?staffMetaDataFileIds=${filesDeleted.join(',')}`,
+    url: `${config.api.apiPath.uploadFiles}/delete/${idEmployee}?staffMetaDataFileIds=${filesDeleted.join(',')}`,
     method: 'delete',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'multipart/form-data',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
   const handleResponseUploadDelete = {
@@ -127,12 +126,12 @@ export function ModalEmployee({
   const { mutate: mutateUploadDelete } = useRequest(uploadDeleteApi, handleResponseUploadDelete);
 
   const updateEmployeeApi: IApiRequest = {
-    url: `${config.api.host}${config.api.apiPath.apiEmployee}/${employeeIdSelected}`,
+    url: `${config.api.apiPath.apiEmployee}/${employeeIdSelected}`,
     method: 'put',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
 
@@ -193,12 +192,12 @@ export function ModalEmployee({
 
   const [isOpenModalLock, setIsOpenModalLock] = useState<boolean>(false);
   const lockAccountApi: IApiRequest = {
-    url: `${config.api.host}${config.api.apiPath.changeStatusEmployee}/${employeeIdSelected}`,
+    url: `${config.api.apiPath.changeStatusEmployee}/${employeeIdSelected}`,
     method: 'put',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
   const handleResponseLockAccount = {
@@ -223,12 +222,12 @@ export function ModalEmployee({
   };
   const [isOpenModalUnLock, setIsOpenModalUnLock] = useState<boolean>(false);
   const unLockAccountApi: IApiRequest = {
-    url: `${config.api.host}${config.api.apiPath.changeStatusEmployee}/${employeeIdSelected}`,
+    url: `${config.api.apiPath.changeStatusEmployee}/${employeeIdSelected}`,
     method: 'put',
     headers: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+      Authorization: `Bearer ${AuthService.getPackageAuth()}`,
     },
   };
   const handleResponseUnLockAccount = {

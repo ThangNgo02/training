@@ -93,81 +93,90 @@ export function ListEmployeesView({
       <>
         <div className='p-3'>
           <div className='flex-col rounded-xl bg-white p-6'>
-            <div className='flex items-center justify-between'>
+            <div className='flex flex-col items-center justify-center xl:flex-row xl:items-center xl:justify-between'>
               <Search
                 onChangeText={handleOnChangeSearch}
                 placeholder='Mã / Tên nhân viên'
                 iconStart={<IconRoot icon={IconVariable.search} />}
+                className='mb-5 w-full lg:w-[300px]'
+                classNameInput='w-full'
               />
 
-              <div className='flex items-center gap-4'>
-                <Button
-                  onClick={() => {
-                    window.location.reload();
-                  }}
-                  iconStart={<IconRoot icon={IconVariable.refresh} />}
-                  className='relative flex items-center gap-2 rounded-lg border px-4 py-[12px] hover:border-[#2DB976]'></Button>
-                <Button
-                  text='Cột'
-                  className='relative flex items-center gap-2 rounded-lg border px-4 py-[10px] hover:border-[#2DB976]'
-                  iconStart={<IconRoot icon={IconVariable.setting} />}
-                  refTo={refSelectCheckbox}
-                  onClick={() => {
-                    setIsOpenSelectCheckbox(!isOpenSelectCheckbox);
-                  }}>
-                  {isOpenSelectCheckbox && (
-                    <SelectCheckboxs
-                      arrOptions={arrOptions}
-                      checkboxStates={checkboxStates}
-                      onChangeCheckboxs={onCheckboxChange}
-                    />
-                  )}
-                </Button>
-                <Button
-                  text='Bộ lọc'
-                  refTo={refBtn}
-                  className='relative box-border flex items-center gap-2 rounded-lg border px-4 py-[10px] hover:border-[#2DB976]'
-                  iconStart={<IconRoot icon={IconVariable.filter} />}
-                  onClick={() => {
-                    setIsOpenModalFilter(!isOpenModalFilter);
-                  }}>
-                  {isOpenModalFilter && (
-                    <ModalFilter
-                      listDepartment={listDepartments}
-                      handleSubmitFormFilter={handleFormFilter}
-                      initialValues={initialValues}
-                    />
-                  )}
-                </Button>
-                <Button
-                  // eslint-disable-next-line @typescript-eslint/no-misused-promises
-                  onClick={handleExportStaff}
-                  text='Xuất dữ liệu'
-                  className='flex items-center gap-2 rounded-lg border px-4 py-[10px] hover:border-[#2DB976]'
-                  iconStart={<IconRoot icon={IconVariable.download} />}
-                />
+              <div className='flex flex-col items-center gap-4 xl:flex-row'>
+                <div className='flex items-center gap-4'>
+                  <Button
+                    onClick={() => {
+                      window.location.reload();
+                    }}
+                    iconStart={<IconRoot icon={IconVariable.refresh} />}
+                    className='relative flex items-center gap-2 rounded-lg border px-4 py-[12px] hover:border-[#2DB976]'></Button>
+                  <Button
+                    text='Cột'
+                    className='relative flex items-center gap-2 rounded-lg border px-4 py-[10px] hover:border-[#2DB976]'
+                    iconStart={<IconRoot icon={IconVariable.setting} />}
+                    refTo={refSelectCheckbox}
+                    onClick={() => {
+                      setIsOpenSelectCheckbox(!isOpenSelectCheckbox);
+                    }}>
+                    {isOpenSelectCheckbox && (
+                      <SelectCheckboxs
+                        arrOptions={arrOptions}
+                        checkboxStates={checkboxStates}
+                        onChangeCheckboxs={onCheckboxChange}
+                      />
+                    )}
+                  </Button>
+                  <Button
+                    text='Bộ lọc'
+                    refTo={refBtn}
+                    className='relative box-border flex items-center gap-2 rounded-lg border px-4 py-[10px] hover:border-[#2DB976]'
+                    iconStart={<IconRoot icon={IconVariable.filter} />}
+                    onClick={() => {
+                      setIsOpenModalFilter(!isOpenModalFilter);
+                    }}>
+                    {isOpenModalFilter && (
+                      <ModalFilter
+                        listDepartment={listDepartments}
+                        handleSubmitFormFilter={handleFormFilter}
+                        initialValues={initialValues}
+                      />
+                    )}
+                  </Button>
+                </div>
 
-                <Button
-                  onClick={() => {
-                    handleSetEmployeeDetail({});
-                    setIsOpenModal(true);
-                    setIsAddNotUpdate(true);
-                    if (setIsReset) {
-                      setIsReset(true);
-                    }
-                  }}
-                  className='flex items-center rounded-lg border bg-[#2DB976] px-4 py-[10px] text-white hover:border-[#2DB976]'
-                  text='Thêm mới'
-                  iconStart={<IconRoot icon={IconVariable.plus} />}
-                />
+                <div className='flex items-center gap-4'>
+                  <Button
+                    // eslint-disable-next-line @typescript-eslint/no-misused-promises
+                    onClick={handleExportStaff}
+                    text='Xuất dữ liệu'
+                    className='flex items-center gap-2 rounded-lg border px-4 py-[10px] hover:border-[#2DB976]'
+                    iconStart={<IconRoot icon={IconVariable.download} />}
+                  />
+
+                  <Button
+                    onClick={() => {
+                      handleSetEmployeeDetail({});
+                      setIsOpenModal(true);
+                      setIsAddNotUpdate(true);
+                      if (setIsReset) {
+                        setIsReset(true);
+                      }
+                    }}
+                    className='flex items-center rounded-lg border bg-[#2DB976] px-4 py-[10px] text-white hover:border-[#2DB976]'
+                    text='Thêm mới'
+                    iconStart={<IconRoot icon={IconVariable.plus} />}
+                  />
+                </div>
               </div>
             </div>
-            <div className='mt-5 flex items-center justify-end gap-4'>
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={onPageChange}
-              />
+            <div className='mt-5 flex flex-col items-center justify-center gap-4 sm:flex-row sm:gap-10 xl:items-center xl:justify-end'>
+              <div className=' flex items-center justify-center xl:mb-0'>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={onPageChange}
+                />
+              </div>
               <SelectRoot
                 name='size'
                 options={optionsRowDisplay}

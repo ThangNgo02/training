@@ -2,6 +2,8 @@ import axios from 'axios';
 
 import toastDefault, { EnumToast } from '@/components/toast';
 
+import AuthService from './Auth';
+
 export const handleExportStaff = async (url: string, fileName: string, setIsLoading: (loading: boolean) => void) => {
   setIsLoading(true);
   try {
@@ -9,7 +11,7 @@ export const handleExportStaff = async (url: string, fileName: string, setIsLoad
       method: 'get',
       url,
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('tokenLogin')}`,
+        Authorization: `Bearer ${AuthService.getPackageAuth()}`,
         // eslint-disable-next-line @typescript-eslint/naming-convention
         'Accept-Language': 'vi',
         // eslint-disable-next-line @typescript-eslint/naming-convention

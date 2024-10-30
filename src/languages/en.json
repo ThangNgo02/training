@@ -1,3 +1,9 @@
 {
-  "welcome.to": "Welcome to"
+  "welcome.to": "Welcome to",
+  "hello": "Hello",
+  "contact": "Contact",
+  "logout": "Logout",
+  "home": "Home Page",
+  "listDepartments": "List Departments",
+  "listEmployees": "List Employees"
 }

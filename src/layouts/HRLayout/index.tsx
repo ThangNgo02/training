@@ -16,13 +16,9 @@ function HRLayout({ title }: IHeaderProps) {
 
   return (
     <div className='relative flex h-screen'>
-      <SideBarHR
-        className={`h-full w-[320px] transition-transform duration-300 lg:translate-x-0 ${
-          isToggle ? 'translate-x-0' : '-translate-x-full'
-        } lg:block ${isToggle ? 'lg:hidden' : 'hidden'}`}
-      />
+      <SideBarHR className={`h-full w-[320px] lg:block ${isToggle ? 'lg:hidden' : 'hidden'}`} />
 
-      <div className={`duration-800 flex-1 overflow-hidden bg-[#f5f5f5] transition-all`}>
+      <div className={`sidebar-transition flex-1 overflow-hidden bg-[#f5f5f5]`}>
         <Header
           iconStart={
             <IconRoot
@@ -34,7 +30,7 @@ function HRLayout({ title }: IHeaderProps) {
             />
           }
           title={title}
-          className='text-2xl font-bold text-[#1A1A1A]'
+          className='text-base font-bold text-[#1A1A1A] sm:text-2xl'
         />
         <Outlet />
       </div>

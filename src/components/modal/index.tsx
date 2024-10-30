@@ -20,7 +20,7 @@ function Modal({ isOpenModal = false, setIsOpenModal, ...props }: IModalProps) {
     <>
       {isOpenModal && (
         <div
-          className='fixed left-0 top-0 z-[100] flex h-full w-full items-center justify-center bg-overlay-modal'
+          className='fixed inset-0 z-[100] flex items-center justify-center bg-overlay-modal'
           onClick={handleClose}>
           <div
             onClick={e => {
@@ -34,22 +34,22 @@ function Modal({ isOpenModal = false, setIsOpenModal, ...props }: IModalProps) {
               <p className='mb-3 text-center text-[18px] font-semibold leading-[28px]'>{props.title}</p>
               <p className='mb-2 text-center text-sm font-normal leading-[18px] text-[#616161]'>{props.content}</p>
             </div>
-            <div className='flex w-full items-center justify-center gap-4'>
+            <div className='flex w-full items-center justify-center gap-10 px-5'>
               {props.onClose && (
                 <Button
-                  text='HỦY'
+                  text='Hủy'
                   onClick={() => {
                     props.onClose?.();
                     handleClose();
                   }}
-                  className='flex w-full items-center justify-center rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-700'
+                  className='flex w-60 items-center justify-center rounded-md bg-red-500 px-4 py-2 text-white hover:bg-red-700'
                 />
               )}
               {props.onConfirm && (
                 <Button
                   text='Xác nhận'
                   onClick={props.onConfirm}
-                  className='flex w-full items-center justify-center rounded-md bg-[#2DB976] px-4 py-2 text-white hover:bg-[#21794e]'
+                  className='flex w-60 items-center justify-center rounded-md bg-[#2DB976] px-4 py-2 text-white hover:bg-[#21794e]'
                 />
               )}
             </div>

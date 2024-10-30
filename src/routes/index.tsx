@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBrowserRouter } from 'react-router-dom';
 
-import { EnumPath } from '@/common/enum/Enums';
+import { EnumPath, EnumSidebar } from '@/common/enum/Enums';
 import Notfound from '@/components/notfound';
 import FeatureComponent from '@/layouts/GeneralLayout';
 import HRLayout from '@/layouts/HRLayout';
@@ -9,6 +9,7 @@ import { Contact } from '@/pages/contact';
 import { ContractsPage } from '@/pages/contract';
 import DepartmentPage from '@/pages/department';
 import { Help } from '@/pages/help';
+import InfoPrivatePage from '@/pages/infoPrivate';
 import { ListEmployeesPage } from '@/pages/listEmployees';
 
 import PrivateRoute from './privateRoute';
@@ -86,7 +87,21 @@ const rootRoutes: Array<{
     ],
   },
   {
-    element: <HRLayout title='Danh sách phòng ban' />,
+    element: <HRLayout title={EnumSidebar.userProfile} />,
+    children: [
+      {
+        path: EnumPath.userProfile,
+        element: (
+          <PrivateRoute
+            role={[]}
+            children={<InfoPrivatePage />}
+          />
+        ),
+      },
+    ],
+  },
+  {
+    element: <HRLayout title={EnumSidebar.department} />,
     children: [
       {
         path: EnumPath.department,
@@ -100,7 +115,7 @@ const rootRoutes: Array<{
     ],
   },
   {
-    element: <HRLayout title='Danh sách nhân viên' />,
+    element: <HRLayout title={EnumSidebar.employees} />,
     children: [
       {
         path: EnumPath.listEmployees,
@@ -114,7 +129,7 @@ const rootRoutes: Array<{
     ],
   },
   {
-    element: <HRLayout title='Danh sách hợp đồng' />,
+    element: <HRLayout title={EnumSidebar.contracts} />,
     children: [
       {
         path: EnumPath.contracts,
@@ -128,7 +143,7 @@ const rootRoutes: Array<{
     ],
   },
   {
-    element: <HRLayout title='Trợ giúp' />,
+    element: <HRLayout title={EnumSidebar.help} />,
     children: [
       {
         path: EnumPath.help,
@@ -142,7 +157,7 @@ const rootRoutes: Array<{
     ],
   },
   {
-    element: <HRLayout title='Liên hệ' />,
+    element: <HRLayout title={EnumSidebar.contact} />,
     children: [
       {
         path: EnumPath.contact,

@@ -1,3 +1,9 @@
 {
-  "dashboard": "Tổng quan"
+  "dashboard": "Tổng quan",
+  "hello": "Xin chao",
+  "contact": "Liên hệ",
+  "logout": "Đăng xuất",
+  "home": "Trang chủ",
+  "listDepartments": "Danh sách phòng ban",
+  "listEmployees": "Danh sách nhân viên"
 }

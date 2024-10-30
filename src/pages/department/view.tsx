@@ -97,15 +97,17 @@ function DepartmentView({
       )}
       <div className='flex h-full flex-col'>
         <div className='p-3'>
-          <div className='flex-col rounded-xl bg-white p-6'>
-            <div className='flex items-center justify-between'>
+          <div className='flex-col items-center justify-center rounded-xl bg-white p-6'>
+            <div className='flex flex-col items-center justify-center sm:flex-row sm:items-center sm:justify-between'>
               <Search
                 onChangeText={handleOnChangeSearch}
                 placeholder='Mã / Tên phòng ban'
                 iconStart={<IconRoot icon={IconVariable.search} />}
+                className='mb-5 w-full sm:w-[300px]'
+                classNameInput='w-full'
               />
 
-              <div className='flex items-center gap-4'>
+              <div className='flex items-center justify-center gap-4'>
                 <Button
                   onClick={() => {
                     window.location.reload();
@@ -139,12 +141,14 @@ function DepartmentView({
                 />
               </div>
             </div>
-            <div className='mt-5 flex items-center justify-end gap-4'>
-              <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={onPageChange}
-              />
+            <div className='mt-5 flex flex-col items-center justify-center gap-4 sm:flex-row sm:items-center sm:justify-end'>
+              <div className='mb-5 flex items-center justify-center sm:mb-0'>
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={onPageChange}
+                />
+              </div>
               <SelectRoot
                 name='size'
                 options={optionsRowDisplay}
