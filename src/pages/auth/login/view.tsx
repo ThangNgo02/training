@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import * as yup from 'yup';
 
 import Button from '@/components/button';
 import Form from '@/components/form';
@@ -21,7 +22,19 @@ function LoginView({ isLoading = false, handleSubmit }: ILogin) {
   return (
     <Form
       onSubmit={handleSubmit}
-      customClassName='flex flex-col'>
+      customClassName='flex flex-col'
+      validator={{
+        username: yup
+          .string()
+          .trim()
+          .typeError('Vui lòng nhập username để đăng nhập')
+          .required('Vui lòng nhập username để đăng nhập'),
+        password: yup
+          .string()
+          .trim()
+          .typeError('Vui lòng nhập mật khẩu để đăng nhập')
+          .required('Vui lòng nhập mật khẩu để đăng nhập'),
+      }}>
       {isLoading && <Loading />}
       <div className='mt-6 flex flex-col gap-4'>
         <InputRoot

@@ -84,16 +84,19 @@ function ModalChangePassword({ setOpenModalChangePassword }: IModalChangePasswor
           validator={{
             oldPassword: yup
               .string()
+              .trim()
               .typeError('Vui lòng nhập mật khẩu hiện tại')
               .required('Vui lòng nhập mật khẩu hiện tại')
               .min(6, 'Mật khẩu phải tối thiểu 6 ký tự'),
             newPassword: yup
               .string()
+              .trim()
               .typeError('Vui lòng nhập mật khẩu mới')
               .required('Vui lòng nhập mật khẩu mới')
               .min(6, 'Mật khẩu mới phải tối thiểu 6 ký tự'),
             confirmNewPassword: yup
               .string()
+              .trim()
               .oneOf([yup.ref('newPassword')], 'Mật khẩu xác nhận không khớp')
               .typeError('Vui lòng nhập lại mật khẩu mới')
               .required('Vui lòng nhập lại mật khẩu mới')
