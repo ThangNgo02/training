@@ -10,10 +10,6 @@ import { LoggerService } from '@/utils/Logger';
 
 import LoginView from './view';
 
-if (AuthService.getPackageAuth()) {
-  AuthService.removeAll();
-}
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const LoginPage: React.FC = () => {
   const [error, setError] = useState('No error');
@@ -69,6 +65,7 @@ const LoginPage: React.FC = () => {
   // Custom hook to handle the login request name mutate as mutateLogin
   const { mutate: mutateLogin } = useRequest(loginApi, handleResponse);
   // Trigger login request
+
   const handleLogin = async (data: any) => {
     mutateLogin({ ...data, tenant: 'ebst' });
   };

@@ -3,4 +3,10 @@ export enum IconVariable {
   alert,
   closeEyes,
   openEyes,
+
+  tick,
+  lock,
+  search,
+  reload,
+  plus,
 }

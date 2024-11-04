@@ -11,6 +11,8 @@ import PublicRoute from './publicRoute';
 const HomePage = React.lazy(async () => import('@/pages/home'));
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const LoginPage = React.lazy(async () => import('@/pages/login'));
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const DepartmentPage = React.lazy(async () => import('@/pages/department'));
 
 const rootRoutes: Array<{
   element: JSX.Element;
@@ -40,6 +42,15 @@ const rootRoutes: Array<{
           <PublicRoute
             role={[]}
             children={<LoginPage />}
+          />
+        ),
+      },
+      {
+        path: EnumPath.department,
+        element: (
+          <PrivateRoute
+            role={[]}
+            children={<DepartmentPage />}
           />
         ),
       },

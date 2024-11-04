@@ -8,7 +8,7 @@ import { IconVariable } from '@/components/icon/types';
 import InputRoot from '@/components/input';
 import { Localize } from '@/context/languages';
 
-import InputButton from '../../components/loginButton/button';
+import Button from '../../components/Button/button';
 
 interface ILoginViewProps {
   handleSubmit: (data: any) => void;
@@ -140,7 +140,7 @@ const LoginView: React.FC<ILoginViewProps> = ({ handleSubmit, error }) => {
         </div>
 
         <div className='flex items-center justify-between'>
-          <InputButton
+          <Button
             type='submit'
             label='Đăng nhập'
           />

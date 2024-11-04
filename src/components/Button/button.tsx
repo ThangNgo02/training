@@ -1,12 +1,13 @@
 import React from 'react';
 
-interface IInputButtonProps {
+interface ILoginButtonProps {
   onClick?: () => void;
   label: string;
   type?: 'button' | 'submit';
 }
 
-const loginButton: React.FC<IInputButtonProps> = ({ onClick, label }) => {
+// eslint-disable-next-line @typescript-eslint/naming-convention
+const Button: React.FC<ILoginButtonProps> = ({ onClick, label }) => {
   return (
     <button
       onClick={onClick}
@@ -16,4 +17,4 @@ const loginButton: React.FC<IInputButtonProps> = ({ onClick, label }) => {
   );
 };
 
-export default loginButton;
+export default Button;

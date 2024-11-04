@@ -1,6 +1,7 @@
 export enum EnumPath {
   home = '/',
   login = '/login',
+  department = '/department',
 }
 
 export enum EnumRole {}

@@ -1,0 +1,11 @@
+/** change table header background color and text color */
+.ant-table
+  .ant-table-container
+  .ant-table-content
+  table
+  thead.ant-table-thead
+  .ant-table-cell {
+  background-color: #4d7bc2;
+  color: white;
+}
+
