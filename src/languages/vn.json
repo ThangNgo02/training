@@ -1,3 +1,25 @@
 {
-  "dashboard": "Tổng quan"
+  "contact": "Liên hệ",
+  "register": "Đăng ký",
+  "login": "Đăng nhập",
+  "username": "Tên đăng nhập",
+  "password": "Mật khẩu",
+  "enter.username": "Nhập tên đăng nhập",
+  "enter.password": "Nhập mật khẩu",
+  "forgotPassword": "Quên mật khẩu",
+  "fullName": "Họ và tên",
+  "enter.fullName": "Nhập họ và tên",
+  "back": "Trở về",
+  "verifyPhoneNumber": "Xác thực số điện thoại",
+  "enter.verifyPhoneNumber": "Nhập số điện thoại bạn muốn xác thực",
+  "phoneNumber": "Số điện thoại",
+  "enter.phoneNumber": "Nhập số điện thoại",
+  "continue": "Tiếp theo",
+  "10PhoneNumber": "Số điện thoại phải có 10 ký tự số",
+  "sendPhoneNumber": "Mã xác thực 6 chữ số đã được gửi đến số điện thoại",
+  "enter.verificationCode": "Nhập mã xác thực",
+  "resendCode": "Gửi lại mã xác thực sau",
+  "second": "giây",
+  "isResendCode": "Mã OTP đã được gửi lại",
+  "home": "Trang chủ"
 }

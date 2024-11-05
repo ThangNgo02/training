@@ -5,6 +5,7 @@ import FormRoot from '@/components/form';
 import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import InputRoot from '@/components/input';
+import { LocalizeTypeFunc } from "@/context/languages";
 
 interface IRegister {
   isLoading?: boolean;
@@ -26,24 +27,24 @@ function RegisterView({ isLoading, handleCallApi }: IRegister) {
     <FormRoot onSubmit={onSubmit}>
       <div className='flex flex-col gap-8 text-16x20'>
         <InputRoot
-          label='Họ và tên'
+          label={LocalizeTypeFunc('fullName')}
           name='fullName'
           readOnly={false}
-          placeholder='Nhập họ và tên'
+          placeholder={LocalizeTypeFunc('enter.fullName')}
         />
         <InputRoot
-          label='Tên đăng nhập'
+          label={LocalizeTypeFunc('username')}
           name='username'
           readOnly={false}
-          placeholder='Nhập tên đăng nhập'
+          placeholder={LocalizeTypeFunc('enter.username')}
         />
         <InputRoot
           className='relative'
           type={isHidden ? 'password' : 'text'}
-          label='Mật khẩu'
+          label={LocalizeTypeFunc('password')}
           name='password'
           readOnly={false}
-          placeholder='Nhập mật khẩu'
+          placeholder={LocalizeTypeFunc('enter.password')}
           iconEnd={
             isHidden ? (
               <IconRoot
@@ -60,7 +61,7 @@ function RegisterView({ isLoading, handleCallApi }: IRegister) {
           }
         />
         <Button
-          name='Đăng kí'
+          name={LocalizeTypeFunc('register')}
           className='rounded-lg bg-primary-pressed px-6 py-4 text-white'
           type='submit'
         />

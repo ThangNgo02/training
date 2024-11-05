@@ -50,11 +50,3 @@ export function LocalizeTypeFunc(tid: string | undefined): any {
   const languageContext = useContext(LanguageContext);
   return languageContext.dictionary[tid as keyof object] || tid;
 }
-
-export const LocalizeContent = () => {
-  const languageContext = useContext(LanguageContext);
-  const SetLocalizeId = (tid: string) => {
-    return languageContext.dictionary[tid as keyof object] || tid;
-  };
-  return { SetLocalizeId };
-};

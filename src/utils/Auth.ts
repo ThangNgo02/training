@@ -28,7 +28,7 @@ class AuthService {
       path: '/',
       expires: new Date(expireAt),
     };
-    cookie.set(config.cookie.auth, auth, options);
+    cookie.set(config.cookie.auth, auth.token, options);
   }
 
   static setPackageProfile(profile: IAuthProfile, expireAt: number) {

@@ -6,6 +6,7 @@ import FormRoot from '@/components/form';
 import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import InputRoot from '@/components/input';
+import { LocalizeTypeFunc } from "@/context/languages";
 
 interface ILogin {
   isLoading?: boolean;
@@ -28,9 +29,9 @@ function LoginView({ isLoading, handleCallApi }: ILogin) {
       <div className='flex flex-col gap-8 text-16x20'>
         <InputRoot
           readOnly={false}
-          label='Tên đăng nhập'
+          label={LocalizeTypeFunc('username')}
           name='username'
-          placeholder='Nhập tên đăng nhập'
+          placeholder={LocalizeTypeFunc('enter.username')}
         />
         <div className='flex flex-col gap-3'>
           <div className=''>
@@ -38,9 +39,9 @@ function LoginView({ isLoading, handleCallApi }: ILogin) {
               readOnly={false}
               className='relative'
               type={isHidden ? 'password' : 'text'}
-              label='Mật khẩu'
+              label={LocalizeTypeFunc('password')}
               name='password'
-              placeholder='Nhập mật khẩu'
+              placeholder={LocalizeTypeFunc('enter.password')}
               iconEnd={
                 isHidden ? (
                   <IconRoot
@@ -61,12 +62,12 @@ function LoginView({ isLoading, handleCallApi }: ILogin) {
             <Link
               to={'/forgot-password'}
               className='font-medium text-primary-pressed'>
-              Quên mật khẩu?
+              {LocalizeTypeFunc('forgotPassword')}?
             </Link>
           </div>
         </div>
         <Button
-          name='Đăng nhập'
+          name={LocalizeTypeFunc('login')}
           customClassName='rounded-lg bg-primary-pressed px-6 py-4 text-white'
           type='submit'
         />

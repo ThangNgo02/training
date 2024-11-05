@@ -9,6 +9,7 @@ import ImageRoot from '@/components/image';
 import AuthService from '@/utils/Auth';
 
 import LogoTsp from '../../../public/logo-tsp.png';
+import { LocalizeTypeFunc } from "@/context/languages";
 
 function PrivateView() {
   const auth = AuthService.getPackageAuth();
@@ -61,7 +62,7 @@ function PrivateView() {
 
       <div className='flex flex-1 flex-col overflow-hidden'>
         <header className='border-b border-gray-200 bg-white px-6 py-4'>
-          <h2 className='text-xl font-semibold text-gray-800'>Trang chủ</h2>
+          <h2 className='text-xl font-semibold text-gray-800'>{LocalizeTypeFunc('home')}</h2>
         </header>
         <main className='flex-1 overflow-y-auto p-6'>
           <div className='rounded-lg bg-white p-6 shadow'>

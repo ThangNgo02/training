@@ -1,3 +1,25 @@
 {
-  "welcome.to": "Welcome to"
+  "contact": "Contact",
+  "register": "Register",
+  "login": "Login",
+  "username": "Username",
+  "password": "Password",
+  "enter.username": "Enter username",
+  "enter.password": "Enter password",
+  "forgotPassword": "Forgot password",
+  "fullName": "Full name",
+  "enter.fullName": "Enter your full name",
+  "back": "Back",
+  "verifyPhoneNumber": "Verify phone number",
+  "enter.verifyPhoneNumber": "Enter the phone number you want to verify",
+  "phoneNumber": "Phone number",
+  "enter.phoneNumber": "Enter your phone number",
+  "continue": "Continue",
+  "10PhoneNumber": "Phone number must have 10 numeric characters",
+  "sendPhoneNumber": "A 6-digit verification code has been sent to your phone number",
+  "enter.verificationCode": "Enter verification code",
+  "resendCode": "Resend verification code later",
+  "second": "seconds",
+  "isResendCode": "OTP code has been resent",
+  "home": "Home page"
 }

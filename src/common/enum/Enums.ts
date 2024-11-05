@@ -5,6 +5,7 @@ export enum EnumPath {
   forgotPassword = '/forgot-password',
   employee = '/employee-list',
   resetPassword = '/reset-password',
+  contact = '/contact'
 }
 
 export enum EnumRole {}

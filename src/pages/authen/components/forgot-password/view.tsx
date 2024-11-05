@@ -10,6 +10,7 @@ import ImageRoot from '@/components/image';
 import InputRoot from '@/components/input';
 
 import ImageOtp from '../../../../../public/image-otp.png';
+import { LocalizeTypeFunc } from "@/context/languages";
 
 interface IForgotPassword {
   isLoading?: boolean;
@@ -46,7 +47,7 @@ function ForgotPasswordView(props: IForgotPassword) {
       props.setIsCounting(true);
       props.setOtpValues(['', '', '', '', '', '']);
 
-      toast.success('Mã OTP đã được gửi lại');
+      toast.success(LocalizeTypeFunc('isResendCode'));
     }
   };
 
@@ -56,7 +57,7 @@ function ForgotPasswordView(props: IForgotPassword) {
         className='absolute top-0 ml-8 mt-8 flex cursor-pointer items-center gap-3'
         onClick={handleGoBack}>
         <IconRoot icon={IconVariable.arrowLeft} />
-        <div>Trở về</div>
+        <div>{LocalizeTypeFunc('back')}</div>
       </div>
       <div className='mx-[116px] my-[88px]'>
         <div className='flex justify-center'>
@@ -76,25 +77,25 @@ function ForgotPasswordView(props: IForgotPassword) {
                 gap={12}
                 direction='column'>
                 <Heading
-                  children='Xác thực số điện thoại'
+                  children={LocalizeTypeFunc('verifyPhoneNumber')}
                   className='text-center text-36x44 font-bold text-[#1A1A1A]'
                 />
                 <div>
                   <h4 className='text-center text-16x20 font-medium text-[#616161]'>
                     {props.isCheckPhone ? (
                       <div>
-                        Mã xác thực 6 chữ số đã được gửi đến số điện thoại&nbsp;
+                        {LocalizeTypeFunc('sendPhoneNumber')}&nbsp;
                         <span className='font-bold text-[#1A1A1A]'>{props.phoneNumber}</span>
                       </div>
                     ) : (
-                      'Nhập số điện thoại bạn muốn xác thực'
+                      LocalizeTypeFunc('enter.verifyPhoneNumber')
                     )}
                   </h4>
                 </div>
               </FlexRoot>
               {props.isCheckPhone ? (
                 <div className='flex flex-col items-center justify-center'>
-                  <div className='font-medium'>Nhập mã xác thực (OTP)</div>
+                  <div className='font-medium'>{LocalizeTypeFunc('enter.verificationCode')} (OTP)</div>
                   <FlexRoot
                     gap={24}
                     className='mt-4'>
@@ -134,7 +135,8 @@ function ForgotPasswordView(props: IForgotPassword) {
                   </FlexRoot>
                   <div className='mt-8 flex items-center gap-2 text-[#616161]'>
                     <div>
-                      Gửi lại mã xác thực sau <span className='text-[#0088E4]'>{props.timeLeft}</span> giây
+                      {LocalizeTypeFunc('resendCode')} <span className='text-[#0088E4]'>{props.timeLeft}</span>{' '}
+                      {LocalizeTypeFunc('second')}
                     </div>
                     <IconRoot
                       icon={IconVariable.refresh}
@@ -150,8 +152,8 @@ function ForgotPasswordView(props: IForgotPassword) {
                   <InputRoot
                     readOnly={false}
                     name='phoneNumber'
-                    label='Số điện thoại'
-                    placeholder='Nhập số điện thoại'
+                    label={LocalizeTypeFunc('phoneNumber')}
+                    placeholder={LocalizeTypeFunc('enter.phoneNumber')}
                     iconStart={<IconRoot icon={IconVariable.phone} />}
                     onChange={e => {
                       let value = e.target.value;
@@ -159,10 +161,10 @@ function ForgotPasswordView(props: IForgotPassword) {
                       props.setPhoneNumber(value);
                     }}
                     value={props.phoneNumber}
-                    errorString={props.isError ? 'Số điện thoại phải có 10 ký tự số' : undefined}
+                    errorString={props.isError ? LocalizeTypeFunc('10PhoneNumber') : undefined}
                   />
                   <ButtonRoot
-                    name='Tiếp theo'
+                    name={LocalizeTypeFunc('continue')}
                     customClassName='h-[54px]'
                     onClick={props.handleSubmitPhone}
                   />

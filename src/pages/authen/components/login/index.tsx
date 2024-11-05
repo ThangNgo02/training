@@ -13,9 +13,9 @@ import LoginView from './view';
 
 function Login() {
   const navigate = useNavigate();
-
+  const config = new Config().getState();
   const loginApi: IApiRequest = {
-    url: `${Config.getInstance().getState().api.host}${Config.getInstance().getState().api.apiPath.login}`,
+    url: config.api.apiPath.login,
     method: 'post',
   };
 
@@ -25,7 +25,6 @@ function Login() {
 
   const handleResponse = {
     handleRequestSuccess: (response: IRootObject) => {
-      console.log('response', response);
       try {
         const auth = {
           token: `${response.accessToken}`,

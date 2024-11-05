@@ -1,23 +1,28 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
+import { EnumPath } from '@/common/enum/Enums';
 import Heading from '@/components/heading';
 import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import SelectRoot from '@/components/select';
+import { LanguageContext, LocalizeTypeFunc } from '@/context/languages';
 
 import ForgotPassword from './components/forgot-password';
 import Login from './components/login';
 import Register from './components/register';
 import ResetPassword from './components/reset-password';
 
-function Authen() {
+function Authentication() {
   const location = useLocation();
   const [selectedValue, setSelectedValue] = useState('vn');
+  const { userLanguageChange } = useContext(LanguageContext);
 
   const handleChange = (value: string) => {
-    setSelectedValue(value);
-    console.log(`Selected value: ${value}`);
+    if (value) {
+      userLanguageChange(value);
+      setSelectedValue(value);
+    }
   };
 
   const languageOptions = [
@@ -29,8 +34,8 @@ function Authen() {
     <>
       <div className="flex min-h-screen items-center justify-center bg-[url('public/theme-login.png')] bg-cover bg-center">
         <div className='relative rounded-[20px] bg-white p-10'>
-          {location?.pathname === '/reset-password ' && <ResetPassword />}
-          {location?.pathname === '/forgot-password' ? (
+          {location?.pathname === EnumPath.resetPassword && <ResetPassword />}
+          {location?.pathname === EnumPath.forgotPassword ? (
             <ForgotPassword />
           ) : (
             <>
@@ -43,11 +48,13 @@ function Authen() {
                   />
                 </div>
                 <div className='px-6 py-[10px]'>
-                  <Link to='/contact'>Liên hệ</Link>
+                  <Link to={EnumPath.contact}>{LocalizeTypeFunc('contact')}</Link>
                 </div>
                 <div className='px-6 py-[10px]'>
-                  <Link to={`${location?.pathname === '/register' ? '/login' : '/register'}`}>
-                    {location?.pathname === '/login' ? 'Đăng ký' : 'Đăng nhập'}
+                  <Link to={`${location?.pathname === EnumPath.register ? EnumPath.login : EnumPath.register}`}>
+                    {location?.pathname === EnumPath.login
+                      ? `${LocalizeTypeFunc('register')}`
+                      : `${LocalizeTypeFunc('login')}`}
                   </Link>
                 </div>
               </div>
@@ -58,12 +65,12 @@ function Authen() {
                 />
               </div>
               <Heading
-                children={`${location?.pathname === '/login' ? 'Đăng nhập TSP' : 'Đăng ký TSP'}`}
+                children={`${location?.pathname === EnumPath.login ? `${LocalizeTypeFunc('login')} TSP` : `${LocalizeTypeFunc('register')} TSP`}`}
                 className='mb-10 mt-3 h-11 text-center text-[36px] font-bold'
               />
               <div className='flex flex-col gap-8 text-16x20'>
-                {location?.pathname === '/login' && <Login />}
-                {location?.pathname === '/register' && <Register />}
+                {location?.pathname === EnumPath.login && <Login />}
+                {location?.pathname === EnumPath.register && <Register />}
               </div>
               <div className='mt-10 flex items-center justify-center gap-[6px] text-14x18 text-[#616161]'>
                 <span>HRM</span>
@@ -82,4 +89,4 @@ function Authen() {
   );
 }
 
-export default Authen;
+export default Authentication;
