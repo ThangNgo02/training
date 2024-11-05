@@ -135,7 +135,7 @@ export function ListEmployeesPage() {
     gender: true,
     position: true,
     departmentName: true,
-    level: true,
+    staffMetaDataLevel: true,
     socialInsuranceCode: false,
     taxCode: false,
     phoneNumber: false,

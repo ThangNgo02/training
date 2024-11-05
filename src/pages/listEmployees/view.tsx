@@ -51,7 +51,7 @@ const arrOptions: ICheckboxProps[] = [
   { label: 'Giới tính', checked: true, name: 'gender' },
   { label: 'Chức vụ', checked: true, name: 'position' },
   { label: 'Phòng ban', checked: true, name: 'departmentName' },
-  { label: 'Bậc', checked: true, name: 'level' },
+  { label: 'Bậc', checked: true, name: 'staffMetaDataLevel' },
   { label: 'BHXH', checked: false, name: 'socialInsuranceCode' },
   { label: 'MST', checked: false, name: 'taxCode' },
   { label: 'SĐT', checked: false, name: 'phoneNumber' },
