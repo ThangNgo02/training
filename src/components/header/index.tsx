@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { type IApiRequest } from '@/api/api.interface';
 import { useRequest } from '@/api/api.middleware';
 import Config from '@/env';
+import useClickOutside from '@/hooks/useClickOutside';
 import { type IDataEmployeeInfoType, type IResponseDataEmployeeInfoAPIType } from '@/pages/infoPrivate/type';
 import AuthService from '@/utils/Auth';
 
@@ -19,6 +20,7 @@ interface IHeaderProps extends React.HTMLProps<HTMLDivElement> {
 }
 
 export function Header({ className, title, iconStart, iconEnd, ...rest }: IHeaderProps) {
+  const [isOpenChatbox, setOpenChatbox] = useState<boolean>(false);
   const profile = AuthService.getPackageProfile();
   const [isOpenDropdown, setOpenDropdown] = useState<boolean>(false);
   const [isOpenModalChangePassword, setOpenModalChangePassword] = useState<boolean>(false);
@@ -59,6 +61,10 @@ export function Header({ className, title, iconStart, iconEnd, ...rest }: IHeade
       mutateGetEmployeeById({});
     }
   }, []);
+  const refSelectChatbox = useRef(null);
+  useClickOutside(refSelectChatbox, () => {
+    setOpenChatbox(false);
+  });
 
   return (
     <>
@@ -72,7 +78,24 @@ export function Header({ className, title, iconStart, iconEnd, ...rest }: IHeade
           </div>
           {iconEnd}
         </div>
-        <div className='relative'>
+        <div className='relative flex items-center gap-10'>
+          <div
+            ref={refSelectChatbox}
+            onClick={() => {
+              setOpenChatbox(!isOpenChatbox);
+            }}
+            className={`w-[200px] select-none rounded-lg ${isOpenChatbox ? 'bg-red-600' : 'bg-[#1e724ada]'}  p-4 text-center text-base text-white hover:cursor-pointer hover:opacity-90`}>
+            {isOpenChatbox ? 'Đóng chatbox test' : 'Bật chatbox test'}
+          </div>
+          {isOpenChatbox && (
+            <div className='absolute right-1 top-16 z-50 border'>
+              <iframe
+                allow='microphone;'
+                width='400'
+                height='500'
+                src='https://console.dialogflow.com/api-client/demo/embedded/8ecb2a6e-2402-4359-af5d-4769ab94f791'></iframe>
+            </div>
+          )}
           <div
             className='flex cursor-pointer select-none items-center gap-3'
             onClick={() => {
@@ -91,7 +114,6 @@ export function Header({ className, title, iconStart, iconEnd, ...rest }: IHeade
             )}
             {isOpenDropdown ? <IconRoot icon={IconVariable.arrowDown} /> : <IconRoot icon={IconVariable.arrowUp} />}
           </div>
-
           {isOpenDropdown && (
             <DropdownHeader
               employee={employee}
