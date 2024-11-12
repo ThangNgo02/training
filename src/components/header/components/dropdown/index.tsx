@@ -36,7 +36,7 @@ function DropdownHeader({ employee, setOpenDropdown, setOpenModalChangePassword 
   return (
     <div
       ref={dropdownRef}
-      className='custom-shadow absolute right-[-4px] mt-2 flex w-[240px] flex-col justify-center rounded-md border bg-white p-1'>
+      className='custom-shadow absolute right-0 top-16 flex w-[240px] flex-col justify-center rounded-md border bg-white p-1'>
       <div
         className='flex cursor-pointer items-center gap-4 rounded-md p-4 hover:bg-gray-300'
         onClick={() => {
