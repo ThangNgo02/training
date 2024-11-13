@@ -48,7 +48,7 @@ const LoginPage: React.FC = () => {
           };
 
           AuthService.setAllPackage(auth, profile);
-          navigate(EnumPath.home);
+          navigate(EnumPath.staff);
           toastDefault(EnumToast.SUCCESS, 'Đăng nhập thành công');
         } catch (error: any) {
           LoggerService.error('Xử lí đăng nhập xảy ra lỗi:', error);

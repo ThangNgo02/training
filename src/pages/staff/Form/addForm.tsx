@@ -260,7 +260,7 @@ const AddForm = ({
                             // eslint-disable-next-line @typescript-eslint/no-base-to-string
                             methods?.formState?.errors?.fullName
                               ? // eslint-disable-next-line @typescript-eslint/no-base-to-string
-                              methods?.formState?.errors?.fullName?.toString()
+                                methods?.formState?.errors?.fullName?.toString()
                               : ''
                           }
                           className='w-full rounded-md border bg-white px-3 py-2 focus:outline-none'
@@ -312,10 +312,11 @@ const AddForm = ({
                             handleInputChange('departmentCode', e.target.value);
                           }}
                           className={`w-full appearance-none rounded-md border px-3 py-2 pr-10 font-semibold
-        ${(methods?.formState?.errors?.departmentCode ?? formValues.departmentCode === '')
-                              ? 'border-red-500'
-                              : 'border-gray-400'
-                            } focus:outline-none`}>
+        ${
+          (methods?.formState?.errors?.departmentCode ?? formValues.departmentCode === '')
+            ? 'border-red-500'
+            : 'border-gray-400'
+        } focus:outline-none`}>
                           <option
                             value=''
                             className='text-[##a8a8a8]'
@@ -533,10 +534,11 @@ const AddForm = ({
                           onChange={e => {
                             handleInputChange('gender', e.target.value);
                           }}
-                          className={`w-full rounded-md border ${(methods?.formState?.errors?.gender ?? formValues.gender === '')
-                            ? 'border-red-500'
-                            : 'border-gray-400'
-                            } px-3 py-2.5 pr-10 font-semibold`}>
+                          className={`w-full rounded-md border ${
+                            (methods?.formState?.errors?.gender ?? formValues.gender === '')
+                              ? 'border-red-500'
+                              : 'border-gray-400'
+                          } px-3 py-2.5 pr-10 font-semibold`}>
                           <option
                             value=''
                             disabled
@@ -808,8 +810,9 @@ const AddForm = ({
                 onChange={e => {
                   handleInputChange('resignDate', e.target.value);
                 }}
-                className={` mx-4 w-full rounded-md border px-3 py-2 focus:outline-none ${disableWorkingDate ? 'bg-white' : 'bg-gray-200'
-                  }`}
+                className={` mx-4 w-full rounded-md border px-3 py-2 focus:outline-none ${
+                  disableWorkingDate ? 'bg-white' : 'bg-gray-200'
+                }`}
                 disabled={!disableWorkingDate}
                 iconEnd={
                   formValues.resignDate &&
