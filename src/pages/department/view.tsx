@@ -20,7 +20,7 @@ import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import InputRoot from '@/components/input';
 
-import { type IDataType } from '.';
+import { type IDepartmentDataType } from '.';
 
 enum BlockForTimesheet {
   DRIVER = 'DRIVER',
@@ -30,8 +30,8 @@ enum BlockForTimesheet {
 }
 
 interface IDepartmentViewProps {
-  data: IDataType[];
-  columns: TableColumnsType<IDataType>;
+  data: IDepartmentDataType[];
+  columns: TableColumnsType<IDepartmentDataType>;
   onAddDepartment: (payload: {
     code: string;
     name: string;
@@ -54,7 +54,7 @@ interface IAddData {
 const DepartmentView: React.FC<IDepartmentViewProps> = ({ data, columns, onAddDepartment, onReset }) => {
   const [currentPage, setCurrentPage] = useState(1); // Tracks the current page
   const [pageSize, setPageSize] = useState(10); // Number of items per page
-  const [tableData, setTableData] = useState<IDataType[]>(data); // Hold table data
+  const [tableData, setTableData] = useState<IDepartmentDataType[]>(data); // Hold table data
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const [showForm, setShowForm] = useState(false);
 
@@ -117,16 +117,17 @@ const DepartmentView: React.FC<IDepartmentViewProps> = ({ data, columns, onAddDe
   const handleRefresh = () => {
     setTableData(data);
     setCurrentPage(1);
+    setCheckedList(newColumns.map(column => column.key as string));
     onReset();
   };
 
   // Handle form submission
-  const handleSubmit = (values: IAddData) => {
+  const handleSubmit = (data: IAddData) => {
     onAddDepartment({
-      code: values.code,
-      name: values.name,
-      note: values.note,
-      phoneNumber: values.phonenumber,
+      code: data.code,
+      name: data.name,
+      note: data.note,
+      phoneNumber: data.phonenumber,
       blockForTimesheet: BlockForTimesheet.OFFICE, // Default value
     });
     setShowForm(false);
@@ -373,7 +374,7 @@ const DepartmentView: React.FC<IDepartmentViewProps> = ({ data, columns, onAddDe
       </div>
 
       {/* Main Table */}
-      <Table<IDataType>
+      <Table<IDepartmentDataType>
         columns={newColumns.filter(col => !col.hidden)}
         dataSource={paginatedData} // Only pass paginated data to the table
         pagination={false} // Disable default pagination

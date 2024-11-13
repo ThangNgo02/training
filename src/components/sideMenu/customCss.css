@@ -1,0 +1,12 @@
+.ant-menu-item span {
+  color: white !important; 
+}
+
+.ant-menu-item-selected {
+  color: #ffffff !important;  
+  background-color: #227c4f !important; 
+}  
+
+.ant-menu {
+  height: auto !important;
+}

@@ -12,7 +12,7 @@ import { LoggerService } from '@/utils/Logger';
 
 import DepartmentView from './view';
 
-export interface IDataType {
+export interface IDepartmentDataType {
   id: number;
   code: string;
   name: string;
@@ -22,7 +22,7 @@ export interface IDataType {
 }
 
 // Define table columns
-const columns: TableColumnsType<IDataType> = [
+const columns: TableColumnsType<IDepartmentDataType> = [
   {
     title: 'Stt',
     dataIndex: 'id',
@@ -88,7 +88,7 @@ const columns: TableColumnsType<IDataType> = [
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const DepartmentPage: React.FC = () => {
-  const [data, setData] = useState<IDataType[]>([]);
+  const [data, setData] = useState<IDepartmentDataType[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
 
   // Fetch token from cookies using AuthService
