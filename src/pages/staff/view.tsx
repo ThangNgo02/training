@@ -360,7 +360,7 @@ const StaffView: React.FC<IStaffViewProps> = ({
             </Dropdown>
           </div>
 
-          <Button // Reset button
+          <Button // Download button
             className='mr-4 mt-10 bg-[#4d7bc2]  px-1 py-2'
             onClick={handleRefresh}>
             Xuat
@@ -524,6 +524,7 @@ const StaffView: React.FC<IStaffViewProps> = ({
         dataSource={data}
         pagination={false} // Disable default pagination
         className='mb-10 mt-4 w-full overflow-auto '
+        scroll={{ y: 500 }}
         bordered
       />
     </div>

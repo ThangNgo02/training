@@ -9,4 +9,8 @@ export enum IconVariable {
   search,
   reload,
   plus,
+  arrowUp,
+  arrowDown,
+  error,
+  required,
 }

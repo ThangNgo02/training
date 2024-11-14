@@ -46,7 +46,7 @@ const AddForm = ({
   const methods = useFormContext();
   // eslint-disable-next-line @typescript-eslint/naming-convention
   const [disableWorkingDate, setDisableWorkingDate] = useState(false);
-  const [formValues, setFormValues] = useState<AddFormValues>({
+  const [formValues, setFormValues] = useState({
     code: '',
     fullName: '',
     position: '',
@@ -123,9 +123,6 @@ const AddForm = ({
       });
     }
 
-    // Clear all errors
-    methods.clearErrors();
-
     // Reset form state
     methods.reset(resetValues);
 
@@ -134,6 +131,7 @@ const AddForm = ({
   };
 
   const handleFormSubmit = (data: AddFormValues) => {
+    console.log('sahkjdjkhsakjhskhjadskjksajd', data);
     // Combine form data with state values and checkbox state
     const submitData = {
       ...data,
@@ -150,15 +148,16 @@ const AddForm = ({
       <div className='h-screen w-screen overflow-y-auto bg-white '>
         <Form
           onSubmit={handleFormSubmit}
+          defaultValues={formValues}
           validator={{
             code: yup
               .string()
-              .required('Mã nhân viên không được chứa khoảng trống và tối đa 20 ký tự')
+              .required('Mã nhân viên không được chứa khoảng trống và không được quá 20 ký tự')
               .trim()
-              .max(20, 'Mã nhân viên không được chứa khoảng trống và tối đa 20 ký tự'),
+              .max(20, 'Mã nhân viên không được chứa khoảng trống và không được quá 20 ký tự'),
             fullName: yup.string().required('Tên nhân viên không được để trống').trim(),
-            departmentCode: yup.string().required('Mã phòng ban không được để trống').trim(),
-            gender: yup.string().required('Gioi tinh không được để trống'),
+            // departmentCode: yup.string().required('Mã phòng ban không được để trống').trim(),
+            // gender: yup.string().required('Gioi tinh không được để trống'),
             email: yup.string().email('Email không hợp lệ').nullable(),
             phoneNumber: yup
               .string()
@@ -308,6 +307,7 @@ const AddForm = ({
                           name='departmentCode'
                           id='departmentCode'
                           value={formValues.departmentCode || ''}
+                          placeholder='sadasasdadasdsd'
                           onChange={e => {
                             handleInputChange('departmentCode', e.target.value);
                           }}
@@ -321,6 +321,7 @@ const AddForm = ({
                             value=''
                             className='text-[##a8a8a8]'
                             disabled
+                            placeholder='sjajhksfhklaslhjkasljhkaslkjhasflkhj'
                             hidden>
                             Chọn phòng ban
                           </option>

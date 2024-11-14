@@ -179,7 +179,6 @@ const StaffPage: React.FC = () => {
   };
 
   const staffFilterApi: IApiRequest = {
-    // url: `https://api.tsp.com.vn/hrm/staff-meta-data?page=${currentPage - 1}&size=${pageSize}&codeOrFullName=${searchValue}`,
     url: `https://api.tsp.com.vn/hrm/staff-meta-data?page=${currentPage - 1}&size=${pageSize}${
       position ? `&position=${position}` : ''
     }${socialInsuranceCode ? `&socialInsuranceCode=${socialInsuranceCode}` : ''}${

@@ -1,12 +1,22 @@
-/** change table header background color and text color */
-.ant-table
-  .ant-table-container
-  .ant-table-content
-  table
-  thead.ant-table-thead
-  .ant-table-cell {
+/* Adjust table header cell height */
+.ant-table .ant-table-container .ant-table-header thead.ant-table-thead .ant-table-cell,
+.ant-table .ant-table-container .ant-table-content table thead.ant-table-thead .ant-table-cell {
   background-color: #4d7bc2;
   color: white;
-  text-align: center !important;
+  height: 48px; /* Set your desired height */
+  line-height: 48px; /* Center-align text vertically */
+  border-color: #4d7bc2;
+  padding: 0 16px; /* Adjust padding as needed */
 }
 
+/* Adjust table body cell height */
+.ant-table .ant-table-container .ant-table-content table tbody.ant-table-tbody .ant-table-cell {
+  height: 48px; /* Set same or different height as header */
+  line-height: 48px; /* Center-align text vertically */
+  padding: 0 16px; /* Adjust padding as needed */
+}
+
+/* Add fixed table layout */
+.ant-table .ant-table-container .ant-table-content table {
+  table-layout: fixed;
+}

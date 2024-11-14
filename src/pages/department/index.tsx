@@ -5,7 +5,8 @@ import { type IApiRequest } from '@/api/api.interface';
 import { useRequest } from '@/api/api.middleware';
 import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
-import Input from '@/components/input';
+import NavBar from '@/components/navBar';
+import SideMenu from '@/components/sideMenu';
 import toastDefault, { EnumToast } from '@/components/toast';
 import AuthService from '@/utils/Auth';
 import { LoggerService } from '@/utils/Logger';
@@ -23,13 +24,6 @@ export interface IDepartmentDataType {
 
 // Define table columns
 const columns: TableColumnsType<IDepartmentDataType> = [
-  {
-    title: 'Stt',
-    dataIndex: 'id',
-    key: 'id',
-    width: '5%',
-    render: text => <div className=''>{text}</div>,
-  },
   {
     title: 'Mã phòng ban',
     dataIndex: 'code',
@@ -49,13 +43,21 @@ const columns: TableColumnsType<IDepartmentDataType> = [
     dataIndex: 'note',
     key: 'note',
     width: '25%',
-    render: text => <div className=''>{text}</div>,
+    render: text => (
+      <div
+        className='max-w-[250px] overflow-hidden text-ellipsis whitespace-nowrap'
+        style={{ textOverflow: 'ellipsis' }}
+        title={text} // This shows the full text on hover
+      >
+        {text}
+      </div>
+    ),
   },
   {
     title: 'Số lượng nhân viên',
     dataIndex: 'totalStaff',
     key: 'totalStaff',
-    width: '15%',
+    width: '20%',
     render: text => <div className=''>{text}</div>,
   },
   {
@@ -89,7 +91,11 @@ const columns: TableColumnsType<IDepartmentDataType> = [
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const DepartmentPage: React.FC = () => {
   const [data, setData] = useState<IDepartmentDataType[]>([]);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [totalData, setTotalData] = useState<IDepartmentDataType[]>([]);
+  const [searchValue, setSearchValue] = useState<string>('');
+  const [pageSize, setPageSize] = useState<number>(25);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [total, setTotal] = useState<number>(0);
 
   // Fetch token from cookies using AuthService
   const token = AuthService.getPackageAuth();
@@ -97,6 +103,17 @@ const DepartmentPage: React.FC = () => {
   // Api
   const departmentApi: IApiRequest = {
     url: 'https://api.tsp.com.vn/hrm/department?page=0&size=1000',
+    method: 'get',
+    headers: {
+      // Set Authorization header using token from cookies
+      Authorization: `Bearer ${token}`,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const filterDepartmentApi: IApiRequest = {
+    url: `https://api.tsp.com.vn/hrm/department?page=${currentPage - 1}&size=${pageSize}${searchValue ? `&codeOrName=${searchValue}` : ''}`,
     method: 'get',
     headers: {
       // Set Authorization header using token from cookies
@@ -117,16 +134,31 @@ const DepartmentPage: React.FC = () => {
   };
 
   // Handles successful department response
-  const handleResponse = {
+  const handleAllDepartmentResponse = {
     handleRequestSuccess: (response: any) => {
       if (response?.code === 2000) {
-        setData(response.data);
+        setTotal(response.totalElements || response.data.length > 0);
+        setTotalData(response.data);
       } else {
         toastDefault(EnumToast.ERROR, 'Failed to fetch department data');
       }
     },
     handleRequestFailed: (error: any) => {
       LoggerService.error('Error fetching departments:', error.message);
+    },
+  };
+
+  const handleFilterStaffResponse = {
+    handleRequestSuccess: (response: any) => {
+      if (response?.code === 2000) {
+        setData(response.data);
+        setTotal(response.totalElements || response.data.length > 0);
+      } else {
+        toastDefault(EnumToast.ERROR, 'Failed to fetch filtered staff data');
+      }
+    },
+    handleRequestFailed: (error: any) => {
+      LoggerService.error('Error fetching filtered departments:', error.message);
     },
   };
 
@@ -146,70 +178,66 @@ const DepartmentPage: React.FC = () => {
   };
 
   // Custom hook to trigger the department fetch request
-  const { mutate: mutateDepartments } = useRequest(departmentApi, handleResponse);
-  const { mutate: addDepartment } = useRequest(addDepartmentApi, addDepartmentResponse);
+  const { mutate: mutateDepartments } = useRequest(departmentApi, handleAllDepartmentResponse);
+  const { mutate: mutateFilterDepartments } = useRequest(filterDepartmentApi, handleFilterStaffResponse);
+  const { mutate: mutateAddDepartment } = useRequest(addDepartmentApi, addDepartmentResponse);
 
   useEffect(() => {
     mutateDepartments({});
   }, []);
 
-  // Filter data based on search query
-  const filteredData = data.filter(item => {
-    const query = searchQuery.toLowerCase();
+  useEffect(() => {
+    mutateFilterDepartments({});
+  }, [searchValue, pageSize, currentPage]);
 
-    // Check for active status
-    if (query === 'hoạt động' || query === 'hoat dong') {
-      return item.active;
-    }
-    if (query === 'đã khóa' || query === 'da khoa') {
-      return !item.active;
-    }
+  // Update page size and reset to the first page
+  const handlePageSizeChange = (newPageSize: number) => {
+    setPageSize(newPageSize);
+    setCurrentPage(1); // Reset to the first page when page size changes
+  };
 
-    // Otherwise, check the other fields
-    return (
-      (typeof item.name === 'string' && item.name.toLowerCase().includes(query)) ||
-      (typeof item.code === 'string' && item.code.toLowerCase().includes(query)) ||
-      (typeof item.note === 'string' && item.note.toLowerCase().includes(query)) ||
-      item.totalStaff.toString().includes(query) ||
-      item.id.toString().includes(query)
-    );
-  });
+  // Update the current page
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
 
-  const handleReset = () => {
-    setSearchQuery('');
+  const handleSearchValueChange = (searchValue: string) => {
+    setSearchValue(searchValue);
+    setCurrentPage(1); // Reset to the first page when search value changes
+  };
+
+  const handleFilterDepartment = () => {
+    mutateFilterDepartments({});
   };
 
   return (
-    <div>
-      <div className='h-8 w-full bg-blue-400'></div>
-      <div className='h-full bg-[#e8e8e8] pb-28'>
-        <h1 className='h-8 pb-4 pl-2 pt-1 font-semibold'>Phòng ban</h1>
+    <div className='flex  flex-col '>
+      <div className='flex'>
+        {/* Content with Side Menu and Main Area */}
+        <SideMenu defaultSelectedKeys={['2']} />
+        <main className='min-h-[65rem] flex-1 bg-[#e8e8e8] pb-28'>
+          {/* Header */}
+          <NavBar title='Phòng ban' />
 
-        <div className='mx-8 mt-4 rounded-md bg-white'>
-          <Input
-            type='text'
-            className='ml-6 mr-2 mt-6 w-[15%] rounded-md px-4 py-2'
-            placeholder='Search'
-            iconStart={
-              <IconRoot
-                icon={IconVariable.search}
-                className='hover:cursor-pointer'
+          <div className='mx-8 mt-10 rounded-md bg-white p-4'>
+            {/* Main Content Area */}
+            <div className='mt-4 p-4'>
+              <DepartmentView
+                // Pass filtered data to DepartmentView
+                data={data}
+                columns={columns}
+                onPageSizeChange={handlePageSizeChange}
+                onPageChange={handlePageChange}
+                onSearchValueChange={handleSearchValueChange}
+                onFilterDepartment={handleFilterDepartment}
+                onAddDepartment={mutateAddDepartment}
+                pageSize={pageSize}
+                currentPage={currentPage}
+                total={total}
               />
-            }
-            name={'search'}
-            value={searchQuery}
-            onChange={e => {
-              setSearchQuery(e.target.value);
-            }}></Input>
-
-          <DepartmentView
-            // Pass filtered data to DepartmentView
-            data={filteredData}
-            columns={columns}
-            onAddDepartment={addDepartment}
-            onReset={handleReset}
-          />
-        </div>
+            </div>
+          </div>
+        </main>
       </div>
     </div>
   );
