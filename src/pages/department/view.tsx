@@ -13,21 +13,13 @@ import {
   type TableColumnsType,
 } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form'; // +
 
 import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import InputRoot from '@/components/input';
 
-import { type IDepartmentDataType } from '.';
-import AddForm, { type AddFormValues } from './Form/addForm';
-
-export enum BlockForTimesheet {
-  DRIVER = 'DRIVER',
-  FACTORY = 'FACTORY',
-  OFFICE = 'OFFICE',
-  DELIVERY = 'DELIVERY',
-}
+import { BlockForTimesheet, type departmentData, type IDepartmentDataType } from '.';
+import AddForm from './Form/addForm';
 
 interface IDepartmentViewProps {
   data: IDepartmentDataType[];
@@ -48,14 +40,6 @@ interface IDepartmentViewProps {
   total: number;
 }
 
-export interface IAddData {
-  code: string;
-  name: string;
-  note: string;
-  phonenumber: string;
-  blockForTimesheet: BlockForTimesheet;
-}
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const DepartmentView: React.FC<IDepartmentViewProps> = ({
   data,
@@ -71,7 +55,7 @@ const DepartmentView: React.FC<IDepartmentViewProps> = ({
 }) => {
   const maxPages = Math.max(1, Math.ceil(total / pageSize)); // Minimum of 1 page
   // eslint-disable-next-line @typescript-eslint/naming-convention
-  const [showForm, setShowForm] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Reset search field
   const handleResetSearch = () => {
@@ -157,7 +141,7 @@ const DepartmentView: React.FC<IDepartmentViewProps> = ({
   }, 200);
 
   // Handle form submission
-  const handleSubmit = (data: IAddData) => {
+  const handleSubmit = (data: departmentData) => {
     onAddDepartment({
       code: data.code,
       name: data.name,
@@ -165,8 +149,16 @@ const DepartmentView: React.FC<IDepartmentViewProps> = ({
       phoneNumber: data.phonenumber,
       blockForTimesheet: BlockForTimesheet.OFFICE, // Default value
     });
-    setShowForm(false);
     onPageChange(1);
+    setIsModalOpen(false);
+  };
+
+  const handleOpenModal = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -201,7 +193,7 @@ const DepartmentView: React.FC<IDepartmentViewProps> = ({
           />
         </div>
 
-        <div className='mb-2 mt-10  flex w-auto  justify-end'>
+        <div className=' mt-10  flex w-auto  justify-end'>
           <Button
             className='mr-4 bg-[#4d7bc2] px-1  py-2'
             onClick={handleRefresh}>
@@ -264,37 +256,20 @@ const DepartmentView: React.FC<IDepartmentViewProps> = ({
             </Button>
           </Dropdown>
 
-          <Dropdown
-            open={showForm}
-            onOpenChange={setShowForm}
-            dropdownRender={() => (
-              <div
-                className='bg-white p-4 shadow-lg'
-                onClick={e => {
-                  e.stopPropagation();
-                }}>
-                <div>
-                  <div
-                    onClick={e => {
-                      e.stopPropagation();
-                    }}>
-                    <h1 className='font-semibold'>Thêm phòng ban </h1>
-                  </div>
+          <div>
+            <Button
+              type='primary'
+              onClick={handleOpenModal}
+              className='mr-4 bg-[#4d7bc2] text-white'>
+              Thêm mới
+            </Button>
 
-                  <hr className='mt-4' />
-
-                  <AddForm
-                    onSubmit={handleSubmit}
-                    onClose={() => {
-                      setShowForm(false);
-                    }}
-                  />
-                </div>
-              </div>
-            )}
-            trigger={['click']}>
-            <Button className='mr-4 bg-[#4d7bc2] text-white'>Thêm mới</Button>
-          </Dropdown>
+            <AddForm
+              isOpen={isModalOpen}
+              onSubmit={handleSubmit}
+              onClose={handleCloseModal}
+            />
+          </div>
         </div>
       </div>
 

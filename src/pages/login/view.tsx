@@ -1,14 +1,13 @@
-import React, { useState } from 'react';
+import { Button } from 'antd';
+import React, { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import * as yup from 'yup';
 
-import Form from '@/components/form';
+import Form, { type IFormRef } from '@/components/form';
 import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import InputRoot from '@/components/input';
 import { Localize } from '@/context/languages';
-
-import Button from '../../components/Button/button';
 
 interface ILoginViewProps {
   handleSubmit: (data: any) => void;
@@ -18,21 +17,34 @@ interface ILoginViewProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const LoginView: React.FC<ILoginViewProps> = ({ handleSubmit, error }) => {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const methods = useFormContext();
+  const formRef = useRef<IFormRef>(null);
 
+  const defaultFormValues = {
+    username: '',
+    password: '',
+  };
+
+  const validationSchema = {
+    username: yup.string().required('Tên đăng nhập không được để trống'),
+    password: yup.string().required('Mật khẩu không được để trống').min(6, 'Mật khẩu phải tối thiểu 6 ký tự'),
+  };
+
+  const handleFormSubmit = (values: any) => {
+    handleSubmit(values);
+    formRef.current?.reset(defaultFormValues);
+  };
   const handlePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
 
-  const methods = useFormContext();
-
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
     <Form
-      onSubmit={handleSubmit}
-      validator={{
-        username: yup.string().required('Tên đăng nhập không được để trống'),
-        password: yup.string().required('Mật khẩu không được để trống').min(6, 'Mật khẩu phải tối thiểu 6 ký tự'),
-      }}>
+      ref={formRef}
+      onSubmit={handleFormSubmit}
+      validator={validationSchema}
+      defaultValues={defaultFormValues}>
       <div className='min-h-[650px] w-full max-w-[600px] rounded-lg bg-white p-8 shadow-md'>
         <div className='ml-6 mr-6 flex w-[400px] justify-around gap-1'>
           <select className='rounded-md  border-none bg-white px-2 py-1'>
@@ -141,9 +153,10 @@ const LoginView: React.FC<ILoginViewProps> = ({ handleSubmit, error }) => {
 
         <div className='flex items-center justify-between'>
           <Button
-            type='submit'
-            label='Đăng nhập'
-          />
+            htmlType='submit'
+            className='w-full rounded bg-[#2DB976] px-4 py-2 font-semibold text-white  focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 disabled:cursor-not-allowed disabled:opacity-50'>
+            Đăng nhập
+          </Button>
         </div>
       </div>
     </Form>

@@ -11,7 +11,24 @@ import toastDefault, { EnumToast } from '@/components/toast';
 import AuthService from '@/utils/Auth';
 import { LoggerService } from '@/utils/Logger';
 
+import PutForm from './Form/putForm';
 import DepartmentView from './view';
+
+export enum BlockForTimesheet {
+  DRIVER = 'DRIVER',
+  FACTORY = 'FACTORY',
+  OFFICE = 'OFFICE',
+  DELIVERY = 'DELIVERY',
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export interface departmentData {
+  code: string;
+  name: string;
+  note: string;
+  phonenumber: string;
+  blockForTimesheet: BlockForTimesheet;
+}
 
 export interface IDepartmentDataType {
   id: number;
@@ -20,82 +37,22 @@ export interface IDepartmentDataType {
   note: string;
   totalStaff: number;
   active: boolean;
+  phoneNumber?: string;
+  blockForTimesheet?: BlockForTimesheet;
 }
-
-// Define table columns
-const columns: TableColumnsType<IDepartmentDataType> = [
-  {
-    title: 'Mã phòng ban',
-    dataIndex: 'code',
-    key: 'code',
-    width: '20%',
-    render: text => <div className=''>{text}</div>,
-  },
-  {
-    title: 'Tên phòng ban',
-    dataIndex: 'name',
-    key: 'name',
-    width: '25%',
-    render: text => <div className=''>{text}</div>,
-  },
-  {
-    title: 'Ghi chú',
-    dataIndex: 'note',
-    key: 'note',
-    width: '25%',
-    render: text => (
-      <div
-        className='max-w-[250px] overflow-hidden text-ellipsis whitespace-nowrap'
-        style={{ textOverflow: 'ellipsis' }}
-        title={text} // This shows the full text on hover
-      >
-        {text}
-      </div>
-    ),
-  },
-  {
-    title: 'Số lượng nhân viên',
-    dataIndex: 'totalStaff',
-    key: 'totalStaff',
-    width: '20%',
-    render: text => <div className=''>{text}</div>,
-  },
-  {
-    title: 'Trạng thái',
-    key: 'active',
-    dataIndex: 'active',
-    width: '15%',
-    render: (active: boolean) => (
-      <div className=''>
-        <Tag
-          color={active ? 'green' : 'volcano'}
-          className='flex items-center justify-center font-semibold'>
-          {active ? (
-            <IconRoot
-              icon={IconVariable.tick}
-              className='py-1 hover:cursor-pointer'
-            />
-          ) : (
-            <IconRoot
-              icon={IconVariable.lock}
-              className='py-1 hover:cursor-pointer'
-            />
-          )}
-          {active ? 'Hoạt động' : 'Đã khóa'}
-        </Tag>
-      </div>
-    ),
-  },
-];
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const DepartmentPage: React.FC = () => {
   const [data, setData] = useState<IDepartmentDataType[]>([]);
-  const [totalData, setTotalData] = useState<IDepartmentDataType[]>([]);
   const [searchValue, setSearchValue] = useState<string>('');
   const [pageSize, setPageSize] = useState<number>(25);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
+
+  //
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDepartmentId, setSelectedDepartmentId] = useState<number | null>(null);
+  const [selectedDepartmentData, setSelectedDepartmentData] = useState<departmentData | null>(null);
 
   // Fetch token from cookies using AuthService
   const token = AuthService.getPackageAuth();
@@ -123,6 +80,26 @@ const DepartmentPage: React.FC = () => {
     },
   };
 
+  const getDepartmentApi = (id: number): IApiRequest => ({
+    url: `https://api.tsp.com.vn/hrm/department/${id}`,
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      'Content-Type': 'application/json',
+    },
+  });
+
+  const createSaveDepartmentApi = (id: number): IApiRequest => ({
+    url: `https://api.tsp.com.vn/hrm/department/${id}`,
+    method: 'put',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      'Content-Type': 'application/json',
+    },
+  });
+
   const addDepartmentApi: IApiRequest = {
     url: 'https://api.tsp.com.vn/hrm/department',
     method: 'post',
@@ -138,7 +115,6 @@ const DepartmentPage: React.FC = () => {
     handleRequestSuccess: (response: any) => {
       if (response?.code === 2000) {
         setTotal(response.totalElements || response.data.length > 0);
-        setTotalData(response.data);
       } else {
         toastDefault(EnumToast.ERROR, 'Failed to fetch department data');
       }
@@ -162,7 +138,42 @@ const DepartmentPage: React.FC = () => {
     },
   };
 
-  // Handles successful addDepartment response
+  const getDepartmentResponse = {
+    handleRequestSuccess: (response: any) => {
+      if (response?.code === 2000) {
+        const formattedData = {
+          code: response.data.code,
+          name: response.data.name,
+          note: response.data.note,
+          phonenumber: response.data.phoneNumber || '',
+          blockForTimesheet: response.data.blockForTimesheet || BlockForTimesheet.DRIVER,
+        };
+        setSelectedDepartmentData(formattedData);
+        setIsModalOpen(true);
+      } else {
+        toastDefault(EnumToast.ERROR, 'Failed to get department details');
+      }
+    },
+    handleRequestFailed: (error: any) => {
+      LoggerService.error('Error getting department:', error.message);
+      toastDefault(EnumToast.ERROR, 'Failed to get department details');
+    },
+  };
+
+  const saveDepartmentResponse = {
+    handleRequestSuccess: (response: any) => {
+      if (response?.code === 2000) {
+        toastDefault(EnumToast.SUCCESS, 'Department added successfully');
+        mutateDepartments({}); // Refresh departments after adding
+      } else {
+        toastDefault(EnumToast.ERROR, 'Failed to add department');
+      }
+    },
+    handleRequestFailed: (error: any) => {
+      LoggerService.error('Error adding department:', error.message);
+    },
+  };
+
   const addDepartmentResponse = {
     handleRequestSuccess: (response: any) => {
       if (response?.code === 2000) {
@@ -177,14 +188,33 @@ const DepartmentPage: React.FC = () => {
     },
   };
 
+  const createDepartmentRequest = (id: number) => {
+    return useRequest(getDepartmentApi(id), getDepartmentResponse);
+  };
+
   // Custom hook to trigger the department fetch request
   const { mutate: mutateDepartments } = useRequest(departmentApi, handleAllDepartmentResponse);
   const { mutate: mutateFilterDepartments } = useRequest(filterDepartmentApi, handleFilterStaffResponse);
+  const { mutate: mutateGetDepartment } = useRequest(
+    getDepartmentApi(selectedDepartmentId ?? 0), // Provide a default value
+    getDepartmentResponse,
+  );
+  const { mutate: mutateSaveDepartment } = useRequest(
+    // Only create the API when we have an ID
+    createSaveDepartmentApi(selectedDepartmentId ?? 0),
+    saveDepartmentResponse,
+  );
   const { mutate: mutateAddDepartment } = useRequest(addDepartmentApi, addDepartmentResponse);
 
   useEffect(() => {
     mutateDepartments({});
   }, []);
+
+  useEffect(() => {
+    if (selectedDepartmentId) {
+      mutateGetDepartment({});
+    }
+  }, [selectedDepartmentId]);
 
   useEffect(() => {
     mutateFilterDepartments({});
@@ -210,6 +240,121 @@ const DepartmentPage: React.FC = () => {
     mutateFilterDepartments({});
   };
 
+  const handleCodeClick = async (record: IDepartmentDataType) => {
+    if (!record.id) return;
+
+    setSelectedDepartmentId(record.id);
+    const { mutate } = createDepartmentRequest(record.id);
+    mutate({});
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedDepartmentId(null);
+    setSelectedDepartmentData({
+      code: '',
+      name: '',
+      note: '',
+      phonenumber: '',
+      blockForTimesheet: '' as BlockForTimesheet,
+    });
+  };
+
+  const handlePutFormSubmit = (data: departmentData) => {
+    console.log('Selected Department ID before submit:', selectedDepartmentId);
+    mutateSaveDepartment({
+      id: selectedDepartmentId,
+      data: {
+        code: data.code,
+        name: data.name,
+        note: data.note,
+        phoneNumber: data.phonenumber,
+        blockForTimesheet: data.blockForTimesheet,
+      },
+    });
+
+    // Refresh the data and reset state
+    mutateFilterDepartments({});
+    handlePageChange(1);
+    setIsModalOpen(false);
+    setSelectedDepartmentId(null);
+    setSelectedDepartmentData(null);
+  };
+
+  // define columns
+  const columns: TableColumnsType<IDepartmentDataType> = [
+    {
+      title: 'Mã phòng ban',
+      dataIndex: 'code',
+      key: 'code',
+      width: '20%',
+      render: (text, record) => (
+        <div
+          className='cursor-pointer text-blue-600 hover:text-blue-800'
+          onClick={() => {
+            handleCodeClick(record);
+          }}>
+          {text}
+        </div>
+      ),
+    },
+    {
+      title: 'Tên phòng ban',
+      dataIndex: 'name',
+      key: 'name',
+      width: '25%',
+      render: text => <div className=''>{text}</div>,
+    },
+    {
+      title: 'Ghi chú',
+      dataIndex: 'note',
+      key: 'note',
+      width: '25%',
+      render: text => (
+        <div
+          className='max-w-[250px] overflow-hidden text-ellipsis whitespace-nowrap'
+          style={{ textOverflow: 'ellipsis' }}
+          title={text} // This shows the full text on hover
+        >
+          {text}
+        </div>
+      ),
+    },
+    {
+      title: 'Số lượng nhân viên',
+      dataIndex: 'totalStaff',
+      key: 'totalStaff',
+      width: '20%',
+      render: text => <div className=''>{text}</div>,
+    },
+    {
+      title: 'Trạng thái',
+      key: 'active',
+      dataIndex: 'active',
+      width: '15%',
+      render: (active: boolean) => (
+        <div className=''>
+          <Tag
+            color={active ? 'green' : 'volcano'}
+            className='flex items-center justify-center font-semibold'>
+            {active ? (
+              <IconRoot
+                icon={IconVariable.tick}
+                className='py-1 hover:cursor-pointer'
+              />
+            ) : (
+              <IconRoot
+                icon={IconVariable.lock}
+                className='py-1 hover:cursor-pointer'
+              />
+            )}
+            {active ? 'Hoạt động' : 'Đã khóa'}
+          </Tag>
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className='flex  flex-col '>
       <div className='flex'>
@@ -234,6 +379,13 @@ const DepartmentPage: React.FC = () => {
                 pageSize={pageSize}
                 currentPage={currentPage}
                 total={total}
+              />
+
+              <PutForm
+                isOpen={isModalOpen}
+                onClose={handleCloseModal}
+                onSubmit={handlePutFormSubmit}
+                departmentData={selectedDepartmentData ?? undefined}
               />
             </div>
           </div>

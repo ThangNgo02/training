@@ -41,7 +41,14 @@ function SelectRoot({
   const err =
     (!Helper.isEmpty(methods?.formState?.errors[props.name]?.message) || isError || isErrorWrongLogin) ?? errorString;
   const [isOpen, setIsOpen] = useState(false);
-  const [value, setValue] = useState<IOption>(props.firstValue?.value ?? props.firstValue);
+  const [value, setValue] = useState<IOption | null>(() => {
+    const formValue = methods?.getValues()[props.name];
+    if (formValue) {
+      const option = options.find(opt => opt.value === formValue);
+      return option ?? props.firstValue ?? null;
+    }
+    return props.firstValue ?? null;
+  });
   const handleReset = () => {
     methods?.reset();
     setValue(

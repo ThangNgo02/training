@@ -17,7 +17,7 @@ export enum BlockForTimesheet {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export interface AddFormValues {
+export interface PutFormValues {
   code: string;
   name: string;
   note: string;
@@ -31,42 +31,57 @@ const validationSchema = {
   blockForTimesheet: yup.string().required('Khối không được để trống'),
 };
 
-const defaultFormValues: AddFormValues = {
+const defaultFormValues: PutFormValues = {
   code: '',
   name: '',
   note: '',
   phonenumber: '',
-  blockForTimesheet: '' as BlockForTimesheet,
+  blockForTimesheet: BlockForTimesheet.DRIVER,
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const AddForm = ({
+const PutForm = ({
   onSubmit,
   onClose,
   isOpen,
+  departmentData,
 }: {
-  onSubmit: (values: AddFormValues) => void;
+  onSubmit: (values: PutFormValues) => void;
   onClose: () => void;
   isOpen: boolean;
+  departmentData?: Partial<PutFormValues>;
 }) => {
   const methods = useFormContext();
   const formRef = useRef<IFormRef>(null);
-  const [key, setKey] = useState(0);
+  const [key, setKey] = useState(0); // Add this to force re-render
 
+  // Update form when modal opens/closes or data changes
   useEffect(() => {
-    if (!isOpen) {
-      formRef.current?.reset(defaultFormValues);
+    if (isOpen && departmentData) {
+      formRef.current?.reset({
+        code: departmentData.code ?? '',
+        name: departmentData.name ?? '',
+        note: departmentData.note ?? '',
+        phonenumber: departmentData.phonenumber ?? '',
+        blockForTimesheet: departmentData.blockForTimesheet ?? BlockForTimesheet.DRIVER,
+      });
+      setKey(prev => prev + 1); // Force re-render
     }
-    setKey(prev => prev + 1);
-  }, [isOpen]);
+  }, [isOpen, departmentData]);
 
   const handleClose = () => {
     formRef.current?.reset(defaultFormValues);
     onClose();
   };
 
-  const handleFormSubmit = (values: AddFormValues) => {
-    onSubmit(values);
+  const handleFormSubmit = (values: PutFormValues) => {
+    onSubmit({
+      code: values.code,
+      name: values.name,
+      note: values.note,
+      phonenumber: values.phonenumber,
+      blockForTimesheet: values.blockForTimesheet,
+    });
     formRef.current?.reset(defaultFormValues);
   };
 
@@ -78,15 +93,15 @@ const AddForm = ({
         footer={null}
         width={800}
         centered
-        maskClosable={true}
-        title='Thêm phòng ban'
+        maskClosable={false}
+        title='Sửa phòng ban'
         className=''>
         <Form
           key={key}
           ref={formRef}
           onSubmit={handleFormSubmit}
           validator={validationSchema}
-          defaultValues={defaultFormValues}>
+          defaultValues={departmentData ?? defaultFormValues}>
           <div
             onClick={e => {
               e.stopPropagation();
@@ -235,7 +250,7 @@ const AddForm = ({
             <Button
               htmlType='submit'
               className='bg-[#4d7bc2] text-white hover:bg-[#3d69b0]'>
-              Thêm
+              Cập nhật
             </Button>
           </div>
         </Form>
@@ -244,4 +259,4 @@ const AddForm = ({
   );
 };
 
-export default AddForm;
+export default PutForm;
