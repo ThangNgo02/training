@@ -84,7 +84,7 @@ export function Header({ className, title, iconStart, iconEnd, ...rest }: IHeade
             onClick={() => {
               setOpenChatbox(!isOpenChatbox);
             }}
-            className={`w-[200px] select-none rounded-lg ${isOpenChatbox ? 'bg-red-600' : 'bg-[#1e724ada]'}  p-4 text-center text-base text-white hover:cursor-pointer hover:opacity-90`}>
+            className={`w-[200px] select-none rounded-lg ${isOpenChatbox ? 'bg-red-600' : 'bg-[#18a561da]'}  p-4 text-center text-base text-white hover:cursor-pointer hover:opacity-90`}>
             {isOpenChatbox ? 'Đóng chatbox test' : 'Bật chatbox test'}
           </div>
           {isOpenChatbox && (

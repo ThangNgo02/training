@@ -6,6 +6,8 @@ const initialModalContext: IModalContext = {
   data: '',
   detailEmployee: '',
   handleSetEmployeeDetail: (data: any) => {},
+  detailContract: '',
+  handleSetContractDetail: (data: any) => {},
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -29,13 +31,22 @@ function ModalProvider(props: IModalProviderProps) {
     setDetailEmployee(employeeDetail);
   };
 
+  const [detailContract, setDetailContract] = React.useState<any>('');
+
+  const handleSetContractDetail = (contractDetail: any) => {
+    // eslint-disable-next-line no-debugger
+    setDetailContract(contractDetail);
+  };
+
   const value: IModalContext = React.useMemo(
     () => ({
       data: state.data,
       detailEmployee,
       handleSetEmployeeDetail,
+      detailContract,
+      handleSetContractDetail,
     }),
-    [state, detailEmployee],
+    [state, detailEmployee, detailContract],
   );
   return <ModalContext.Provider value={value}>{props.children}</ModalContext.Provider>;
 }

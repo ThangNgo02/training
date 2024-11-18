@@ -41,7 +41,7 @@ function SelectRoot({
   const err =
     (!Helper.isEmpty(methods?.formState?.errors[props.name]?.message) || isError || isErrorWrongLogin) ?? errorString;
   const [isOpen, setIsOpen] = useState(false);
-  const [value, setValue] = useState<IOption>(props.firstValue?.value ?? props.firstValue);
+  const [value, setValue] = useState<IOption>(props.firstValue?.value || props.firstValue);
   const handleReset = () => {
     methods?.reset();
     setValue(
@@ -100,12 +100,14 @@ function SelectRoot({
     <>
       <div
         ref={selectRef}
-        className={`relative select-none outline-none ${props.className ?? ''} ${isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'} ${disabled && 'border-none bg-[#d7efe1]'}`}>
+        className={`relative select-none p-[13px] outline-none ${props.className ?? ''} ${isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'} ${disabled && 'border border-[#d9d9d9] bg-[#d9efe1]'}`}>
         <div
           className={`flex w-full items-center justify-between gap-2 px-2 text-sm text-black ${props.classNameSelected} ${!disabled && 'cursor-pointer'}`}
           // eslint-disable-next-line no-void
           onClick={disabled ? () => void 0 : handleToggle}>
-          <span className={`text-[#0F1E34] ${!value && 'text-gray-400'}`}>{value ? value.label : 'Lựa chọn'}</span>
+          <span className={`text-[#0F1E34] ${value && value?.value === '' && 'text-gray-400'}`}>
+            {value ? value.label : 'Lựa chọn'}
+          </span>
           {isOpen ? (
             <span className='text-[#0F1E34]'>
               <IconRoot icon={IconVariable.arrowUp} />
@@ -119,7 +121,7 @@ function SelectRoot({
 
         {isOpen && (
           <div
-            className={`absolute left-0 right-0 z-10 mt-[14px] w-full overflow-y-auto rounded-md border border-gray-200 bg-white p-1 text-start shadow-md ${props.classNameOptionList}`}>
+            className={`absolute left-0 right-0 z-10 mt-[17px] w-full overflow-y-auto rounded-md border border-gray-200 bg-white p-1 text-start shadow-md ${props.classNameOptionList}`}>
             <ul>
               {options.map(option => (
                 <li

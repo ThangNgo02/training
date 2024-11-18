@@ -48,7 +48,10 @@ function InputRoot({
     }
   }, [props.isReset]);
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
+    let value = event.target.value;
+    if (typeof value === 'string') {
+      value = event.target.value.trim();
+    }
     setState(value);
     methods?.setValue(props.name, value);
     methods?.trigger(props.name);
@@ -61,15 +64,15 @@ function InputRoot({
     setIsFocus(false);
   };
   return (
-    <div className={`flex h-[96px] w-full flex-col gap-2`}>
+    <div className={`flex w-full flex-col gap-2`}>
       {props.label && (
         <span className={`text-16x20 text-start font-medium text-[#1A1A1A] ${props.classNameLabel}`}>
           {isRequire && <span className='text-red-500'>*</span>} <Localize tid={props.label} />
         </span>
       )}
       <div
-        className={` text-neutral-80 flex h-11 items-center gap-2 rounded-lg border px-3 py-[6px] text-base transition ${props.className} ${isError ? 'border-red-500' : 'border-neutral-40 hover:border-primary-hover hover:bg-primary-bg_color focus:border-primary-hover active:border-primary-hover '} ${
-          props.disabled && 'hover:bg-neutral-40  cursor-not-allowed  border-none  bg-[#d7efe1]'
+        className={` text-neutral-80 flex h-12 items-center gap-2 rounded-lg border px-3 py-[6px] text-base transition ${props.className} ${isError ? 'border-red-500' : 'border-neutral-40 hover:border-primary-hover hover:bg-primary-bg_color focus:border-primary-hover active:border-primary-hover '} ${
+          props.disabled && 'hover:bg-neutral-40  cursor-not-allowed border bg-[#b7ffcac8]'
         } ${methods?.formState?.errors[props.name]?.message ? 'border-red-500' : isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'}`}>
         {props.iconStart}
         <input

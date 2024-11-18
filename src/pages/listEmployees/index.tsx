@@ -12,7 +12,7 @@ import { ModalContext } from '@/context/contextStore';
 import Config from '@/env';
 import { type IColumnsTableProps } from '@/types';
 import AuthService from '@/utils/Auth';
-import { handleExportStaff } from '@/utils/ExportFile';
+import { handleExportExcel } from '@/utils/ExportFile';
 import { LoggerService } from '@/utils/Logger';
 
 import { ModalEmployee } from './components/ModalEmployee';
@@ -309,12 +309,12 @@ export function ListEmployeesPage() {
   };
 
   const handleExportClick = async () => {
-    const url = `${config.api.apiPath.exportStaff}?${queryParamsStringExportFile}`;
+    const url = `${config.api.host}/${config.api.apiPath.exportStaff}?${queryParamsStringExportFile}`;
     const currentDate = new Date();
     const formattedDate = `${currentDate.getDate()}-${currentDate.getMonth() + 1}-${currentDate.getFullYear()}`;
     const fileName = `hosonhanvien_${formattedDate}`;
 
-    await handleExportStaff(url, fileName, setIsLoading);
+    await handleExportExcel(url, fileName, setIsLoading);
   };
 
   useEffect(() => {

@@ -41,4 +41,6 @@ export enum IconVariable {
   logoutRed,
   avatarDefault,
   changePasswordModal,
+  expire,
+  historyUpdateContract,
 }

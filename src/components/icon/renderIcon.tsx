@@ -1076,4 +1076,97 @@ export const renderICon: Record<IconVariable, React.ReactNode> = {
       />
     </svg>
   ),
+  [IconVariable.expire]: (
+    <svg
+      width='12'
+      height='13'
+      viewBox='0 0 12 13'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'>
+      <g clipPath='url(#clip0_989_3183)'>
+        <path
+          d='M9.5 2.39014H2.5C1.94772 2.39014 1.5 2.83785 1.5 3.39014V10.3901C1.5 10.9424 1.94772 11.3901 2.5 11.3901H9.5C10.0523 11.3901 10.5 10.9424 10.5 10.3901V3.39014C10.5 2.83785 10.0523 2.39014 9.5 2.39014Z'
+          stroke='#344054'
+          strokeWidth='1.5'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+        <path
+          d='M8 1.39014V3.39014'
+          stroke='#344054'
+          strokeWidth='1.5'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+        <path
+          d='M4 1.39014V3.39014'
+          stroke='#344054'
+          strokeWidth='1.5'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+        <path
+          d='M1.5 5.39014H10.5'
+          stroke='#344054'
+          strokeWidth='1.5'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+        <path
+          d='M5 7.39014L7 9.39014'
+          stroke='#344054'
+          strokeWidth='1.5'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+        <path
+          d='M7 7.39014L5 9.39014'
+          stroke='#344054'
+          strokeWidth='1.5'
+          strokeLinecap='round'
+          strokeLinejoin='round'
+        />
+      </g>
+      <defs>
+        <clipPath id='clip0_989_3183'>
+          <rect
+            width='12'
+            height='12'
+            fill='white'
+            transform='translate(0 0.390137)'
+          />
+        </clipPath>
+      </defs>
+    </svg>
+  ),
+  [IconVariable.historyUpdateContract]: (
+    <svg
+      width='20'
+      height='21'
+      viewBox='0 0 20 21'
+      fill='none'
+      xmlns='http://www.w3.org/2000/svg'>
+      <path
+        d='M2.5 2.89014V7.0568H6.66667'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M2.54167 11.2236C2.72625 12.8951 3.46725 14.4561 4.64565 15.6559C5.82405 16.8556 7.37148 17.6245 9.03941 17.8391C10.7073 18.0537 12.399 17.7014 13.8427 16.839C15.2864 15.9766 16.3983 14.654 17 13.0836C17.6016 11.5132 17.658 9.78622 17.1601 8.17993C16.6622 6.57365 15.639 5.1813 14.2546 4.22649C12.8703 3.27169 11.2052 2.80983 9.52686 2.91511C7.84848 3.02038 6.25418 3.68666 5 4.80696L2.5 7.05696'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+      <path
+        d='M10 6.22363V10.3903L13.3333 12.057'
+        stroke='#475467'
+        strokeWidth='2'
+        strokeLinecap='round'
+        strokeLinejoin='round'
+      />
+    </svg>
+  ),
 };

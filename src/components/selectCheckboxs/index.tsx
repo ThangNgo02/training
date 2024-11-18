@@ -28,7 +28,7 @@ export function SelectCheckboxs(props: ISelectCheckboxsProps) {
 
   return (
     <div
-      className='custom-shadow absolute left-1/2 top-[62px] z-50 w-[180px] -translate-x-1/2 transform rounded-lg bg-white px-4 py-2'
+      className='custom-shadow absolute left-1/2 top-[62px] z-50 w-[200px] -translate-x-1/2 transform rounded-lg bg-white px-4 py-2'
       onClick={e => {
         e.stopPropagation();
       }}>

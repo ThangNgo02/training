@@ -19,8 +19,8 @@ import toastDefault, { EnumToast } from '@/components/toast';
 import { ModalContext } from '@/context/contextStore';
 import { useDepartments } from '@/hooks/useDepartments';
 
+import { DatePickerField } from '../../../../components/DatePickerField';
 import { CustomCheckbox } from '../CustomCheckbox';
-import { DatePickerField } from '../DatePickerField';
 import { type IModalEmployeeProps } from './type';
 dayjs.extend(customParseFormat);
 
@@ -188,21 +188,30 @@ export function ModalEmployeeView({
               }
         }
         validator={{
-          code: yup.string().typeError('Vui lòng nhập mã nhân viên').required('Vui lòng nhập mã nhân viên'),
+          code: yup
+            .string()
+            .trim()
+            .typeError('Vui lòng nhập mã nhân viên')
+            .required('Vui lòng nhập mã nhân viên')
+            .max(20, 'Mã nhân viên không được quá 20 ký tự'),
           fullName: yup
             .string()
+            .trim()
             .typeError('Vui lòng nhập họ tên cho nhân viên')
             .required('Vui lòng nhập họ tên cho nhân viên'),
           gender: yup
             .string()
+            .trim()
             .typeError('Vui lòng chọn giới tính cho nhân viên')
             .required('Vui lòng chọn giới tính cho nhân viên'),
           departmentCode: yup
             .string()
+            .trim()
             .typeError('Vui lòng chọn phòng ban cho nhân viên')
             .required('Vui lòng chọn phòng ban cho nhân viên'),
           phoneNumber: yup
             .string()
+            .trim()
             .nullable()
             .transform((value, originalValue) => (originalValue === '' ? null : value))
             .notRequired()
@@ -210,6 +219,7 @@ export function ModalEmployeeView({
 
           identityCard: yup
             .string()
+            .trim()
             .nullable()
             .transform((value, originalValue) => (originalValue === '' ? null : value))
             .notRequired()
@@ -235,9 +245,9 @@ export function ModalEmployeeView({
             }),
         }}>
         <div className='fixed bottom-0 left-0 right-0 top-0 z-50 bg-black p-1'>
-          <div className='relative max-h-[100vh] overflow-y-auto rounded-xl bg-white'>
+          <div className='relative h-full max-h-[100vh] overflow-y-auto rounded-xl bg-white'>
             <div className='sticky top-0 z-50 flex items-center justify-between border-b-[1px] border-[#E4E7EC] bg-white px-6  py-6'>
-              <span className='text-[18px] font-semibold text-[#344054]'>
+              <span className='font-semibold text-[#344054] sm:text-[18px]'>
                 {isAddNotUpdate === false ? 'Chi tiết nhân viên' : 'Thêm hồ sơ nhân viên'}
               </span>
               <div className='flex items-center gap-4'>
@@ -245,13 +255,13 @@ export function ModalEmployeeView({
                   onClick={handleCloseModal}
                   type='button'
                   text='Đóng'
-                  className='w-[90px] rounded-lg border border-[#98A2B3] px-4 py-2 text-center text-sm font-medium text-[#344054] hover:cursor-pointer hover:border-[#2DB976] hover:text-[#2DB976]'
+                  className='w-[70px] rounded-lg border border-[#98A2B3] px-2 py-1 text-center text-sm font-medium text-[#344054] hover:cursor-pointer hover:border-[#2DB976] hover:text-[#2DB976] sm:w-[90px] sm:px-4 sm:py-2'
                 />
                 {detailEmployee?.status !== 'DEACTIVE' && (
                   <Button
                     text='Lưu'
                     type='submit'
-                    className='w-[90px] rounded-lg border border-[#2DB976] bg-[#2DB976] px-4 py-2 text-center text-sm font-medium text-[#fafafa] hover:cursor-pointer hover:bg-[#2db975d7] hover:text-white'
+                    className='w-[70px] rounded-lg border border-[#2DB976] bg-[#2DB976] px-2 py-1 text-center text-sm font-medium text-[#fafafa] hover:cursor-pointer hover:bg-[#2db975d7] hover:text-white sm:w-[90px] sm:px-4 sm:py-2'
                   />
                 )}
               </div>
@@ -259,10 +269,10 @@ export function ModalEmployeeView({
             <div className='p-5'>
               <div className='border-b-2 border-b-[#E4E7EC] pb-6'>
                 <span className='text-base font-semibold text-[#344054]'>Thông tin chi tiết</span>
-                <div className='mt-4 flex gap-6'>
-                  <div className='w-[50%] gap-4 rounded-[10px] bg-[#E0F9EA] p-4'>
-                    <div className='box-border flex justify-between gap-4'>
-                      <div className='w-[50%]'>
+                <div className='mt-4 flex flex-col gap-6 lg:flex-row'>
+                  <div className='w-full rounded-[10px] bg-[#a3ffbcc8] p-4 sm:w-full sm:gap-4'>
+                    <div className='box-border flex flex-col justify-between sm:flex-row sm:gap-4'>
+                      <div className='sm:w-[50%]'>
                         <InputRoot
                           disabled={detailEmployee?.status === 'DEACTIVE'}
                           isRequire={true}
@@ -277,7 +287,7 @@ export function ModalEmployeeView({
                           }
                         />
                       </div>
-                      <div className='w-[50%]'>
+                      <div className='sm:w-[50%]'>
                         <InputRoot
                           disabled={detailEmployee?.status === 'DEACTIVE'}
                           isRequire={true}
@@ -293,8 +303,8 @@ export function ModalEmployeeView({
                         />
                       </div>
                     </div>
-                    <div className='mt-4 box-border flex justify-between gap-4'>
-                      <div className='w-[50%]'>
+                    <div className='box-border flex flex-col justify-between sm:flex-row sm:gap-4'>
+                      <div className='sm:w-[50%]'>
                         <InputRoot
                           disabled={detailEmployee?.status === 'DEACTIVE'}
                           name='position'
@@ -304,7 +314,7 @@ export function ModalEmployeeView({
                           classNameLabel='text-[#344054] text-sm font-normal'
                         />
                       </div>
-                      <div className='w-[50%]'>
+                      <div className='sm:w-[50%]'>
                         <p className='text-sm font-normal text-[#344054]'>
                           <span className='text-red-500'>*</span> Phòng ban
                         </p>
@@ -330,8 +340,8 @@ export function ModalEmployeeView({
                         />
                       </div>
                     </div>
-                    <div className='mt-4 box-border flex justify-between gap-4'>
-                      <div className='w-[50%]'>
+                    <div className='box-border flex flex-col justify-between gap-5 sm:flex-row'>
+                      <div className='sm:w-[50%]'>
                         <p className='text-sm font-normal text-[#344054]'>Bậc</p>
                         <SelectRoot
                           isReset={isReset}
@@ -347,7 +357,7 @@ export function ModalEmployeeView({
                           name='staffMetaDataLevel'
                         />
                       </div>
-                      <div className='w-[50%]'>
+                      <div className='sm:w-[50%]'>
                         <InputRoot
                           disabled={detailEmployee?.status === 'DEACTIVE'}
                           name='phoneNumber'
@@ -365,7 +375,7 @@ export function ModalEmployeeView({
                         />
                       </div>
                     </div>
-                    <div className='mt-4 box-border flex justify-between gap-4'>
+                    <div className='box-border flex justify-between'>
                       <InputRoot
                         disabled={detailEmployee?.status === 'DEACTIVE'}
                         name='email'
@@ -375,7 +385,7 @@ export function ModalEmployeeView({
                         classNameLabel='text-[#344054] text-sm font-normal'
                       />
                     </div>
-                    <div className='mt-4 box-border flex justify-between gap-4'>
+                    <div className='box-border flex justify-between gap-4'>
                       <TextAreaRoot
                         disabled={detailEmployee?.status === 'DEACTIVE'}
                         name='note'
@@ -386,9 +396,9 @@ export function ModalEmployeeView({
                       />
                     </div>
                   </div>
-                  <div className='w-[50%] gap-4 rounded-[10px] bg-[#E0F9EA] p-4'>
-                    <div className='box-border flex justify-between gap-4'>
-                      <div className='w-[50%]'>
+                  <div className='w-full rounded-[10px] bg-[#a3ffbcc8] p-4 pb-0 sm:w-full sm:gap-4'>
+                    <div className='box-border flex flex-col justify-between gap-4 sm:flex-row'>
+                      <div className='sm:w-[50%]'>
                         <p className='text-sm font-normal text-[#344054]'>Ngày sinh</p>
                         <DatePickerField
                           disabled={detailEmployee?.status === 'DEACTIVE'}
@@ -398,7 +408,7 @@ export function ModalEmployeeView({
                           displayFormat='DD/MM/YYYY'
                         />
                       </div>
-                      <div className='w-[50%]'>
+                      <div className='sm:w-[50%]'>
                         <p className='text-sm font-normal text-[#344054]'>
                           <span className='text-red-500'>*</span> Giới tính
                         </p>
@@ -424,7 +434,7 @@ export function ModalEmployeeView({
                         />
                       </div>
                     </div>
-                    <div className='mt-4 box-border flex justify-between gap-4'>
+                    <div className='mt-4 box-border flex flex-col justify-between sm:flex-row sm:gap-4'>
                       <InputRoot
                         disabled={detailEmployee?.status === 'DEACTIVE'}
                         name='socialInsuranceCode'
@@ -442,8 +452,8 @@ export function ModalEmployeeView({
                         classNameLabel='text-[#344054] text-sm font-normal'
                       />
                     </div>
-                    <div className='mt-4 box-border flex justify-between gap-4'>
-                      <div className='w-[50%]'>
+                    <div className='box-border flex flex-col justify-between sm:flex-row sm:gap-4'>
+                      <div className='sm:w-[50%]'>
                         <InputRoot
                           disabled={detailEmployee?.status === 'DEACTIVE'}
                           name='identityCard'
@@ -461,7 +471,7 @@ export function ModalEmployeeView({
                         />
                       </div>
 
-                      <div className='w-[50%]'>
+                      <div className='sm:w-[50%]'>
                         <p className='text-sm font-normal text-[#344054]'>Ngày cấp</p>
                         <DatePickerField
                           disabled={detailEmployee?.status === 'DEACTIVE'}
@@ -472,7 +482,7 @@ export function ModalEmployeeView({
                         />
                       </div>
                     </div>
-                    <div className='mt-4 box-border flex justify-between gap-4'>
+                    <div className='box-border flex justify-between gap-4'>
                       <InputRoot
                         disabled={detailEmployee?.status === 'DEACTIVE'}
                         name='issuePlaceIdentityCard'
@@ -482,7 +492,7 @@ export function ModalEmployeeView({
                         classNameLabel='text-[#344054] text-sm font-normal'
                       />
                     </div>
-                    <div className='mt-4 box-border flex justify-between gap-4'>
+                    <div className='box-border flex justify-between gap-4'>
                       <InputRoot
                         disabled={detailEmployee?.status === 'DEACTIVE'}
                         name='permanentAddress'
@@ -492,7 +502,7 @@ export function ModalEmployeeView({
                         classNameLabel='text-[#344054] text-sm font-normal'
                       />
                     </div>
-                    <div className='mt-4 box-border flex justify-between gap-4'>
+                    <div className='box-border flex justify-between'>
                       <InputRoot
                         disabled={detailEmployee?.status === 'DEACTIVE'}
                         name='temporaryAddress'
@@ -507,8 +517,8 @@ export function ModalEmployeeView({
               </div>
               <div className='mt-5 border-b-2 border-b-[#E4E7EC] pb-6'>
                 <span className='text-base font-semibold text-[#344054]'>Thời gian làm việc</span>
-                <div className='mt-4 flex items-end gap-6'>
-                  <div className='w-[34%]'>
+                <div className='mt-4 flex flex-col items-start gap-6 md:flex-row md:items-end'>
+                  <div className='w-full md:w-[34%]'>
                     <p className='text-sm font-normal text-[#344054]'>Ngày bắt đầu làm</p>
                     <DatePickerField
                       disabled={detailEmployee?.status === 'DEACTIVE'}
@@ -518,7 +528,7 @@ export function ModalEmployeeView({
                       displayFormat='DD/MM/YYYY'
                     />
                   </div>
-                  <div className='w-[34%]'>
+                  <div className='w-full md:w-[34%]'>
                     <p className='text-sm font-normal text-[#344054]'>Ngày nghỉ việc</p>
                     <DatePickerField
                       name='resignDate'
@@ -547,7 +557,7 @@ export function ModalEmployeeView({
               <div className={`mt-5 ${detailEmployee?.status === 'DEACTIVE' && 'rounded-lg bg-[#f5f5f5] p-2'}`}>
                 <p className='text-base font-semibold text-[#344054]'>Tài liệu, chứng từ</p>
                 {isAddNotUpdate === true ? (
-                  <div className='mt-4 flex items-center gap-8'>
+                  <div className='mt-4 flex flex-col items-start gap-8 xl:flex-row'>
                     <Upload
                       disabled={detailEmployee?.status === 'DEACTIVE'}
                       showUploadList={false}
@@ -623,7 +633,7 @@ export function ModalEmployeeView({
                 )}
               </div>
               {isAddNotUpdate === false && (
-                <div className='mt-5 flex items-center justify-between'>
+                <div className='mt-5 flex flex-col items-start justify-between gap-4 md:flex-row md:gap-0'>
                   {detailEmployee.status === 'DEACTIVE' ? (
                     <>
                       <div>

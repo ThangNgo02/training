@@ -4,7 +4,7 @@ import toastDefault, { EnumToast } from '@/components/toast';
 
 import AuthService from './Auth';
 
-export const handleExportStaff = async (url: string, fileName: string, setIsLoading: (loading: boolean) => void) => {
+export const handleExportExcel = async (url: string, fileName: string, setIsLoading: (loading: boolean) => void) => {
   setIsLoading(true);
   try {
     const response = await axios({

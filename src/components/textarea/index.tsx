@@ -55,7 +55,7 @@ function TextAreaRoot({
       )}
       <div
         className={` text-16x20 text-neutral-80 flex h-full items-center gap-2 rounded-lg border p-3 transition ${props.className} ${isError ? 'border-red-500' : 'border-neutral-40 hover:border-primary-hover hover:bg-primary-bg_color focus:border-primary-hover active:border-primary-hover '} ${
-          props.disabled && 'bg-[#d7efe1]  hover:bg-neutral-40  cursor-not-allowed  border-none'
+          props.disabled && 'hover:bg-neutral-40 cursor-not-allowed border border-[#d9d9d9] bg-[#d9efe1]'
         } ${isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'}`}>
         {props.iconStart}
         <textarea

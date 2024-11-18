@@ -69,6 +69,7 @@ export function ModalFilter({ handleSubmitFormFilter, listDepartment, initialVal
                 options={[
                   { label: 'Hoạt động', value: 'ACTIVE' },
                   { label: 'Đã khóa', value: 'DEACTIVE' },
+                  { label: 'Nghỉ việc', value: 'RESIGNED' },
                 ]}
                 className='mt-2 rounded-lg border p-[10px]'
               />
