@@ -18,17 +18,17 @@ import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import InputRoot from '@/components/input';
 
-import { BlockForTimesheet, type departmentData, type IDepartmentDataType } from '.';
+import { BlockForTimesheet, type IShiftDataType, type shiftData } from '.';
 import AddForm from './Form/addForm';
 
-interface IDepartmentViewProps {
-  data: IDepartmentDataType[];
-  columns: TableColumnsType<IDepartmentDataType>;
+interface IShiftViewProps {
+  data: IShiftDataType[];
+  columns: TableColumnsType<IShiftDataType>;
   onPageSizeChange: (pageSize: number) => void;
   onPageChange: (currentPage: number) => void;
   onSearchValueChange: (searchValue: string) => void;
-  onFilterDepartment: () => void;
-  onAddDepartment: (payload: {
+  onFilterShift: () => void;
+  onAddShift: (payload: {
     code: string;
     name: string;
     note: string;
@@ -41,20 +41,19 @@ interface IDepartmentViewProps {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const DepartmentView: React.FC<IDepartmentViewProps> = ({
+const ShiftView: React.FC<IShiftViewProps> = ({
   data,
   columns,
   onPageSizeChange,
   onPageChange,
   onSearchValueChange,
-  onFilterDepartment,
-  onAddDepartment,
+  onFilterShift,
+  onAddShift,
   currentPage,
   pageSize,
   total,
 }) => {
   const maxPages = Math.max(1, Math.ceil(total / pageSize)); // Minimum of 1 page
-  // eslint-disable-next-line @typescript-eslint/naming-convention
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Reset search field
@@ -141,8 +140,8 @@ const DepartmentView: React.FC<IDepartmentViewProps> = ({
   }, 200);
 
   // Handle form submission
-  const handleSubmit = (data: departmentData) => {
-    onAddDepartment({
+  const handleSubmit = (data: shiftData) => {
+    onAddShift({
       code: data.code,
       name: data.name,
       note: data.note,
@@ -168,7 +167,7 @@ const DepartmentView: React.FC<IDepartmentViewProps> = ({
           <InputRoot
             type='text'
             className='  mt-10 w-[140%] items-center rounded-md px-4'
-            placeholder='Mã / Tên phòng ban'
+            placeholder='Mã / Tên ca làm việc'
             value={searchInputValue}
             onChange={e => {
               const value = e.target.value;
@@ -351,7 +350,7 @@ const DepartmentView: React.FC<IDepartmentViewProps> = ({
       </div>
 
       {/* Main Table */}
-      <Table<IDepartmentDataType>
+      <Table<IShiftDataType>
         columns={newColumns.filter(col => !col.hidden)}
         dataSource={data}
         pagination={false} // Disable default pagination
@@ -363,4 +362,4 @@ const DepartmentView: React.FC<IDepartmentViewProps> = ({
   );
 };
 
-export default DepartmentView;
+export default ShiftView;

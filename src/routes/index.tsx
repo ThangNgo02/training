@@ -14,6 +14,8 @@ const LoginPage = React.lazy(async () => import('@/pages/login'));
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const DepartmentPage = React.lazy(async () => import('@/pages/department'));
 // eslint-disable-next-line @typescript-eslint/naming-convention
+const ShiftPage = React.lazy(async () => import('@/pages/shift'));
+// eslint-disable-next-line @typescript-eslint/naming-convention
 const StaffPage = React.lazy(async () => import('@/pages/staff'));
 
 const rootRoutes: Array<{
@@ -62,6 +64,15 @@ const rootRoutes: Array<{
           <PrivateRoute
             role={[]}
             children={<StaffPage />}
+          />
+        ),
+      },
+      {
+        path: EnumPath.shift,
+        element: (
+          <PrivateRoute
+            role={[]}
+            children={<ShiftPage />}
           />
         ),
       },

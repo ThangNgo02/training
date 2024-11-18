@@ -1,6 +1,6 @@
 import './customCss.css';
 
-import { ProfileOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons';
+import { ProfileOutlined, QuestionCircleOutlined, TableOutlined, UserOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -25,6 +25,9 @@ const SideMenu: React.FC<SideMenuProps> = ({ defaultSelectedKeys }) => {
         navigate(EnumPath.department);
         break;
       case '3':
+        navigate(EnumPath.shift);
+        break;
+      case '4':
         navigate('/help');
         break;
       default:
@@ -69,13 +72,22 @@ const SideMenu: React.FC<SideMenuProps> = ({ defaultSelectedKeys }) => {
           icon={<ProfileOutlined />}>
           Phòng ban
         </Menu.Item>
-        <hr className='mx-2' />
-
         <Menu.Item
           key='3'
           className='text-white'
           onClick={() => {
             handleMenuClick('3');
+          }}
+          icon={<TableOutlined />}>
+          Ca làm việc
+        </Menu.Item>
+        <hr className='mx-2' />
+
+        <Menu.Item
+          key='4'
+          className='text-white'
+          onClick={() => {
+            handleMenuClick('4');
           }}
           icon={<QuestionCircleOutlined />}>
           Giúp đỡ
