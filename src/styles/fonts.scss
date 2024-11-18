@@ -1,0 +1,21 @@
+@font-face {
+    font-family: 'SVN-Rollgates Luxury';
+    src: url('#{$font-path}SVN-RollgatesLuxury-Regular.woff2') format('woff2'),
+        url('#{$font-path}SVN-RollgatesLuxury-Regular.woff') format('woff'),
+        url('#{$font-path}SVN-RollgatesLuxury-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'UTM Impact';
+    src: url('#{$font-path}UTMImpact.woff2') format('woff2'),
+        url('#{$font-path}UTMImpact.woff') format('woff'),
+        url('#{$font-path}UTMImpact.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
+

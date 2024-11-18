@@ -1,0 +1,300 @@
+@use 'sass:math';
+
+@mixin text-overflow ($number: 2, $over: hidden) {
+    display: -webkit-box;
+    -webkit-line-clamp: ($number);
+    -webkit-box-orient: vertical;
+    overflow: $over;
+    text-overflow: ellipsis;
+}
+
+@mixin aspect-ratio($width: 1, $height: 1) {
+    position: relative;
+
+    &::before {
+        content: '';
+        display: block;
+        padding-bottom: math.div($height, $width) * 100%;
+    }
+}
+
+@mixin transition($value) {
+    transition: $value;
+}
+
+@mixin scroll-bars(
+    $size: 4,
+    $thumb-color: $deep-koamaru,
+    $track-color: $white05, 
+    $border-radius-track: 8,
+    $border-radius-thumb: 8,
+    $border-thumb: 0
+) {
+    // For Internet Explorer
+    scrollbar-face-color: $thumb-color;
+    scrollbar-track-color: $track-color;
+
+    // For Google Chrome
+    &::-webkit-scrollbar {
+        height: rem($size);
+        width: rem($size);
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: $thumb-color;
+        border: rem($border-thumb) solid $track-color;
+        border-radius: rem($border-radius-thumb);
+    }
+
+    &::-webkit-scrollbar-track {
+        background: $track-color;
+        border-radius: $border-radius-track;
+    }
+}
+
+@mixin font-base($font-size: 16, $line-height: 24) {
+    font-size: rem($font-size);
+    line-height: rem($line-height);
+}
+
+@mixin style-bg-color() {
+    &-bg-white {
+        background-color: $white;
+    }
+}
+
+@mixin style-font-weight() {
+    &-100 {
+        font-weight: 100;
+    }
+
+    &-200 {
+        font-weight: 200;
+    }
+
+    &-300 {
+        font-weight: 300;
+    }
+
+    &-400 {
+        font-weight: normal;
+    }
+
+    &-500 {
+        font-weight: 500;
+    }
+
+    &-600 {
+        font-weight: 600;
+    }
+
+    &-700 {
+        font-weight: bold;
+    }
+
+    &-800 {
+        font-weight: 800;
+    }
+
+    &-900 {
+        font-weight: 900;
+    }
+}
+
+@mixin style-general() {
+    &-uppercase {
+        text-transform: uppercase;
+    }
+
+    &-capitalize {
+        text-transform: capitalize;
+    }
+
+    &-underline {
+        text-decoration: underline;
+    }
+
+    &-italic {
+        font-style: italic;
+    }
+
+    &-center {
+        text-align: center;
+    }
+
+    &-justify {
+        text-align: justify;
+    }
+
+    &-right {
+        text-align: right;
+    }
+
+    &-left {
+        text-align: left;
+    }
+}
+
+@mixin reset-button {
+    appearance: none;
+    background-color: none;
+    border: 0;
+    outline: none;
+}
+
+@mixin list-style-none {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+@mixin adjust-flex($justify-content: center, $align-item: center) {
+    align-items: $align-item;
+    display: flex;
+    justify-content: $justify-content;
+}
+
+$colors-design: (
+    'white': $white,
+    'black': $black,
+    'deepKoamaru': $deep-koamaru,
+    'electricCrimson': $electric-crimson,
+    'midNightGreen': $mid-night-green,
+    'khaki': $khaki,
+    'quartz':$quartz,
+    'arsenic':$arsenic,
+    'spanishGray': $spanish-gray,
+    'raisinBlack': $raisin-black,
+    'davysGrey': $davys-grey,
+);
+
+$font-design: (
+    'fontSvn': $font-svn,
+    'fontRoboto': $font-roboto,
+    'fontMontserrat': $font-montserrat,
+    'fontUTM': $font-utm,
+);
+
+@mixin style-font {
+    @each $name, $font in $font-design {
+        &-#{$name} {
+            font-family: $font;
+        }
+    }
+}
+
+@mixin style-color {
+    @each $name, $color in $colors-design {
+        &-#{$name} {
+            color: $color;
+        }
+    }
+}
+@mixin container {
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: rem(16);
+    padding-right: rem(16);
+
+    @include small-mobile-up {
+        max-width: rem(540);
+    }
+
+    @include mobile-up {
+        max-width: rem(720);
+    }
+
+    @include tablet-up {
+        max-width: rem(960);
+    }
+
+    @include desktop-up {
+        max-width: rem(1140);
+    }
+
+    @include break-min(1920px) {
+        max-width: rem(1920);
+        padding-left: rem(112);
+        padding-right: rem(112);
+    }
+}
+
+@mixin container-v2 {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: $standard-viewport;
+    padding-left: rem(80);
+    padding-right: rem(80);
+    
+    @include tablet-down {
+        padding-left: rem(40);
+        padding-right: rem(40);
+    }
+    @include mobile-down {
+        padding-left: rem(16);
+        padding-right: rem(16);
+    }
+
+    @include break-min(1920px) {
+        max-width: rem(1920);
+        padding-left: rem(278);
+        padding-right: rem(278);
+    }
+}
+
+@mixin inset() {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
+@mixin section-spacing() {
+    &-pd {
+        padding-top: rem(80);
+        padding-bottom: rem(80);
+        @include desktop-down {
+            padding-top: rem(60);
+            padding-bottom: rem(60);
+        }
+        @include tablet-down {
+            padding-top: rem(32);
+            padding-bottom: rem(32);
+        }
+
+        @include mobile-down {
+            padding-top: rem(24);
+            padding-bottom: rem(24);
+        }
+
+        &-noPb {
+            padding-bottom: 0;
+        }
+
+        &-noPt {
+            padding-top: 0;
+        }
+    }
+}
+
+@mixin text-background($color) {
+    background: $color;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    /* stylelint-disable-next-line property-no-unknown */
+    text-fill-color: transparent;
+}
+
+.u {
+    @include section-spacing;
+}
+
+@mixin scroll-desc-pk3($line-height,$line-height-tablet-down,$line:3) {
+    max-height: rem($line-height)* $line;
+    overflow-y: auto;
+    @include scroll-bars(4,$mid-night-green,transparent,8,8,0);
+    @include tablet-down {
+        max-height: rem($line-height-tablet-down) * $line; 
+    }
+}

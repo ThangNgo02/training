@@ -1,7 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
+@import 'styles/common';
 .home {
     &-text {
         &_900 {
@@ -9,3 +9,6 @@
         }
     }
 }
+
+// Components
+@import 'components/atoms/*/index.scss';

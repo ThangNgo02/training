@@ -1,0 +1,85 @@
+.a-button {
+    $root: &;
+    box-sizing: border-box;
+    font-weight: 600;
+    outline: 0;
+    overflow: hidden;
+    padding-left: rem(16);
+    padding-right: rem(16);
+    padding-top: 0;
+    padding-bottom: 0;
+    width: 100%;
+    font-family: $font-roboto;
+    @include font-base(20, 32);
+    @include adjust-flex();
+    @include transition(all $transition ease-in-out);
+    @include reset-button();
+
+    &-loading {
+        align-items: center;
+
+        img {
+            height: rem(48);
+            width: rem(48);
+        }
+    }
+
+    &-primary {
+        background-color: $cool-black;
+        box-shadow: 0 rem(4) rem(12) $dark-green;
+        color: $white;
+        padding-left: rem(113);
+        padding-right: rem(112);
+    }
+
+    &-green {
+        background-color: $mid-night-green;
+        padding-left: rem(54);
+        padding-right: rem(54);
+        border-radius: rem(2000);
+        @include tablet-down {
+            padding-left: rem(32);
+            padding-right: rem(32);
+        }
+    }
+
+    &-iconButton,
+    &-secondary {
+        background-color: $celestial-blue;
+        color: $white;
+        padding: rem(12) rem(16);
+        border-radius: rem(2000);
+    }
+
+    &-iconButton {
+        background-color: $cyan-cobalt-blue;
+    }
+
+    &-h60 {
+        height: rem(60);
+        @include max-desktop-down {
+            height: rem(48);
+        }
+    }
+    
+    &-h60-pk3 {
+        height: rem(60);
+
+        @include tablet-down {
+            height: rem(48);
+        }
+        @include mobile-down {
+            height: rem(40);
+        }
+    }
+
+
+    &:disabled {
+        opacity: 0.7;
+        cursor: no-drop;
+    }
+
+    &:hover {
+        opacity: 0.7;
+    }
+}
