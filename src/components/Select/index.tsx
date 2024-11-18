@@ -107,7 +107,9 @@ function SelectRoot({
     <>
       <div
         ref={selectRef}
-        className={`relative select-none outline-none ${props.className ?? ''} ${isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'} ${disabled && 'border-none bg-[#d7efe1]'}`}>
+        className={`relative select-none outline-none ${props.className ?? ''} 
+        ${isFocus ? 'custom-shadow border-[#2db976]' : err ? 'border-red-500' : 'border-[#98A2B3]'} 
+        ${disabled && 'border-none bg-[#d7efe1]'}`}>
         <div
           className={`flex w-full items-center justify-between gap-2 px-2 text-sm text-black ${props.classNameSelected} ${!disabled && 'cursor-pointer'}`}
           // eslint-disable-next-line no-void

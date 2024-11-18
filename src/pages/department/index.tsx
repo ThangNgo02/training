@@ -90,15 +90,15 @@ const DepartmentPage: React.FC = () => {
     },
   });
 
-  const createSaveDepartmentApi = (id: number): IApiRequest => ({
-    url: `https://api.tsp.com.vn/hrm/department/${id}`,
+  const saveDepartmentApi: IApiRequest = {
+    url: `https://api.tsp.com.vn/hrm/department/${selectedDepartmentId}`,
     method: 'put',
     headers: {
       Authorization: `Bearer ${token}`,
       // eslint-disable-next-line @typescript-eslint/naming-convention
       'Content-Type': 'application/json',
     },
-  });
+  };
 
   const addDepartmentApi: IApiRequest = {
     url: 'https://api.tsp.com.vn/hrm/department',
@@ -164,7 +164,7 @@ const DepartmentPage: React.FC = () => {
     handleRequestSuccess: (response: any) => {
       if (response?.code === 2000) {
         toastDefault(EnumToast.SUCCESS, 'Department added successfully');
-        mutateDepartments({}); // Refresh departments after adding
+        mutateFilterDepartments({}); // Refresh departments
       } else {
         toastDefault(EnumToast.ERROR, 'Failed to add department');
       }
@@ -178,7 +178,7 @@ const DepartmentPage: React.FC = () => {
     handleRequestSuccess: (response: any) => {
       if (response?.code === 2000) {
         toastDefault(EnumToast.SUCCESS, 'Department added successfully');
-        mutateDepartments({}); // Refresh departments after adding
+        mutateFilterDepartments({}); // Refresh departments after adding
       } else {
         toastDefault(EnumToast.ERROR, 'Failed to add department');
       }
@@ -199,11 +199,7 @@ const DepartmentPage: React.FC = () => {
     getDepartmentApi(selectedDepartmentId ?? 0), // Provide a default value
     getDepartmentResponse,
   );
-  const { mutate: mutateSaveDepartment } = useRequest(
-    // Only create the API when we have an ID
-    createSaveDepartmentApi(selectedDepartmentId ?? 0),
-    saveDepartmentResponse,
-  );
+  const { mutate: mutateSaveDepartment } = useRequest(saveDepartmentApi, saveDepartmentResponse);
   const { mutate: mutateAddDepartment } = useRequest(addDepartmentApi, addDepartmentResponse);
 
   useEffect(() => {
@@ -261,23 +257,19 @@ const DepartmentPage: React.FC = () => {
   };
 
   const handlePutFormSubmit = (data: departmentData) => {
-    console.log('Selected Department ID before submit:', selectedDepartmentId);
-    mutateSaveDepartment({
-      id: selectedDepartmentId,
-      data: {
-        code: data.code,
-        name: data.name,
-        note: data.note,
-        phoneNumber: data.phonenumber,
-        blockForTimesheet: data.blockForTimesheet,
-      },
-    });
+    const dataApi = {
+      code: data.code,
+      name: data.name,
+      note: data.note,
+      phoneNumber: data.phonenumber,
+      blockForTimesheet: data.blockForTimesheet,
+    };
+    mutateSaveDepartment({ ...dataApi });
 
     // Refresh the data and reset state
     mutateFilterDepartments({});
     handlePageChange(1);
     setIsModalOpen(false);
-    setSelectedDepartmentId(null);
     setSelectedDepartmentData(null);
   };
 
@@ -293,6 +285,7 @@ const DepartmentPage: React.FC = () => {
           className='cursor-pointer text-blue-600 hover:text-blue-800'
           onClick={() => {
             handleCodeClick(record);
+            setSelectedDepartmentId(record.id);
           }}>
           {text}
         </div>

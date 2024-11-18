@@ -36,7 +36,7 @@ const defaultFormValues: PutFormValues = {
   name: '',
   note: '',
   phonenumber: '',
-  blockForTimesheet: BlockForTimesheet.DRIVER,
+  blockForTimesheet: '' as BlockForTimesheet,
 };
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -63,7 +63,7 @@ const PutForm = ({
         name: departmentData.name ?? '',
         note: departmentData.note ?? '',
         phonenumber: departmentData.phonenumber ?? '',
-        blockForTimesheet: departmentData.blockForTimesheet ?? BlockForTimesheet.DRIVER,
+        blockForTimesheet: departmentData.blockForTimesheet ?? ('' as BlockForTimesheet),
       });
       setKey(prev => prev + 1); // Force re-render
     }
