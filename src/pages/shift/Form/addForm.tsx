@@ -78,7 +78,7 @@ const AddForm = ({
         footer={null}
         width={800}
         centered
-        maskClosable={true}
+        maskClosable={false}
         title='Thêm phòng ban'
         className=''>
         <Form

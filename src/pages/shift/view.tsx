@@ -1,6 +1,6 @@
 import './customCss.css';
 
-import { CloseCircleOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { CloseCircleOutlined, FilterOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import {
   Button,
   Checkbox,
@@ -18,16 +18,19 @@ import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import InputRoot from '@/components/input';
 
-import { BlockForTimesheet, type IShiftDataType, type shiftData } from '.';
+import { type BlockForTimesheet, type IShiftDataType, type shiftData } from '.';
 import AddForm from './Form/addForm';
+import FilterForm from './Form/filterForm';
 
 interface IShiftViewProps {
   data: IShiftDataType[];
+  totalData: IShiftDataType[];
   columns: TableColumnsType<IShiftDataType>;
   onPageSizeChange: (pageSize: number) => void;
   onPageChange: (currentPage: number) => void;
   onSearchValueChange: (searchValue: string) => void;
   onFilterShift: () => void;
+  setDepartmentCode: (code: string) => void;
   onAddShift: (payload: {
     code: string;
     name: string;
@@ -43,18 +46,22 @@ interface IShiftViewProps {
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const ShiftView: React.FC<IShiftViewProps> = ({
   data,
+  totalData,
   columns,
   onPageSizeChange,
   onPageChange,
   onSearchValueChange,
   onFilterShift,
   onAddShift,
+  setDepartmentCode,
   currentPage,
   pageSize,
   total,
 }) => {
   const maxPages = Math.max(1, Math.ceil(total / pageSize)); // Minimum of 1 page
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  const [showFilterForm, setShowFilterForm] = useState(false);
 
   // Reset search field
   const handleResetSearch = () => {
@@ -139,6 +146,15 @@ const ShiftView: React.FC<IShiftViewProps> = ({
     onPageChange(1); // Reset to first page when searching
   }, 200);
 
+  const handleFilterSubmit = (data: any) => {
+    setDepartmentCode(data.departmentCode || '');
+
+    // Reset page to 1 when applying filters
+    onPageChange(1);
+    onFilterShift();
+    setShowFilterForm(false);
+  };
+
   // Handle form submission
   const handleSubmit = (data: shiftData) => {
     onAddShift({
@@ -146,7 +162,7 @@ const ShiftView: React.FC<IShiftViewProps> = ({
       name: data.name,
       note: data.note,
       phoneNumber: data.phonenumber,
-      blockForTimesheet: BlockForTimesheet.OFFICE, // Default value
+      blockForTimesheet: data.blockForTimesheet, // Default value
     });
     onPageChange(1);
     setIsModalOpen(false);
@@ -201,6 +217,32 @@ const ShiftView: React.FC<IShiftViewProps> = ({
               className='fill-white hover:cursor-pointer hover:fill-black'
             />
           </Button>
+
+          <div>
+            <Dropdown
+              open={showFilterForm}
+              onOpenChange={setShowFilterForm}
+              dropdownRender={() => (
+                <div
+                  className='bg-white p-4 shadow-lg'
+                  onClick={e => {
+                    e.stopPropagation();
+                  }}>
+                  <FilterForm
+                    onSubmit={handleFilterSubmit}
+                    totalData={totalData as any}
+                    onClose={() => {
+                      setShowFilterForm(false);
+                    }}
+                  />
+                </div>
+              )}
+              trigger={['click']}>
+              <Button className='mr-4  bg-[#4d7bc2] text-white'>
+                <FilterOutlined />
+              </Button>
+            </Dropdown>
+          </div>
 
           <Dropdown // Select collumns
             menu={{

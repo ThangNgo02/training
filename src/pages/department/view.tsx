@@ -27,7 +27,6 @@ interface IDepartmentViewProps {
   onPageSizeChange: (pageSize: number) => void;
   onPageChange: (currentPage: number) => void;
   onSearchValueChange: (searchValue: string) => void;
-  onFilterDepartment: () => void;
   onAddDepartment: (payload: {
     code: string;
     name: string;
@@ -47,7 +46,6 @@ const DepartmentView: React.FC<IDepartmentViewProps> = ({
   onPageSizeChange,
   onPageChange,
   onSearchValueChange,
-  onFilterDepartment,
   onAddDepartment,
   currentPage,
   pageSize,

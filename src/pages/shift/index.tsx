@@ -70,6 +70,8 @@ const ShiftPage: React.FC = () => {
   const [pageSize, setPageSize] = useState<number>(25);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [total, setTotal] = useState<number>(0);
+  const [totalData, setTotalData] = useState<IShiftDataType[]>([]);
+  const [departmentCode, setDepartmentCode] = useState<string>('');
 
   //
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -80,7 +82,7 @@ const ShiftPage: React.FC = () => {
   const token = AuthService.getPackageAuth();
 
   // Api
-  const departmentApi: IApiRequest = {
+  const shiftApi: IApiRequest = {
     url: 'https://api.tsp.com.vn/hrm/shift-for-staff?page=0&size=2000',
     method: 'get',
     headers: {
@@ -91,8 +93,8 @@ const ShiftPage: React.FC = () => {
     },
   };
 
-  const filterDepartmentApi: IApiRequest = {
-    url: `https://api.tsp.com.vn/hrm/shift-for-staff?page=${currentPage - 1}&size=${pageSize}${searchValue ? `&codeOrName=${searchValue}` : ''}`,
+  const filterShiftApi: IApiRequest = {
+    url: `https://api.tsp.com.vn/hrm/shift-for-staff?page=${currentPage - 1}&size=${pageSize}${departmentCode ? `&departmentCode=${departmentCode}` : ''}${searchValue ? `&codeOrName=${searchValue}` : ''}`,
     method: 'get',
     headers: {
       // Set Authorization header using token from cookies
@@ -102,8 +104,8 @@ const ShiftPage: React.FC = () => {
     },
   };
 
-  const getDepartmentApi = (id: number): IApiRequest => ({
-    url: `https://api.tsp.com.vn/hrm/department/${id}`,
+  const getShiftApi = (id: number): IApiRequest => ({
+    url: `https://api.tsp.com.vn/hrm/shift/${id}`,
     method: 'get',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -112,8 +114,8 @@ const ShiftPage: React.FC = () => {
     },
   });
 
-  const saveDepartmentApi: IApiRequest = {
-    url: `https://api.tsp.com.vn/hrm/department/${selectedShiftId}`,
+  const saveShiftApi: IApiRequest = {
+    url: `https://api.tsp.com.vn/hrm/shift/${selectedShiftId}`,
     method: 'put',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -122,8 +124,8 @@ const ShiftPage: React.FC = () => {
     },
   };
 
-  const addDepartmentApi: IApiRequest = {
-    url: 'https://api.tsp.com.vn/hrm/department',
+  const addShiftApi: IApiRequest = {
+    url: 'https://api.tsp.com.vn/hrm/shift',
     method: 'post',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -137,6 +139,7 @@ const ShiftPage: React.FC = () => {
     handleRequestSuccess: (response: any) => {
       if (response?.code === 2000) {
         setTotal(response.totalElements || response.data.length > 0);
+        setTotalData(response.data);
       } else {
         toastDefault(EnumToast.ERROR, 'Failed to fetch shift data');
       }
@@ -211,18 +214,18 @@ const ShiftPage: React.FC = () => {
   };
 
   const createShiftRequest = (id: number) => {
-    return useRequest(getDepartmentApi(id), getShiftResponse);
+    return useRequest(getShiftApi(id), getShiftResponse);
   };
 
   // Custom hook to trigger the shift fetch request
-  const { mutate: mutateShifts } = useRequest(departmentApi, handleAllShiftResponse);
-  const { mutate: mutateFilterShifts } = useRequest(filterDepartmentApi, handleFilterStaffResponse);
+  const { mutate: mutateShifts } = useRequest(shiftApi, handleAllShiftResponse);
+  const { mutate: mutateFilterShifts } = useRequest(filterShiftApi, handleFilterStaffResponse);
   const { mutate: mutateGetShift } = useRequest(
-    getDepartmentApi(selectedShiftId ?? 0), // Provide a default value
+    getShiftApi(selectedShiftId ?? 0), // Provide a default value
     getShiftResponse,
   );
-  const { mutate: mutateSaveShift } = useRequest(saveDepartmentApi, saveShiftResponse);
-  const { mutate: mutateAddShift } = useRequest(addDepartmentApi, addShiftResponse);
+  const { mutate: mutateSaveShift } = useRequest(saveShiftApi, saveShiftResponse);
+  const { mutate: mutateAddShift } = useRequest(addShiftApi, addShiftResponse);
 
   useEffect(() => {
     mutateShifts({});
@@ -404,12 +407,14 @@ const ShiftPage: React.FC = () => {
               <ShiftView
                 // Pass filtered data to ShiftView
                 data={data}
+                totalData={totalData}
                 columns={columns}
                 onPageSizeChange={handlePageSizeChange}
                 onPageChange={handlePageChange}
                 onSearchValueChange={handleSearchValueChange}
                 onFilterShift={handleFilterShift}
                 onAddShift={mutateAddShift}
+                setDepartmentCode={setDepartmentCode}
                 pageSize={pageSize}
                 currentPage={currentPage}
                 total={total}

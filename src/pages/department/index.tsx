@@ -232,9 +232,7 @@ const DepartmentPage: React.FC = () => {
     setCurrentPage(1); // Reset to the first page when search value changes
   };
 
-  const handleFilterDepartment = () => {
-    mutateFilterDepartments({});
-  };
+  
 
   const handleCodeClick = async (record: IDepartmentDataType) => {
     if (!record.id) return;
@@ -367,7 +365,7 @@ const DepartmentPage: React.FC = () => {
                 onPageSizeChange={handlePageSizeChange}
                 onPageChange={handlePageChange}
                 onSearchValueChange={handleSearchValueChange}
-                onFilterDepartment={handleFilterDepartment}
+                
                 onAddDepartment={mutateAddDepartment}
                 pageSize={pageSize}
                 currentPage={currentPage}

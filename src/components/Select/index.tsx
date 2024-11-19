@@ -26,6 +26,8 @@ export interface ISelectProps {
   classNameItemSelect?: string;
   classNameOptionList?: string;
   onChange?: (value: any) => void;
+  maxHeight?: number;
+  classNameDropdown?: string;
 }
 
 function SelectRoot({
@@ -35,6 +37,7 @@ function SelectRoot({
   isErrorWrongLogin,
   disabled = false,
   errorString,
+  maxHeight = 256,
   ...props
 }: ISelectProps) {
   const methods = useFormContext();
@@ -111,9 +114,10 @@ function SelectRoot({
         ${isFocus ? 'custom-shadow border-[#2db976]' : err ? 'border-red-500' : 'border-[#98A2B3]'} 
         ${disabled && 'border-none bg-[#d7efe1]'}`}>
         <div
-          className={`flex w-full items-center justify-between gap-2 px-2 text-sm text-black ${props.classNameSelected} ${!disabled && 'cursor-pointer'}`}
-          // eslint-disable-next-line no-void
-          onClick={disabled ? () => void 0 : handleToggle}>
+          className={`flex w-full items-center justify-between gap-2 px-2 text-sm text-black ${
+            props.classNameSelected
+          } ${!disabled && 'cursor-pointer'}`}
+          onClick={disabled ? () => {} : handleToggle}>
           <span className={`text-[#0F1E34] ${!value && 'text-gray-400'}`}>{value ? value.label : 'Lựa chọn'}</span>
           {isOpen ? (
             <span className='text-[#0F1E34]'>
@@ -128,12 +132,20 @@ function SelectRoot({
 
         {isOpen && (
           <div
-            className={`absolute left-0 right-0 z-10 mt-[14px] w-full overflow-y-auto rounded-md border border-gray-200 bg-white p-1 text-start shadow-md ${props.classNameOptionList}`}>
-            <ul>
+            className={`absolute left-0 right-0 z-10 mt-[14px] w-full rounded-md border border-gray-200 bg-white p-1 text-start shadow-md ${
+              props.classNameOptionList
+            }`}
+            style={{
+              maxHeight: `${maxHeight}px`,
+              overflowY: 'auto',
+            }}>
+            <ul className='w-full'>
               {options.map(option => (
                 <li
                   key={option.value}
-                  className={`cursor-pointer rounded px-2 py-2 text-sm text-gray-700 hover:bg-[#e1e1e1] ${props.classNameItemSelect}`}
+                  className={`cursor-pointer rounded px-2 py-2 text-sm text-gray-700 hover:bg-[#e1e1e1] ${
+                    props.classNameItemSelect
+                  } ${value?.value === option.value ? 'bg-[#f5f5f5]' : ''}`}
                   onClick={() => {
                     handleOptionClick(option);
                   }}>
