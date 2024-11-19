@@ -1,5 +1,5 @@
 import { Button } from 'antd';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import Form, { type IFormRef } from '@/components/form';
@@ -26,7 +26,7 @@ const FilterForm = ({
 }) => {
   const methods = useFormContext();
   const formRef = useRef<IFormRef>(null);
-
+  const [selectKey, setSelectKey] = useState(0);
   // Get all departments from totalData
   const departments = totalData
     .filter(item => item.departmentList && Array.isArray(item.departmentList))
@@ -43,9 +43,14 @@ const FilterForm = ({
   };
 
   const handleReset = () => {
+    // Reset form
     formRef.current?.reset(defaultFormValues);
+    // Force re-render Select component
+    setSelectKey(prev => prev + 1);
     // Submit with empty departmentCode
     onSubmit({ departmentCode: '' });
+    // Reset the form field manually
+    methods?.setValue('departmentCode', '');
     onClose();
   };
 
@@ -62,6 +67,7 @@ const FilterForm = ({
           className=''>
           <h1>Phòng ban</h1>
           <SelectRoot
+            key={selectKey} // Add key to force re-render
             options={departments.map(dept => ({
               value: dept.code,
               label: dept.name,
@@ -73,7 +79,6 @@ const FilterForm = ({
               methods?.formState?.errors?.departmentCode ? methods?.formState?.errors?.departmentCode?.toString() : ''
             }
             className='mt-2 w-72 rounded-md border px-3 py-3 focus:outline-none'
-            maxHeight={200}
           />
 
           <div
