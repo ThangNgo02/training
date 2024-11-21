@@ -145,7 +145,7 @@ const DepartmentView: React.FC<IDepartmentViewProps> = ({
       name: data.name,
       note: data.note,
       phoneNumber: data.phonenumber,
-      blockForTimesheet: BlockForTimesheet.OFFICE, // Default value
+      blockForTimesheet: data.blockForTimesheet,
     });
     onPageChange(1);
     setIsModalOpen(false);

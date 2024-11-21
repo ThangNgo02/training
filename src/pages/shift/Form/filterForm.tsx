@@ -74,10 +74,6 @@ const FilterForm = ({
             }))}
             name='departmentCode'
             firstValue={{ value: '', label: 'Chọn phòng ban' }}
-            errorString={
-              // eslint-disable-next-line @typescript-eslint/no-base-to-string
-              methods?.formState?.errors?.departmentCode ? methods?.formState?.errors?.departmentCode?.toString() : ''
-            }
             className='mt-2 w-72 rounded-md border px-3 py-3 focus:outline-none'
           />
 

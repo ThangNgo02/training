@@ -146,6 +146,7 @@ const ShiftView: React.FC<IShiftViewProps> = ({
     onPageChange(1); // Reset to first page when searching
   }, 200);
 
+  // Handle form submission
   const handleFilterSubmit = (data: any) => {
     setDepartmentCode(data.departmentCode || '');
 
@@ -155,14 +156,10 @@ const ShiftView: React.FC<IShiftViewProps> = ({
     setShowFilterForm(false);
   };
 
-  // Handle form submission
-  const handleSubmit = (data: shiftData) => {
+  const handleAddSubmit = (data: shiftData) => {
     onAddShift({
       code: data.code,
       name: data.name,
-      note: data.note,
-      phoneNumber: data.phonenumber,
-      blockForTimesheet: data.blockForTimesheet, // Default value
     });
     onPageChange(1);
     setIsModalOpen(false);
@@ -258,7 +255,7 @@ const ShiftView: React.FC<IShiftViewProps> = ({
                         indeterminate={indeterminate}
                         onChange={onCheckAllChange}
                         checked={checkAll}>
-                        Check all
+                        Tất cả
                       </Checkbox>
                     </div>
                   ),
@@ -306,7 +303,8 @@ const ShiftView: React.FC<IShiftViewProps> = ({
 
             <AddForm
               isOpen={isModalOpen}
-              onSubmit={handleSubmit}
+              onSubmit={handleAddSubmit}
+              totalData={totalData as any}
               onClose={handleCloseModal}
             />
           </div>

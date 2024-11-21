@@ -399,7 +399,7 @@ const ShiftPage: React.FC = () => {
         <SideMenu defaultSelectedKeys={['3']} />
         <main className='min-h-[65rem] flex-1 bg-[#e8e8e8] pb-28'>
           {/* Header */}
-          <NavBar title='Ca' />
+          <NavBar title='Ca làm việc' />
 
           <div className='mx-8 mt-10 rounded-md bg-white p-4'>
             {/* Main Content Area */}

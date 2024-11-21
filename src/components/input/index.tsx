@@ -60,16 +60,23 @@ function InputRoot({
     setIsFocus(false);
   };
   return (
-    <div className={`flex h-[96px] w-full flex-col gap-2`}>
+    <div className={`flex w-full flex-col gap-2`}>
       {props.label && (
         <span className={`text-16x20 text-start font-medium text-[#1A1A1A] ${props.classNameLabel}`}>
           {isRequire && <span className='text-red-500'>*</span>} <Localize tid={props.label} />
         </span>
       )}
       <div
-        className={` text-neutral-80 flex h-11 items-center gap-2 rounded-lg border px-3 py-[6px] text-base transition ${props.className} ${isError ? 'border-red-500' : 'border-neutral-40 hover:border-primary-hover hover:bg-primary-bg_color focus:border-primary-hover active:border-primary-hover '} ${
-          props.disabled && 'hover:bg-neutral-40  cursor-not-allowed  border-none  bg-[#d7efe1]'
-        } ${methods?.formState?.errors[props.name]?.message ? 'border-red-500' : isFocus ? 'custom-shadow border-[#2db976]' : 'border-[#98A2B3]'}`}>
+        className={`text-neutral-80 flex h-11 items-center gap-2 rounded-lg border px-3 py-[6px] text-base transition ${props.className
+          } ${isError
+            ? 'border-red-500'
+            : 'border-neutral-40 hover:border-primary-hover hover:bg-primary-bg_color focus:border-primary-hover active:border-primary-hover'
+          } ${props.disabled && 'hover:bg-neutral-40 cursor-not-allowed border-none bg-[#d7efe1]'} ${methods?.formState?.errors[props.name]?.message
+            ? 'border-red-500'
+            : isFocus
+              ? 'custom-shadow border-[#2db976]'
+              : 'border-[#98A2B3]'
+          }`}>
         {props.iconStart}
         <input
           autoFocus={props.autoFocus}
@@ -80,25 +87,27 @@ function InputRoot({
           onFocus={handleFocus}
           onBlur={handleBlur}
           {...props}
-          className={`h-full w-full bg-inherit outline-none ${
-            props.disabled && 'bg-neutral-40 cursor-not-allowed'
-          } ${classNameInput}`}
+          className={`h-full w-full bg-inherit outline-none ${props.disabled && 'bg-neutral-40 cursor-not-allowed'
+            } ${classNameInput}`}
           placeholder={LocalizeTypeFunc(props.placeholder ?? '')}
         />
         {props.iconEnd}
       </div>
-      <div className='mb-2 flex items-center'>
-        {err && (
-          <div className='bg-danger-bg_color flex gap-1 p-1'>
-            <span className='text-12x16 text-neutral-100'>
-              <Localize tid={err ?? ''} />
-            </span>
-          </div>
-        )}
-        {methods?.formState?.errors[props.name]?.message && (
-          <span className='text-sm text-red-500'>{methods?.formState?.errors[props.name]?.message}</span>
-        )}
-      </div>
+      {/* Only render error div if there's an error */}
+      {(err ?? methods?.formState?.errors[props.name]?.message) && (
+        <div className='mt-2 flex items-center'>
+          {err && (
+            <div className='bg-danger-bg_color flex gap-1 p-1'>
+              <span className='text-12x16 text-neutral-100'>
+                <Localize tid={err ?? ''} />
+              </span>
+            </div>
+          )}
+          {methods?.formState?.errors[props.name]?.message && (
+            <span className='text-sm text-red-500'>{methods?.formState?.errors[props.name]?.message}</span>
+          )}
+        </div>
+      )}
     </div>
   );
 }
