@@ -168,7 +168,6 @@ const AddForm = ({
 }) => {
   const methods = useFormContext();
   const formRef = useRef<IFormRef>(null);
-  const [key, setKey] = useState(0);
   const [isOvertimeEnabled, setIsOvertimeEnabled] = useState(false);
   const [overtimeMinutes, setOvertimeMinutes] = useState(30);
 
@@ -190,7 +189,6 @@ const AddForm = ({
         endTime: '',
         fromBreakTime: '',
         toBreakTime: '',
-        totalHours: 0,
         isTimeError: false,
         isBreakTimeError: false,
       };
@@ -201,62 +199,57 @@ const AddForm = ({
   const timeStringToMinutes = (time: string) => {
     if (!time) return 0;
     const [hours, minutes] = time.split(':').map(Number);
-    return hours * 60 + minutes;
+    const totalMinutes = hours * 60 + minutes;
+    return totalMinutes;
   };
 
-  const calculateTotalHours = (dayKey: string) => {
-    const currentDay = times[dayKey];
-    if (!currentDay.enabled) return;
+  const handleTimeChange = (dayKey: string, field: string, value: string) => {
+    setTimes(prev => {
+      // Create new state with the updated time value
+      const updatedDay = {
+        ...prev[dayKey],
+        [field]: value,
+      };
 
-    if (currentDay.startTime || currentDay.endTime || (currentDay.startTime && currentDay.endTime)) {
-      const start = timeStringToMinutes(currentDay.startTime);
-      const end = timeStringToMinutes(currentDay.endTime);
-      const fromBreak = currentDay.fromBreakTime ? timeStringToMinutes(currentDay.fromBreakTime) : 0;
-      const toBreak = currentDay.toBreakTime ? timeStringToMinutes(currentDay.toBreakTime) : 0;
+      // Calculate total hours immediately
+      const start = timeStringToMinutes(updatedDay.startTime);
+      const end = timeStringToMinutes(updatedDay.endTime);
+      const fromBreak = updatedDay.fromBreakTime ? timeStringToMinutes(updatedDay.fromBreakTime) : 0;
+      const toBreak = updatedDay.toBreakTime ? timeStringToMinutes(updatedDay.toBreakTime) : 0;
 
       const isError = start >= end;
       const isBreakTimeError =
-        (fromBreak && fromBreak < start) ||
-        (toBreak && toBreak > end) ||
-        (fromBreak && fromBreak > end) ||
-        (fromBreak && !toBreak) || // Only fromBreak exists
-        (!fromBreak && toBreak); // Only toBreak exists
-      const breakDuration = fromBreak && toBreak ? toBreak - fromBreak : 0;
-      const totalMinutes = end - start - (breakDuration > 0 ? breakDuration : 0);
+        (fromBreak && !toBreak) || // fromBreak exists but no toBreak
+        (!fromBreak && toBreak) || // toBreak exists but no fromBreak
+        (fromBreak &&
+          toBreak && // both exist, check validity
+          (fromBreak < start || toBreak > end || fromBreak > end || fromBreak > toBreak));
 
-      setTimes(prev => ({
-        ...prev,
-        [dayKey]: {
-          ...prev[dayKey],
-          isTimeError: isError,
-          isBreakTimeError,
-          totalHours: totalMinutes > 0 ? Number((totalMinutes / 60).toFixed(1)) : 0,
-        },
-      }));
-    }
-  };
+      let totalMinutes = end - start;
 
-  // Handle time changes
-  const handleTimeChange = (dayKey: string, field: string, value: string) => {
-    setTimes(prev => {
-      const updatedTimes = {
-        ...prev,
-        [dayKey]: {
-          ...prev[dayKey],
-          [field]: value,
-        },
-      };
+      if (fromBreak && toBreak && !isBreakTimeError) {
+        const breakDuration = toBreak - fromBreak;
+        totalMinutes -= breakDuration;
+      }
+
+      const totalHours = totalMinutes / 60;
+      const roundedHours = Math.round(totalHours * 10) / 10;
 
       // Set form value
       methods?.setValue(`workingTimes.${dayKey}.${field}`, value);
+      methods?.setValue(`workingTimes.${dayKey}.totalHours`, roundedHours);
 
-      return updatedTimes;
+      // Return new state with all calculations
+      return {
+        ...prev,
+        [dayKey]: {
+          ...updatedDay,
+          isTimeError: isError,
+          isBreakTimeError,
+          totalHours: totalMinutes > 0 ? roundedHours : 0,
+        },
+      };
     });
-
-    // Calculate total hours after state update
-    setTimeout(() => {
-      calculateTotalHours(dayKey);
-    }, 0);
   };
 
   const handleOvertimeChange = (value: string) => {
@@ -268,34 +261,60 @@ const AddForm = ({
   };
 
   // Add useEffect for each day
-  useEffect(() => {
-    for (const day of weekdays) {
-      calculateTotalHours(day.key);
-    }
-  }, [times]);
+  // useEffect(() => {
+  //   for (const day of weekdays) {
+  //     calculateTotalHours(day.key);
+  //   }
+  // }, [times]);
 
   useEffect(() => {
     if (!isOpen) {
-      formRef.current?.reset(defaultFormValues);
+      setTimes(
+        weekdays.reduce<Record<string, any>>((acc, day) => {
+          acc[day.key] = {
+            enabled: false,
+            startTime: '',
+            endTime: '',
+            fromBreakTime: '',
+            toBreakTime: '',
+            totalHours: 0,
+            isTimeError: false,
+            isBreakTimeError: false,
+          };
+          return acc;
+        }, {}),
+      );
     }
-    setKey(prev => prev + 1);
   }, [isOpen]);
 
   const handleSwitchChange = (dayKey: string, checked: boolean) => {
-    setTimes(prev => ({
-      ...prev,
-      [dayKey]: {
-        ...prev[dayKey],
-        enabled: checked,
-        startTime: checked ? prev[dayKey].startTime : '',
-        endTime: checked ? prev[dayKey].endTime : '',
-        fromBreakTime: checked ? prev[dayKey].fromBreakTime : '',
-        toBreakTime: checked ? prev[dayKey].toBreakTime : '',
-        totalHours: checked ? prev[dayKey].totalHours : 0,
-        isTimeError: false,
-        isBreakTimeError: false,
-      },
-    }));
+    setTimes(prev => {
+      const newState = {
+        ...prev,
+        [dayKey]: {
+          ...prev[dayKey],
+          enabled: checked,
+          startTime: '',
+          endTime: '',
+          fromBreakTime: '',
+          toBreakTime: '',
+          totalHours: 0,
+          isTimeError: false,
+          isBreakTimeError: false,
+        },
+      };
+
+      // Reset form values when switch is turned off
+      if (!checked) {
+        methods?.setValue(`workingTimes.${dayKey}.startTime`, '');
+        methods?.setValue(`workingTimes.${dayKey}.endTime`, '');
+        methods?.setValue(`workingTimes.${dayKey}.fromBreakTime`, '');
+        methods?.setValue(`workingTimes.${dayKey}.toBreakTime`, '');
+        methods?.setValue(`workingTimes.${dayKey}.totalHours`, 0);
+      }
+
+      return newState;
+    });
   };
 
   const handleClose = () => {
@@ -368,7 +387,6 @@ const AddForm = ({
           <div className='h-screen w-screen overflow-y-auto bg-white '>
             <div className='h-full overflow-y-auto'>
               <Form
-                key={key}
                 ref={formRef}
                 onSubmit={handleFormSubmit}
                 validator={validationSchema}
@@ -407,7 +425,13 @@ const AddForm = ({
                       {/* Column 1 */}
                       <div className='space-y-4'>
                         <div>
-                          <label className='mb-2 block text-sm font-medium'>Mã ca</label>
+                          <div className='pointer-events-none mb-1 flex items-center'>
+                            <IconRoot
+                              icon={IconVariable.required}
+                              className='hover:cursor-none'
+                            />
+                            <label className='text-sm font-medium'>Mã ca</label>
+                          </div>
                           <InputRoot
                             name='code'
                             placeholder='Nhập mã ca'
@@ -419,7 +443,13 @@ const AddForm = ({
                       {/* Column 2 */}
                       <div className='space-y-4'>
                         <div>
-                          <label className='mb-2 block text-sm font-medium'>Tên ca</label>
+                          <div className='pointer-events-none mb-1 flex items-center'>
+                            <IconRoot
+                              icon={IconVariable.required}
+                              className='hover:cursor-none'
+                            />
+                            <label className='text-sm font-medium'>Tên ca</label>
+                          </div>
                           <InputRoot
                             name='name'
                             placeholder='Nhập tên ca'
@@ -431,7 +461,13 @@ const AddForm = ({
                       {/* Column 3 */}
                       <div className='space-y-4'>
                         <div>
-                          <label className='mb-2 block text-sm font-medium'>Loại ca</label>
+                          <div className='pointer-events-none mb-1 flex items-center'>
+                            <IconRoot
+                              icon={IconVariable.required}
+                              className='hover:cursor-none'
+                            />
+                            <label className='text-sm font-medium'>Loại ca</label>
+                          </div>
                           <SelectRoot
                             name='shiftType'
                             firstValue={{ value: '', label: 'Chọn loại ca' }}
@@ -448,7 +484,7 @@ const AddForm = ({
                   </div>
                   <div>
                     <div className='mb-4 px-6'>
-                      <label className='mb-2 block text-sm font-medium'>Phòng ban</label>
+                      <label className='mb-1 ml-2 block text-sm font-medium'>Phòng ban</label>
                       <Select
                         mode='tags'
                         size='large'
@@ -471,7 +507,7 @@ const AddForm = ({
                     </div>
                   </div>
                   <div className='px-6 py-4'>
-                    <label className='mb-2 block text-sm font-medium'>Ghi chú</label>
+                    <label className='mb-1 ml-2 block text-sm font-medium'>Ghi chú</label>
                     <InputRoot
                       name='note'
                       placeholder='Nhập ghi chú'
