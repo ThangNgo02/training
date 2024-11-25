@@ -14,20 +14,12 @@ import { LoggerService } from '@/utils/Logger';
 import PutForm from './Form/putForm';
 import ShiftView from './view';
 
-export enum BlockForTimesheet {
-  DRIVER = 'DRIVER',
-  FACTORY = 'FACTORY',
-  OFFICE = 'OFFICE',
-  DELIVERY = 'DELIVERY',
-}
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface shiftData {
   code: string;
   name: string;
   note: string;
   phonenumber: string;
-  blockForTimesheet: BlockForTimesheet;
 }
 
 export interface IWorkingTime {
@@ -42,25 +34,29 @@ export interface IWorkingTime {
 }
 
 export interface IDepartment {
-  id: number;
-  code: string;
+  id: string;
   name: string;
-  note: string;
-  active: boolean;
-  phoneNumber: string;
-  blockForTimesheet: string;
+  code: string;
 }
 
 export interface IShiftDataType {
-  id: number;
+  id?: number;
   code: string;
   name: string;
-  departmentList: IDepartment[];
   shiftType: 'FIXED' | 'FLEXIBLE';
+  departmentList: IDepartment[];
+  note: string;
   overtime: boolean;
   overtimeForMinutes: number;
-  workingTimes: IWorkingTime[];
-  status: 'ACTIVE' | 'DEACTIVE';
+  workingTimes: Array<{
+    active: boolean;
+    dayOfWeek: string;
+    startTime: string;
+    endTime: string;
+    fromBreakTime: string;
+    toBreakTime: string;
+    totalHours: number;
+  }>;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -125,7 +121,7 @@ const ShiftPage: React.FC = () => {
   };
 
   const addShiftApi: IApiRequest = {
-    url: 'https://api.tsp.com.vn/hrm/shift',
+    url: 'https://api.tsp.com.vn/hrm/shift-for-staff',
     method: 'post',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -171,7 +167,6 @@ const ShiftPage: React.FC = () => {
           name: response.data.name,
           note: response.data.note,
           phonenumber: response.data.phoneNumber || '',
-          blockForTimesheet: response.data.blockForTimesheet || BlockForTimesheet.DRIVER,
         };
         setSelectedShiftData(formattedData);
         setIsModalOpen(true);
@@ -277,7 +272,6 @@ const ShiftPage: React.FC = () => {
       name: '',
       note: '',
       phonenumber: '',
-      blockForTimesheet: '' as BlockForTimesheet,
     });
   };
 
@@ -287,7 +281,6 @@ const ShiftPage: React.FC = () => {
       name: data.name,
       note: data.note,
       phoneNumber: data.phonenumber,
-      blockForTimesheet: data.blockForTimesheet,
     };
     mutateSaveShift({ ...dataApi });
 
@@ -310,7 +303,7 @@ const ShiftPage: React.FC = () => {
           className='cursor-pointer text-blue-600 hover:text-blue-800'
           onClick={() => {
             handleCodeClick(record);
-            setSelectedShiftId(record.id);
+            setSelectedShiftId(record.id ?? null);
           }}>
           {text}
         </div>

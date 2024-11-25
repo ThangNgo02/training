@@ -30,14 +30,30 @@ export interface AddFormValues {
   note: string;
   overtime: boolean;
   overtimeForMinutes: number;
-  workingTimes: WorkingTime[];
-  startTimeForShift?: string;
-  endTimeForShift?: string;
-  minimumTimeForShift?: number;
+  workingTimes: Array<{
+    active: boolean;
+    dayOfWeek: string;
+    startTime: string;
+    endTime: string;
+    fromBreakTime: string;
+    toBreakTime: string;
+    totalHours: number;
+  }>;
 }
 
+// Define the weekdays
+const weekdays = [
+  { key: 'monday', label: 'Thứ Hai', dayOfWeek: 'MONDAY' },
+  { key: 'tuesday', label: 'Thứ Ba', dayOfWeek: 'TUESDAY' },
+  { key: 'wednesday', label: 'Thứ Tư', dayOfWeek: 'WEDNESDAY' },
+  { key: 'thursday', label: 'Thứ Năm', dayOfWeek: 'THURSDAY' },
+  { key: 'friday', label: 'Thứ Sáu', dayOfWeek: 'FRIDAY' },
+  { key: 'saturday', label: 'Thứ Bảy', dayOfWeek: 'SATURDAY' },
+  { key: 'sunday', label: 'Chủ Nhật', dayOfWeek: 'SUNDAY' },
+];
+
 const validationSchema = {
-  code: yup.string().required('Mã ca không được để trống'),
+  code: yup.string().required('Mã ca không được để trống').matches(/^\S*$/, 'Mã ca không được chứa khoảng trắng'),
   name: yup.string().required('Tên ca không được để trống'),
   shiftType: yup.string().required('Loại ca không được để trống'),
 };
@@ -50,75 +66,15 @@ const defaultFormValues: AddFormValues = {
   note: '',
   overtime: false,
   overtimeForMinutes: 30,
-  workingTimes: [
-    {
-      active: false,
-      dayOfWeek: 'MONDAY',
-      startTime: '',
-      endTime: '',
-      fromBreakTime: '',
-      toBreakTime: '',
-      totalHours: 0,
-    },
-    {
-      active: false,
-      dayOfWeek: 'TUESDAY',
-      startTime: '',
-      endTime: '',
-      fromBreakTime: '',
-      toBreakTime: '',
-      totalHours: 0,
-    },
-    {
-      active: false,
-      dayOfWeek: 'WEDNESDAY',
-      startTime: '',
-      endTime: '',
-      fromBreakTime: '',
-      toBreakTime: '',
-      totalHours: 0,
-    },
-    {
-      active: false,
-      dayOfWeek: 'THURSDAY',
-      startTime: '',
-      endTime: '',
-      fromBreakTime: '',
-      toBreakTime: '',
-      totalHours: 0,
-    },
-    {
-      active: false,
-      dayOfWeek: 'FRIDAY',
-      startTime: '',
-      endTime: '',
-      fromBreakTime: '',
-      toBreakTime: '',
-      totalHours: 0,
-    },
-    {
-      active: false,
-      dayOfWeek: 'SATURDAY',
-      startTime: '',
-      endTime: '',
-      fromBreakTime: '',
-      toBreakTime: '',
-      totalHours: 0,
-    },
-    {
-      active: false,
-      dayOfWeek: 'SUNDAY',
-      startTime: '',
-      endTime: '',
-      fromBreakTime: '',
-      toBreakTime: '',
-      totalHours: 0,
-    },
-  ],
-  // eslint-disable-next-line unicorn/no-zero-fractions
-  minimumTimeForShift: 1.0,
-  startTimeForShift: '',
-  endTimeForShift: '',
+  workingTimes: weekdays.map(day => ({
+    active: false,
+    dayOfWeek: day.dayOfWeek,
+    startTime: '00:00',
+    endTime: '00:00',
+    fromBreakTime: '23:59',
+    toBreakTime: '23:59',
+    totalHours: 0,
+  })),
 };
 
 // Prevent outer scroll
@@ -150,17 +106,6 @@ const usePreventScroll = (isOpen: boolean) => {
   }, [isOpen]);
 };
 
-// Define the weekdays
-const weekdays = [
-  { key: 'monday', label: 'Thứ Hai', dayOfWeek: 'MONDAY' },
-  { key: 'tuesday', label: 'Thứ Ba', dayOfWeek: 'TUESDAY' },
-  { key: 'wednesday', label: 'Thứ Tư', dayOfWeek: 'WEDNESDAY' },
-  { key: 'thursday', label: 'Thứ Năm', dayOfWeek: 'THURSDAY' },
-  { key: 'friday', label: 'Thứ Sáu', dayOfWeek: 'FRIDAY' },
-  { key: 'saturday', label: 'Thứ Bảy', dayOfWeek: 'SATURDAY' },
-  { key: 'sunday', label: 'Chủ Nhật', dayOfWeek: 'SUNDAY' },
-];
-
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const AddForm = ({
   onSubmit,
@@ -175,20 +120,27 @@ const AddForm = ({
 }) => {
   const methods = useFormContext();
   const formRef = useRef<IFormRef>(null);
+  const [key, setKey] = useState(0);
   const [shiftType, setShiftType] = useState<'FIXED' | 'FLEXIBLE'>('FIXED');
   const [isOvertimeEnabled, setIsOvertimeEnabled] = useState(false);
   const [overtimeMinutes, setOvertimeMinutes] = useState(30);
   // eslint-disable-next-line unicorn/no-zero-fractions
   const [minimumTime, setMinimumTime] = useState<string | number>(1.0);
 
-  const departments = totalData
-    .filter(item => item.departmentList && Array.isArray(item.departmentList))
-    .flatMap(item =>
-      item.departmentList.map((dept: { code: any; name: any }) => ({
-        code: dept.code,
-        name: dept.name,
-      })),
-    );
+  const departments = [
+    ...new Map(
+      totalData
+        .filter(item => item.departmentList && Array.isArray(item.departmentList))
+        .flatMap(item =>
+          item.departmentList.map((dept: { id: any; code: any; name: any }) => ({
+            id: dept.id,
+            code: dept.code,
+            name: dept.name,
+          })),
+        )
+        .map(dept => [dept.id, dept]), // Map with `id` as the key for deduplication
+    ).values(),
+  ];
 
   // Use a single state object to manage time data for each day
   const [times, setTimes] = useState(
@@ -248,6 +200,7 @@ const AddForm = ({
       // Set form value
       methods?.setValue(`workingTimes.${dayKey}.${field}`, value);
       methods?.setValue(`workingTimes.${dayKey}.totalHours`, roundedHours);
+      methods?.setValue(`workingTimes.${dayKey}.active`, updatedDay.enabled);
 
       // Return new state with all calculations
       return {
@@ -290,6 +243,7 @@ const AddForm = ({
         }, {}),
       );
     }
+    setKey(prev => prev + 1);
   }, [isOpen]);
 
   const handleSwitchChange = (dayKey: string, checked: boolean) => {
@@ -323,9 +277,17 @@ const AddForm = ({
   };
 
   const handleClose = () => {
+    // Reset minimum time
     setMinimumTime('1.0');
-    // eslint-disable-next-line unicorn/no-zero-fractions
-    methods?.setValue('minimumTimeForShift', 1.0);
+    methods?.setValue('minimumTimeForShift', 1);
+
+    // Reset form fields
+    methods?.setValue('code', '');
+    methods?.setValue('name', '');
+    methods?.setValue('note', '');
+    methods?.setValue('departmentCode', []);
+
+    // Reset times state
     setTimes(
       weekdays.reduce<Record<string, any>>((acc, day) => {
         acc[day.key] = {
@@ -341,12 +303,54 @@ const AddForm = ({
         return acc;
       }, {}),
     );
+    // Reset overtime settings
+    setIsOvertimeEnabled(false);
+    setOvertimeMinutes(30);
+
+    // Reset shift type
+    setShiftType('FIXED');
+    methods?.setValue('shiftType', 'FIXED');
+    // Reset the entire form to default values
     formRef.current?.reset(defaultFormValues);
+
     onClose();
   };
 
   const handleFormSubmit = (values: AddFormValues) => {
-    onSubmit(values);
+    console.log(departments);
+    // Transform the workingTimes array to match the required format
+    const transformedWorkingTimes = weekdays.map((day, index) => ({
+      active: times[day.key].enabled,
+      dayOfWeek: day.dayOfWeek,
+      startTime:
+        (values.workingTimes[day.key as keyof typeof values.workingTimes] as { startTime?: string })?.startTime ??
+        '00:00',
+      endTime:
+        (values.workingTimes[day.key as keyof typeof values.workingTimes] as { endTime?: string })?.endTime ?? '00:00',
+      fromBreakTime:
+        (values.workingTimes[day.key as keyof typeof values.workingTimes] as { fromBreakTime?: string })
+          ?.fromBreakTime ?? '23:59',
+      toBreakTime:
+        (values.workingTimes[day.key as keyof typeof values.workingTimes] as { toBreakTime?: string })?.toBreakTime ??
+        '23:59',
+      totalHours:
+        (values.workingTimes[day.key as keyof typeof values.workingTimes] as { totalHours?: number })?.totalHours ?? 0,
+    }));
+    // Transform the departmentList to match the required format
+    const transformedDepartmentList = (values.departmentList || []).map((value: { code: string }) => ({
+      code: value.code,
+    }));
+
+    // Create the final payload
+    const payload = {
+      ...values,
+      departmentList: transformedDepartmentList,
+      workingTimes: transformedWorkingTimes,
+      overtime: isOvertimeEnabled,
+      overtimeForMinutes: overtimeMinutes,
+    };
+
+    onSubmit(payload);
     formRef.current?.reset(defaultFormValues);
   };
   usePreventScroll(isOpen);
@@ -407,6 +411,7 @@ const AddForm = ({
             <div className='h-full overflow-y-auto'>
               <Form
                 ref={formRef}
+                key={key}
                 onSubmit={handleFormSubmit}
                 validator={validationSchema}
                 defaultValues={defaultFormValues}>
@@ -510,7 +515,7 @@ const AddForm = ({
                             errorString={
                               methods?.formState?.errors?.shiftType
                                 ? // eslint-disable-next-line @typescript-eslint/no-base-to-string
-                                methods?.formState?.errors?.shiftType?.toString()
+                                  methods?.formState?.errors?.shiftType?.toString()
                                 : ''
                             }
                           />
@@ -531,8 +536,8 @@ const AddForm = ({
                         }}
                         style={{ width: '100%' }}
                         options={departments.map(dept => ({
-                          value: dept.code,
-                          label: `${dept.code}`,
+                          value: dept.id,
+                          label: `${dept.name}`,
                         }))}
                         status={methods?.formState?.errors?.departmentCode ? 'error' : undefined}
                         value={methods?.watch('departmentCode') || undefined}
@@ -583,8 +588,9 @@ const AddForm = ({
                                       <label className='mb-1 block text-sm font-medium'>Giờ vào</label>
                                       <SelectRoot
                                         name={`workingTimes.${day.key}.startTime`}
-                                        className={`w-44 rounded-md border px-3 py-3 ${times[day.key].isTimeError ? 'border-red-500' : ''
-                                          }`}
+                                        className={`w-44 rounded-md border px-3 py-3 ${
+                                          times[day.key].isTimeError ? 'border-red-500' : ''
+                                        }`}
                                         firstValue={{
                                           value: times[day.key].startTime || '',
                                           label: times[day.key].startTime || 'Chọn giờ',
@@ -599,8 +605,9 @@ const AddForm = ({
                                       <label className='mb-1 block text-sm font-medium'>Giờ ra</label>
                                       <SelectRoot
                                         name={`workingTimes.${day.key}.endTime`}
-                                        className={`w-44 rounded-md border px-3 py-3 ${times[day.key].isTimeError ? 'border-red-500' : ''
-                                          }`}
+                                        className={`w-44 rounded-md border px-3 py-3 ${
+                                          times[day.key].isTimeError ? 'border-red-500' : ''
+                                        }`}
                                         firstValue={{
                                           value: times[day.key].endTime || '',
                                           label: times[day.key].endTime || 'Chọn giờ',
@@ -616,8 +623,9 @@ const AddForm = ({
                                       <div className='flex items-center gap-2'>
                                         <SelectRoot
                                           name={`workingTimes.${day.key}.fromBreakTime`}
-                                          className={`w-44 rounded-md border px-3 py-3 ${times[day.key].isBreakTimeError ? 'border-red-500' : ''
-                                            }`}
+                                          className={`w-44 rounded-md border px-3 py-3 ${
+                                            times[day.key].isBreakTimeError ? 'border-red-500' : ''
+                                          }`}
                                           firstValue={{
                                             value: times[day.key].fromBreakTime || '',
                                             label: times[day.key].fromBreakTime || 'Chọn giờ',
@@ -630,8 +638,9 @@ const AddForm = ({
                                         <span> - </span>
                                         <SelectRoot
                                           name={`workingTimes.${day.key}.toBreakTime`}
-                                          className={`w-44 rounded-md border px-3 py-3 ${times[day.key].isBreakTimeError ? 'border-red-500' : ''
-                                            }`}
+                                          className={`w-44 rounded-md border px-3 py-3 ${
+                                            times[day.key].isBreakTimeError ? 'border-red-500' : ''
+                                          }`}
                                           firstValue={{
                                             value: times[day.key].toBreakTime || '',
                                             label: times[day.key].toBreakTime || 'Chọn giờ',
@@ -750,8 +759,9 @@ const AddForm = ({
                             name='minimumTimeForShift'
                             type='number'
                             placeholder='Nhập thời gian tối thiểu'
-                            className={`w-full rounded-md border px-3 py-2 ${methods?.formState?.errors?.minimumTimeForShift ? 'border-red-500' : ''
-                              }`}
+                            className={`w-full rounded-md border px-3 py-2 ${
+                              methods?.formState?.errors?.minimumTimeForShift ? 'border-red-500' : ''
+                            }`}
                             min={0}
                             step={1}
                             // eslint-disable-next-line unicorn/no-zero-fractions

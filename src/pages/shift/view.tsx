@@ -18,8 +18,8 @@ import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import InputRoot from '@/components/input';
 
-import { type BlockForTimesheet, type IShiftDataType, type shiftData } from '.';
-import AddForm from './Form/addForm';
+import { type IShiftDataType } from '.';
+import AddForm, { type AddFormValues } from './Form/addForm';
 import FilterForm from './Form/filterForm';
 
 interface IShiftViewProps {
@@ -31,13 +31,7 @@ interface IShiftViewProps {
   onSearchValueChange: (searchValue: string) => void;
   onFilterShift: () => void;
   setDepartmentCode: (code: string) => void;
-  onAddShift: (payload: {
-    code: string;
-    name: string;
-    note: string;
-    phoneNumber: string;
-    blockForTimesheet: BlockForTimesheet;
-  }) => void;
+  onAddShift: (payload: AddFormValues) => void;
   currentPage: number;
   pageSize: number;
   total: number;
@@ -156,11 +150,8 @@ const ShiftView: React.FC<IShiftViewProps> = ({
     setShowFilterForm(false);
   };
 
-  const handleAddSubmit = (data: shiftData) => {
-    onAddShift({
-      code: data.code,
-      name: data.name,
-    });
+  const handleAddSubmit = (data: AddFormValues) => {
+    onAddShift(data);
     onPageChange(1);
     setIsModalOpen(false);
   };
