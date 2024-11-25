@@ -31,6 +31,9 @@ export interface AddFormValues {
   overtime: boolean;
   overtimeForMinutes: number;
   workingTimes: WorkingTime[];
+  startTimeForShift?: string;
+  endTimeForShift?: string;
+  minimumTimeForShift?: number;
 }
 
 const validationSchema = {
@@ -112,6 +115,10 @@ const defaultFormValues: AddFormValues = {
       totalHours: 0,
     },
   ],
+  // eslint-disable-next-line unicorn/no-zero-fractions
+  minimumTimeForShift: 1.0,
+  startTimeForShift: '',
+  endTimeForShift: '',
 };
 
 // Prevent outer scroll
@@ -168,8 +175,11 @@ const AddForm = ({
 }) => {
   const methods = useFormContext();
   const formRef = useRef<IFormRef>(null);
+  const [shiftType, setShiftType] = useState<'FIXED' | 'FLEXIBLE'>('FIXED');
   const [isOvertimeEnabled, setIsOvertimeEnabled] = useState(false);
   const [overtimeMinutes, setOvertimeMinutes] = useState(30);
+  // eslint-disable-next-line unicorn/no-zero-fractions
+  const [minimumTime, setMinimumTime] = useState<string | number>(1.0);
 
   const departments = totalData
     .filter(item => item.departmentList && Array.isArray(item.departmentList))
@@ -260,15 +270,10 @@ const AddForm = ({
     }
   };
 
-  // Add useEffect for each day
-  // useEffect(() => {
-  //   for (const day of weekdays) {
-  //     calculateTotalHours(day.key);
-  //   }
-  // }, [times]);
-
   useEffect(() => {
     if (!isOpen) {
+      setShiftType('FIXED');
+      methods?.setValue('shiftType', 'FIXED');
       setTimes(
         weekdays.reduce<Record<string, any>>((acc, day) => {
           acc[day.key] = {
@@ -318,6 +323,9 @@ const AddForm = ({
   };
 
   const handleClose = () => {
+    setMinimumTime('1.0');
+    // eslint-disable-next-line unicorn/no-zero-fractions
+    methods?.setValue('minimumTimeForShift', 1.0);
     setTimes(
       weekdays.reduce<Record<string, any>>((acc, day) => {
         acc[day.key] = {
@@ -343,7 +351,7 @@ const AddForm = ({
   };
   usePreventScroll(isOpen);
 
-  // Generate time options from 00:00 to 23:30
+  // Generate time options
   const workTimeOptions = Array.from({ length: 48 }, (_, i) => {
     const hour = Math.floor(i / 2)
       .toString()
@@ -360,6 +368,17 @@ const AddForm = ({
     return {
       value: `${hour}:00`,
       label: `${hour}:00`,
+    };
+  });
+
+  const flexibleTimeOptions = Array.from({ length: 96 }, (_, i) => {
+    const hour = Math.floor(i / 4)
+      .toString()
+      .padStart(2, '0');
+    const minute = ((i % 4) * 15).toString().padStart(2, '0');
+    return {
+      value: `${hour}:${minute}`,
+      label: `${hour}:${minute}`,
     };
   });
 
@@ -436,6 +455,10 @@ const AddForm = ({
                             name='code'
                             placeholder='Nhập mã ca'
                             className='w-full rounded-md border px-3 py-2'
+                            errorString={
+                              // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                              methods?.formState?.errors?.code ? methods?.formState?.errors?.code?.toString() : ''
+                            }
                           />
                         </div>
                       </div>
@@ -454,6 +477,10 @@ const AddForm = ({
                             name='name'
                             placeholder='Nhập tên ca'
                             className='w-full rounded-md border px-3 py-2'
+                            errorString={
+                              // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                              methods?.formState?.errors?.name ? methods?.formState?.errors?.name?.toString() : ''
+                            }
                           />
                         </div>
                       </div>
@@ -470,13 +497,22 @@ const AddForm = ({
                           </div>
                           <SelectRoot
                             name='shiftType'
-                            firstValue={{ value: '', label: 'Chọn loại ca' }}
+                            firstValue={{ value: shiftType, label: shiftType === 'FIXED' ? 'Cố định' : 'Linh hoạt' }}
                             className='w-full rounded-md border px-3 py-3 focus:outline-none'
                             options={[
                               { value: 'FIXED', label: 'Cố định' },
                               { value: 'FLEXIBLE', label: 'Linh hoạt' },
                             ]}
-                            errorString={methods?.formState?.errors?.shiftType?.toString() ?? ''}
+                            onChange={value => {
+                              setShiftType(value as 'FIXED' | 'FLEXIBLE');
+                              methods?.setValue('shiftType', value);
+                            }}
+                            errorString={
+                              methods?.formState?.errors?.shiftType
+                                ? // eslint-disable-next-line @typescript-eslint/no-base-to-string
+                                methods?.formState?.errors?.shiftType?.toString()
+                                : ''
+                            }
                           />
                         </div>
                       </div>
@@ -518,165 +554,229 @@ const AddForm = ({
 
                 <hr className='mt-0 w-full' />
 
-                <div className='mb-12 mt-6'>
-                  <div className='grid grid-cols-5 gap-4 px-6'>
-                    <div className='col-span-4 bg-[#e0ecf9]'>
-                      {/* Takes up 4/5 = 80% */}
-                      <div>
-                        {weekdays.map(day => (
-                          <div
-                            key={day.key}
-                            className='m-4 flex h-20 items-center bg-white px-5'>
-                            <h3 className='flex items-center font-medium'>
-                              <span className='w-16'>{day.label}</span>
-                              <span className='ml-2'>
-                                <Switch
-                                  onChange={checked => {
-                                    handleSwitchChange(day.key, checked);
-                                  }}
-                                  checked={times[day.key].enabled}
-                                />
-                              </span>
-                            </h3>
-                            <hr className='ml-4 h-[80%] border-l border-gray-300' />
-                            <div className='ml-4'>
-                              {times[day.key].enabled ? (
-                                <div className='flex items-center gap-2'>
-                                  <div>
-                                    <label className='mb-1 block text-sm font-medium'>Giờ vào</label>
-                                    <SelectRoot
-                                      name={`workingTimes.${day.key}.startTime`}
-                                      className={`w-44 rounded-md border px-3 py-3 ${
-                                        times[day.key].isTimeError ? 'border-red-500' : ''
-                                      }`}
-                                      firstValue={{
-                                        value: times[day.key].startTime || '',
-                                        label: times[day.key].startTime || 'Chọn giờ',
-                                      }}
-                                      options={workTimeOptions}
-                                      onChange={value => {
-                                        handleTimeChange(day.key, 'startTime', value);
-                                      }}
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className='mb-1 block text-sm font-medium'>Giờ ra</label>
-                                    <SelectRoot
-                                      name={`workingTimes.${day.key}.endTime`}
-                                      className={`w-44 rounded-md border px-3 py-3 ${
-                                        times[day.key].isTimeError ? 'border-red-500' : ''
-                                      }`}
-                                      firstValue={{
-                                        value: times[day.key].endTime || '',
-                                        label: times[day.key].endTime || 'Chọn giờ',
-                                      }}
-                                      options={workTimeOptions}
-                                      onChange={value => {
-                                        handleTimeChange(day.key, 'endTime', value);
-                                      }}
-                                    />
-                                  </div>
-                                  <div>
-                                    <label className='mb-1 block text-sm font-medium'>Giờ nghỉ</label>
-                                    <div className='flex items-center gap-2'>
+                {shiftType === 'FIXED' ? (
+                  <div className='mb-12 mt-6'>
+                    <div className='grid grid-cols-5 gap-4 px-6'>
+                      <div className='col-span-4 bg-[#e0ecf9]'>
+                        {/* Takes up 4/5 = 80% */}
+                        <div>
+                          {weekdays.map(day => (
+                            <div
+                              key={day.key}
+                              className='m-4 flex h-20 items-center bg-white px-5'>
+                              <h3 className='flex items-center font-medium'>
+                                <span className='w-16'>{day.label}</span>
+                                <span className='ml-2'>
+                                  <Switch
+                                    onChange={checked => {
+                                      handleSwitchChange(day.key, checked);
+                                    }}
+                                    checked={times[day.key].enabled}
+                                  />
+                                </span>
+                              </h3>
+                              <hr className='ml-4 h-[80%] border-l border-gray-300' />
+                              <div className='ml-4'>
+                                {times[day.key].enabled ? (
+                                  <div className='flex items-center gap-2'>
+                                    <div>
+                                      <label className='mb-1 block text-sm font-medium'>Giờ vào</label>
                                       <SelectRoot
-                                        name={`workingTimes.${day.key}.fromBreakTime`}
-                                        className={`w-44 rounded-md border px-3 py-3 ${
-                                          times[day.key].isBreakTimeError ? 'border-red-500' : ''
-                                        }`}
+                                        name={`workingTimes.${day.key}.startTime`}
+                                        className={`w-44 rounded-md border px-3 py-3 ${times[day.key].isTimeError ? 'border-red-500' : ''
+                                          }`}
                                         firstValue={{
-                                          value: times[day.key].fromBreakTime || '',
-                                          label: times[day.key].fromBreakTime || 'Chọn giờ',
+                                          value: times[day.key].startTime || '',
+                                          label: times[day.key].startTime || 'Chọn giờ',
                                         }}
-                                        options={restTimeOptions}
+                                        options={workTimeOptions}
                                         onChange={value => {
-                                          handleTimeChange(day.key, 'fromBreakTime', value);
-                                        }}
-                                      />
-                                      <span> - </span>
-                                      <SelectRoot
-                                        name={`workingTimes.${day.key}.toBreakTime`}
-                                        className={`w-44 rounded-md border px-3 py-3 ${
-                                          times[day.key].isBreakTimeError ? 'border-red-500' : ''
-                                        }`}
-                                        firstValue={{
-                                          value: times[day.key].toBreakTime || '',
-                                          label: times[day.key].toBreakTime || 'Chọn giờ',
-                                        }}
-                                        options={restTimeOptions}
-                                        onChange={value => {
-                                          handleTimeChange(day.key, 'toBreakTime', value);
+                                          handleTimeChange(day.key, 'startTime', value);
                                         }}
                                       />
                                     </div>
+                                    <div>
+                                      <label className='mb-1 block text-sm font-medium'>Giờ ra</label>
+                                      <SelectRoot
+                                        name={`workingTimes.${day.key}.endTime`}
+                                        className={`w-44 rounded-md border px-3 py-3 ${times[day.key].isTimeError ? 'border-red-500' : ''
+                                          }`}
+                                        firstValue={{
+                                          value: times[day.key].endTime || '',
+                                          label: times[day.key].endTime || 'Chọn giờ',
+                                        }}
+                                        options={workTimeOptions}
+                                        onChange={value => {
+                                          handleTimeChange(day.key, 'endTime', value);
+                                        }}
+                                      />
+                                    </div>
+                                    <div>
+                                      <label className='mb-1 block text-sm font-medium'>Giờ nghỉ</label>
+                                      <div className='flex items-center gap-2'>
+                                        <SelectRoot
+                                          name={`workingTimes.${day.key}.fromBreakTime`}
+                                          className={`w-44 rounded-md border px-3 py-3 ${times[day.key].isBreakTimeError ? 'border-red-500' : ''
+                                            }`}
+                                          firstValue={{
+                                            value: times[day.key].fromBreakTime || '',
+                                            label: times[day.key].fromBreakTime || 'Chọn giờ',
+                                          }}
+                                          options={restTimeOptions}
+                                          onChange={value => {
+                                            handleTimeChange(day.key, 'fromBreakTime', value);
+                                          }}
+                                        />
+                                        <span> - </span>
+                                        <SelectRoot
+                                          name={`workingTimes.${day.key}.toBreakTime`}
+                                          className={`w-44 rounded-md border px-3 py-3 ${times[day.key].isBreakTimeError ? 'border-red-500' : ''
+                                            }`}
+                                          firstValue={{
+                                            value: times[day.key].toBreakTime || '',
+                                            label: times[day.key].toBreakTime || 'Chọn giờ',
+                                          }}
+                                          options={restTimeOptions}
+                                          onChange={value => {
+                                            handleTimeChange(day.key, 'toBreakTime', value);
+                                          }}
+                                        />
+                                      </div>
+                                    </div>
+                                    <div>
+                                      <label className='mb-1 block text-sm font-medium'>Giờ công</label>
+                                      <InputRoot
+                                        name={`workingTimes.${day.key}.totalHours`}
+                                        className='w-44 rounded border px-3 py-2'
+                                        placeholder='Giờ công'
+                                        value={times[day.key].totalHours.toFixed(1)}
+                                      />
+                                    </div>
                                   </div>
-                                  <div>
-                                    <label className='mb-1 block text-sm font-medium'>Giờ công</label>
-                                    <InputRoot
-                                      name={`workingTimes.${day.key}.totalHours`}
-                                      className='w-44 rounded border px-3 py-2'
-                                      placeholder='Giờ công'
-                                      value={times[day.key].totalHours.toFixed(1)}
-                                    />
-                                  </div>
-                                </div>
-                              ) : (
-                                <span className='text-sm text-gray-500'>Không có giờ làm việc</span>
-                              )}
+                                ) : (
+                                  <span className='text-sm text-gray-500'>Không có giờ làm việc</span>
+                                )}
+                              </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                    <div className='col-span-1'>
-                      {/* Takes up 1/5 = 20% */}
-                      <div>
-                        <h3 className='flex items-center font-medium'>
-                          <span className='ml-2'>
-                            <Switch
-                              checked={isOvertimeEnabled}
-                              onChange={checked => {
-                                setIsOvertimeEnabled(checked);
-                              }}
-                            />
-                            <span className='ml-4'>Tăng ca cuối giờ</span>
-                            <span>
-                              <QuestionCircleOutlined
-                                className='ml-4'
-                                title='Thời gian làm việc sau ca sẽ được tính tăng ca.'
-                              />
-                            </span>
-                          </span>
-                        </h3>
-                        {isOvertimeEnabled && (
-                          <div className='flex items-center gap-1'>
-                            <span className='w-22 text-lg'>Nếu làm hơn</span>
-
-                            <span>
-                              <InputRoot
-                                name='overtimeMinutes'
-                                className='mx-3 w-11 px-2 py-1'
-                                defaultValue={30}
-                                value={overtimeMinutes}
-                                onChange={e => {
-                                  handleOvertimeChange(e.target.value);
+                      <div className='col-span-1'>
+                        {/* Takes up 1/5 = 20% */}
+                        <div>
+                          <h3 className='flex items-center font-medium'>
+                            <span className='ml-2'>
+                              <Switch
+                                checked={isOvertimeEnabled}
+                                onChange={checked => {
+                                  setIsOvertimeEnabled(checked);
                                 }}
                               />
+                              <span className='ml-4'>Tăng ca cuối giờ</span>
+                              <span>
+                                <QuestionCircleOutlined
+                                  className='ml-4'
+                                  title='Thời gian làm việc sau ca sẽ được tính tăng ca.'
+                                />
+                              </span>
                             </span>
+                          </h3>
+                          {isOvertimeEnabled && (
+                            <div className='flex items-center gap-1'>
+                              <span className='w-22 text-lg'>Nếu làm hơn</span>
 
-                            <span className='text-lg'> phút</span>
-                            <span>
-                              <QuestionCircleOutlined
-                                className='ml-3'
-                                title={`Thời gian làm việc sau ${overtimeMinutes} phút sẽ được tính tăng ca.`}
-                              />
-                            </span>
-                          </div>
-                        )}
+                              <span>
+                                <InputRoot
+                                  name='overtimeMinutes'
+                                  className='mx-3 w-11 px-2 py-1'
+                                  defaultValue={30}
+                                  value={overtimeMinutes}
+                                  onChange={e => {
+                                    handleOvertimeChange(e.target.value);
+                                  }}
+                                />
+                              </span>
+
+                              <span className='text-lg'> phút</span>
+                              <span>
+                                <QuestionCircleOutlined
+                                  className='ml-3'
+                                  title={`Thời gian làm việc sau ${overtimeMinutes} phút sẽ được tính tăng ca.`}
+                                />
+                              </span>
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
+                ) : (
+                  <div className='mb-12 mt-6'>
+                    <div className='px-6'>
+                      <div className='grid grid-cols-3 gap-6'>
+                        <div>
+                          <label className='mb-1 block text-sm font-medium'>Giờ bắt đầu</label>
+                          <SelectRoot
+                            name='flexibleStartTime'
+                            className='w-full rounded-md border px-3 py-3'
+                            firstValue={{
+                              value: '',
+                              label: 'Chọn giờ bắt đầu',
+                            }}
+                            options={flexibleTimeOptions}
+                            onChange={value => {
+                              methods?.setValue('flexibleStartTime', value);
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <label className='mb-1 block text-sm font-medium'>Giờ kết thúc</label>
+                          <SelectRoot
+                            name='flexibleEndTime'
+                            className='w-full rounded-md border px-3 py-3'
+                            firstValue={{
+                              value: '',
+                              label: 'Chọn giờ kết thúc',
+                            }}
+                            options={flexibleTimeOptions}
+                            onChange={value => {
+                              methods?.setValue('flexibleEndTime', value);
+                            }}
+                          />
+                        </div>
+                        <div>
+                          <label className='mb-1 block text-sm font-medium'>Thời gian tối thiểu 1 ca (giờ)</label>
+                          <InputRoot
+                            name='minimumTimeForShift'
+                            type='number'
+                            placeholder='Nhập thời gian tối thiểu'
+                            className={`w-full rounded-md border px-3 py-2 ${methods?.formState?.errors?.minimumTimeForShift ? 'border-red-500' : ''
+                              }`}
+                            min={0}
+                            step={1}
+                            // eslint-disable-next-line unicorn/no-zero-fractions
+                            defaultValue={1.0}
+                            // eslint-disable-next-line unicorn/no-zero-fractions
+                            value={minimumTime}
+                            onChange={e => {
+                              const value = e.target.value;
+                              setMinimumTime(value);
+                              methods?.setValue('minimumTimeForShift', Number(value));
+                            }}
+                            onBlur={e => {
+                              const value = Number(e.target.value);
+                              if (!Number.isNaN(value)) {
+                                const formattedValue = value.toFixed(1);
+                                setMinimumTime(formattedValue);
+                                methods?.setValue('minimumTimeForShift', Number(formattedValue));
+                              }
+                            }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </Form>
             </div>
           </div>
