@@ -1,5 +1,5 @@
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { Button, Modal, Select, Switch } from 'antd';
+import { Button, Modal, Switch } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import * as yup from 'yup';
@@ -9,6 +9,9 @@ import IconRoot from '@/components/icon';
 import { IconVariable } from '@/components/icon/types';
 import InputRoot from '@/components/input';
 import SelectRoot from '@/components/Select';
+
+import { type IDepartment } from '..';
+import DepartmentSelect from './departmentSelect';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface WorkingTime {
@@ -22,11 +25,38 @@ export interface WorkingTime {
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-export interface AddFormValues {
+export interface BaseFormValues {
   code: string;
   name: string;
-  shiftType: 'FIXED' | 'FLEXIBLE';
-  departmentList: Array<{ code: string }>;
+  departmentList: IDepartment[];
+  note: string;
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export interface FixedShiftFormValues extends BaseFormValues {
+  shiftType: 'FIXED';
+  overtime: boolean;
+  overtimeForMinutes: number;
+  workingTimes: WorkingTime[];
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export interface FlexibleShiftFormValues extends BaseFormValues {
+  shiftType: 'FLEXIBLE';
+  startTimeForShift: string;
+  endTimeForShift: string;
+  minimumTimeForShift: number;
+}
+
+// Combined type for form values
+export type AddFormValues = FixedShiftFormValues | FlexibleShiftFormValues;
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export interface FixedShiftPayload {
+  code: string;
+  name: string;
+  shiftType: 'FIXED';
+  departmentList: IDepartment[];
   note: string;
   overtime: boolean;
   overtimeForMinutes: number;
@@ -39,6 +69,18 @@ export interface AddFormValues {
     toBreakTime: string;
     totalHours: number;
   }>;
+}
+
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export interface FlexibleShiftPayload {
+  code: string;
+  name: string;
+  shiftType: 'FLEXIBLE';
+  departmentList: IDepartment[];
+  note: string;
+  startTimeForShift: string;
+  endTimeForShift: string;
+  minimumTimeForShift: number;
 }
 
 // Define the weekdays
@@ -125,7 +167,12 @@ const AddForm = ({
   const [isOvertimeEnabled, setIsOvertimeEnabled] = useState(false);
   const [overtimeMinutes, setOvertimeMinutes] = useState(30);
   // eslint-disable-next-line unicorn/no-zero-fractions
-  const [minimumTime, setMinimumTime] = useState<string | number>(1.0);
+  const [minimumTimeForShift, setMinimumTimeForShift] = useState<number>(1.0);
+  const [minimumTimeDisplay, setMinimumTimeDisplay] = useState('1.0');
+
+  const formatDecimal = (num: number): string => {
+    return num.toFixed(1);
+  };
 
   const departments = [
     ...new Map(
@@ -225,6 +272,11 @@ const AddForm = ({
 
   useEffect(() => {
     if (!isOpen) {
+      setMinimumTimeDisplay('1.0');
+      // eslint-disable-next-line unicorn/no-zero-fractions
+      setMinimumTimeForShift(1.0);
+      // eslint-disable-next-line unicorn/no-zero-fractions
+      methods?.setValue('minimumTimeForShift', 1.0);
       setShiftType('FIXED');
       methods?.setValue('shiftType', 'FIXED');
       setTimes(
@@ -242,6 +294,8 @@ const AddForm = ({
           return acc;
         }, {}),
       );
+      setShiftType('FIXED');
+      methods?.setValue('shiftType', 'FIXED');
     }
     setKey(prev => prev + 1);
   }, [isOpen]);
@@ -277,15 +331,16 @@ const AddForm = ({
   };
 
   const handleClose = () => {
-    // Reset minimum time
-    setMinimumTime('1.0');
+    // eslint-disable-next-line unicorn/no-zero-fractions
+    setMinimumTimeForShift(1.0);
+    setMinimumTimeDisplay('1.0');
     methods?.setValue('minimumTimeForShift', 1);
 
     // Reset form fields
     methods?.setValue('code', '');
     methods?.setValue('name', '');
     methods?.setValue('note', '');
-    methods?.setValue('departmentCode', []);
+    methods?.setValue('departmentList', []);
 
     // Reset times state
     setTimes(
@@ -318,41 +373,67 @@ const AddForm = ({
 
   const handleFormSubmit = (values: AddFormValues) => {
     console.log(departments);
-    // Transform the workingTimes array to match the required format
-    const transformedWorkingTimes = weekdays.map((day, index) => ({
-      active: times[day.key].enabled,
-      dayOfWeek: day.dayOfWeek,
-      startTime:
-        (values.workingTimes[day.key as keyof typeof values.workingTimes] as { startTime?: string })?.startTime ??
-        '00:00',
-      endTime:
-        (values.workingTimes[day.key as keyof typeof values.workingTimes] as { endTime?: string })?.endTime ?? '00:00',
-      fromBreakTime:
-        (values.workingTimes[day.key as keyof typeof values.workingTimes] as { fromBreakTime?: string })
-          ?.fromBreakTime ?? '23:59',
-      toBreakTime:
-        (values.workingTimes[day.key as keyof typeof values.workingTimes] as { toBreakTime?: string })?.toBreakTime ??
-        '23:59',
-      totalHours:
-        (values.workingTimes[day.key as keyof typeof values.workingTimes] as { totalHours?: number })?.totalHours ?? 0,
-    }));
+
+    // Check if workingTimes exists (only in FIXED shift)
+    let transformedWorkingTimes: WorkingTime[] = [];
+    if (values.shiftType === 'FIXED') {
+      transformedWorkingTimes = weekdays.map(day => ({
+        active: times[day.key].enabled,
+        dayOfWeek: day.dayOfWeek,
+        startTime:
+          (values.workingTimes[day.key as keyof typeof values.workingTimes] as { startTime?: string })?.startTime ??
+          '00:00',
+        endTime:
+          (values.workingTimes[day.key as keyof typeof values.workingTimes] as { endTime?: string })?.endTime ??
+          '00:00',
+        fromBreakTime:
+          (values.workingTimes[day.key as keyof typeof values.workingTimes] as { fromBreakTime?: string })
+            ?.fromBreakTime ?? '23:59',
+        toBreakTime:
+          (values.workingTimes[day.key as keyof typeof values.workingTimes] as { toBreakTime?: string })?.toBreakTime ??
+          '23:59',
+        totalHours:
+          (values.workingTimes[day.key as keyof typeof values.workingTimes] as { totalHours?: number })?.totalHours ??
+          0,
+      }));
+    }
+
     // Transform the departmentList to match the required format
-    const transformedDepartmentList = (values.departmentList || []).map((value: { code: string }) => ({
-      code: value.code,
+    const transformedDepartmentList = (values.departmentList || []).map((value: IDepartment) => ({
+      code: value.code ?? '',
     }));
 
-    // Create the final payload
-    const payload = {
-      ...values,
-      departmentList: transformedDepartmentList,
-      workingTimes: transformedWorkingTimes,
-      overtime: isOvertimeEnabled,
-      overtimeForMinutes: overtimeMinutes,
-    };
+    // Handle the form submission based on the shift type
+    if (values.shiftType === 'FIXED') {
+      const fixedPayload: FixedShiftPayload = {
+        code: values.code,
+        name: values.name,
+        shiftType: 'FIXED',
+        departmentList: transformedDepartmentList,
+        note: values.note,
+        overtime: isOvertimeEnabled,
+        overtimeForMinutes: overtimeMinutes,
+        workingTimes: transformedWorkingTimes,
+      };
+      onSubmit(fixedPayload);
+    } else {
+      const flexiblePayload: FlexibleShiftPayload = {
+        code: values.code,
+        name: values.name,
+        shiftType: 'FLEXIBLE',
+        departmentList: transformedDepartmentList,
+        note: values.note,
+        startTimeForShift: values.startTimeForShift || '00:00',
+        endTimeForShift: values.endTimeForShift || '00:00',
+        minimumTimeForShift,
+      };
+      onSubmit(flexiblePayload);
+    }
 
-    onSubmit(payload);
+    // Reset the form after submission
     formRef.current?.reset(defaultFormValues);
   };
+
   usePreventScroll(isOpen);
 
   // Generate time options
@@ -526,25 +607,7 @@ const AddForm = ({
                   <div>
                     <div className='mb-4 px-6'>
                       <label className='mb-1 ml-2 block text-sm font-medium'>Phòng ban</label>
-                      <Select
-                        mode='tags'
-                        size='large'
-                        placeholder='Chọn phòng ban'
-                        onChange={value => {
-                          methods?.setValue('departmentCode', value);
-                          methods?.trigger('departmentCode');
-                        }}
-                        style={{ width: '100%' }}
-                        options={departments.map(dept => ({
-                          value: dept.id,
-                          label: `${dept.name}`,
-                        }))}
-                        status={methods?.formState?.errors?.departmentCode ? 'error' : undefined}
-                        value={methods?.watch('departmentCode') || undefined}
-                        tokenSeparators={[',']}
-                        allowClear
-                        maxTagCount='responsive'
-                      />
+                      <DepartmentSelect departments={departments} />
                     </div>
                   </div>
                   <div className='px-6 py-4'>
@@ -726,7 +789,7 @@ const AddForm = ({
                         <div>
                           <label className='mb-1 block text-sm font-medium'>Giờ bắt đầu</label>
                           <SelectRoot
-                            name='flexibleStartTime'
+                            name='startTimeForShift'
                             className='w-full rounded-md border px-3 py-3'
                             firstValue={{
                               value: '',
@@ -734,14 +797,14 @@ const AddForm = ({
                             }}
                             options={flexibleTimeOptions}
                             onChange={value => {
-                              methods?.setValue('flexibleStartTime', value);
+                              methods?.setValue('startTimeForShift', value);
                             }}
                           />
                         </div>
                         <div>
                           <label className='mb-1 block text-sm font-medium'>Giờ kết thúc</label>
                           <SelectRoot
-                            name='flexibleEndTime'
+                            name='endTimeForShift'
                             className='w-full rounded-md border px-3 py-3'
                             firstValue={{
                               value: '',
@@ -749,7 +812,7 @@ const AddForm = ({
                             }}
                             options={flexibleTimeOptions}
                             onChange={value => {
-                              methods?.setValue('flexibleEndTime', value);
+                              methods?.setValue('endTimeForShift', value);
                             }}
                           />
                         </div>
@@ -757,7 +820,7 @@ const AddForm = ({
                           <label className='mb-1 block text-sm font-medium'>Thời gian tối thiểu 1 ca (giờ)</label>
                           <InputRoot
                             name='minimumTimeForShift'
-                            type='number'
+                            type='text'
                             placeholder='Nhập thời gian tối thiểu'
                             className={`w-full rounded-md border px-3 py-2 ${
                               methods?.formState?.errors?.minimumTimeForShift ? 'border-red-500' : ''
@@ -767,18 +830,33 @@ const AddForm = ({
                             // eslint-disable-next-line unicorn/no-zero-fractions
                             defaultValue={1.0}
                             // eslint-disable-next-line unicorn/no-zero-fractions
-                            value={minimumTime}
+                            value={minimumTimeDisplay}
                             onChange={e => {
-                              const value = e.target.value;
-                              setMinimumTime(value);
-                              methods?.setValue('minimumTimeForShift', Number(value));
+                              const inputValue = e.target.value;
+                              // Allow empty or numeric input
+                              if (inputValue === '' || /^\d*\.?\d*$/.test(inputValue)) {
+                                setMinimumTimeDisplay(inputValue);
+                                const numValue = Number(inputValue);
+                                if (!Number.isNaN(numValue)) {
+                                  setMinimumTimeForShift(numValue);
+                                  methods?.setValue('minimumTimeForShift', numValue);
+                                }
+                              }
                             }}
                             onBlur={e => {
                               const value = Number(e.target.value);
-                              if (!Number.isNaN(value)) {
-                                const formattedValue = value.toFixed(1);
-                                setMinimumTime(formattedValue);
+                              if (!Number.isNaN(value) && e.target.value !== '') {
+                                const formattedValue = formatDecimal(Math.max(0.5, Math.round(value * 2) / 2));
+                                setMinimumTimeDisplay(formattedValue);
+                                setMinimumTimeForShift(Number(formattedValue));
                                 methods?.setValue('minimumTimeForShift', Number(formattedValue));
+                              } else {
+                                // Reset to default if invalid or empty
+                                setMinimumTimeDisplay('1.0');
+                                // eslint-disable-next-line unicorn/no-zero-fractions
+                                setMinimumTimeForShift(1.0);
+                                // eslint-disable-next-line unicorn/no-zero-fractions
+                                methods?.setValue('minimumTimeForShift', 1.0);
                               }
                             }}
                           />

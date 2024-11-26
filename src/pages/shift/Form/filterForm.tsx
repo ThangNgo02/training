@@ -28,14 +28,20 @@ const FilterForm = ({
   const formRef = useRef<IFormRef>(null);
   const [selectKey, setSelectKey] = useState(0);
   // Get all departments from totalData
-  const departments = totalData
-    .filter(item => item.departmentList && Array.isArray(item.departmentList))
-    .flatMap(item =>
-      item.departmentList.map((dept: { code: any; name: any }) => ({
-        code: dept.code,
-        name: dept.name,
-      })),
-    );
+  const departments = [
+    ...new Map(
+      totalData
+        .filter(item => item.departmentList && Array.isArray(item.departmentList))
+        .flatMap(item =>
+          item.departmentList.map((dept: { id: any; code: any; name: any }) => ({
+            id: dept.id,
+            code: dept.code,
+            name: dept.name,
+          })),
+        )
+        .map(dept => [dept.id, dept]), // Map with `id` as the key for deduplication
+    ).values(),
+  ];
 
   const handleFormSubmit = (values: FilterFormValues) => {
     onSubmit(values);

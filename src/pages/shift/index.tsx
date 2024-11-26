@@ -34,9 +34,9 @@ export interface IWorkingTime {
 }
 
 export interface IDepartment {
-  id: string;
-  name: string;
-  code: string;
+  id?: string;
+  name?: string;
+  code?: string;
 }
 
 export interface IShiftDataType {
