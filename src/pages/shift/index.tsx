@@ -11,7 +11,7 @@ import toastDefault, { EnumToast } from '@/components/toast';
 import AuthService from '@/utils/Auth';
 import { LoggerService } from '@/utils/Logger';
 
-import PutForm from './Form/putForm';
+import PutForm, { type PutFormValues } from './Form/putForm';
 import ShiftView from './view';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -57,6 +57,10 @@ export interface IShiftDataType {
     toBreakTime: string;
     totalHours: number;
   }>;
+  startTimeForShift: string;
+  endTimeForShift: string;
+  minimumTimeForShift: number;
+  status?: 'ACTIVE' | 'DEACTIVE';
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -72,7 +76,8 @@ const ShiftPage: React.FC = () => {
   //
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedShiftId, setSelectedShiftId] = useState<number | null>(null);
-  const [selectedShiftData, setSelectedShiftData] = useState<shiftData | null>(null);
+  const [selectedShiftData, setSelectedShiftData] = useState<IShiftDataType | null>(null);
+  const [status, setStatus] = useState<'activate' | 'deactivate' | ''>('');
 
   // Fetch token from cookies using AuthService
   const token = AuthService.getPackageAuth();
@@ -101,7 +106,7 @@ const ShiftPage: React.FC = () => {
   };
 
   const getShiftApi = (id: number): IApiRequest => ({
-    url: `https://api.tsp.com.vn/hrm/shift/${id}`,
+    url: `https://api.tsp.com.vn/hrm/shift-for-staff/${id}`,
     method: 'get',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -111,7 +116,7 @@ const ShiftPage: React.FC = () => {
   });
 
   const saveShiftApi: IApiRequest = {
-    url: `https://api.tsp.com.vn/hrm/shift/${selectedShiftId}`,
+    url: `https://api.tsp.com.vn/hrm/shift-for-staff/${selectedShiftId}`,
     method: 'put',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -122,6 +127,16 @@ const ShiftPage: React.FC = () => {
 
   const addShiftApi: IApiRequest = {
     url: 'https://api.tsp.com.vn/hrm/shift-for-staff',
+    method: 'post',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      'Content-Type': 'application/json',
+    },
+  };
+
+  const changeStatusShiftApi: IApiRequest = {
+    url: `https://api.tsp.com.vn/hrm/shift-for-staff/${selectedShiftId}/${status}`,
     method: 'post',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -162,12 +177,31 @@ const ShiftPage: React.FC = () => {
   const getShiftResponse = {
     handleRequestSuccess: (response: any) => {
       if (response?.code === 2000) {
-        const formattedData = {
+        const formattedData: IShiftDataType = {
+          id: response.data.id,
           code: response.data.code,
           name: response.data.name,
+          shiftType: response.data.shiftType,
+          departmentList: response.data.departmentList || [],
+          status: response.data.status,
           note: response.data.note,
-          phonenumber: response.data.phoneNumber || '',
+          overtime: response.data.overtime ?? false,
+          overtimeForMinutes: response.data.overtimeForMinutes ?? 0,
+          workingTimes:
+            response.data.workingTimes?.map((time: any) => ({
+              active: time.active ?? false,
+              dayOfWeek: time.dayOfWeek ?? '',
+              startTime: time.startTime ?? '',
+              endTime: time.endTime ?? '',
+              fromBreakTime: time.fromBreakTime ?? '',
+              toBreakTime: time.toBreakTime ?? '',
+              totalHours: time.totalHours ?? 0,
+            })) || [],
+          startTimeForShift: response.data.startTimeForShift || '',
+          endTimeForShift: response.data.endTimeForShift || '',
+          minimumTimeForShift: response.data.minimumTimeForShift ?? 0,
         };
+
         setSelectedShiftData(formattedData);
         setIsModalOpen(true);
       } else {
@@ -191,6 +225,20 @@ const ShiftPage: React.FC = () => {
     },
     handleRequestFailed: (error: any) => {
       LoggerService.error('Error adding shift:', error.message);
+    },
+  };
+
+  const changeStatusShiftResponse = {
+    handleRequestSuccess: (response: any) => {
+      if (response?.code === 2000) {
+        toastDefault(EnumToast.SUCCESS, 'Shift status change successfully');
+        mutateFilterShifts({}); // Refresh shifts after changing
+      } else {
+        toastDefault(EnumToast.ERROR, 'Failed to change shift status');
+      }
+    },
+    handleRequestFailed: (error: any) => {
+      LoggerService.error('Error changing shift status:', error.message);
     },
   };
 
@@ -220,6 +268,7 @@ const ShiftPage: React.FC = () => {
     getShiftResponse,
   );
   const { mutate: mutateSaveShift } = useRequest(saveShiftApi, saveShiftResponse);
+  const { mutate: mutateChangeStatusShift } = useRequest(changeStatusShiftApi, changeStatusShiftResponse);
   const { mutate: mutateAddShift } = useRequest(addShiftApi, addShiftResponse);
 
   useEffect(() => {
@@ -231,6 +280,14 @@ const ShiftPage: React.FC = () => {
       mutateGetShift({});
     }
   }, [selectedShiftId]);
+
+  useEffect(() => {
+    if (selectedShiftId) {
+      mutateChangeStatusShift({});
+      handleFilterShift();
+      handleCloseModal();
+    }
+  }, [status]);
 
   useEffect(() => {
     mutateFilterShifts({});
@@ -266,28 +323,11 @@ const ShiftPage: React.FC = () => {
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedShiftId(null);
-    setSelectedShiftData({
-      code: '',
-      name: '',
-      note: '',
-      phonenumber: '',
-    });
   };
 
-  const handlePutFormSubmit = (data: shiftData) => {
-    const dataApi = {
-      code: data.code,
-      name: data.name,
-      note: data.note,
-      phoneNumber: data.phonenumber,
-    };
-    mutateSaveShift({ ...dataApi });
-
-    // Refresh the data and reset state
-    mutateFilterShifts({});
-    handlePageChange(1);
-    setIsModalOpen(false);
+  const handlePutFormSubmit = (data: PutFormValues) => {
+    mutateSaveShift(data);
+    handleCloseModal();
     setSelectedShiftData(null);
   };
 
@@ -415,9 +455,15 @@ const ShiftPage: React.FC = () => {
 
               <PutForm
                 isOpen={isModalOpen}
+                totalData={totalData}
+                setStatus={setStatus}
                 onClose={handleCloseModal}
                 onSubmit={handlePutFormSubmit}
-                departmentData={selectedShiftData ?? undefined}
+                shiftData={
+                  selectedShiftData?.shiftType === 'FIXED'
+                    ? { ...selectedShiftData, shiftType: 'FIXED' }
+                    : { ...selectedShiftData, shiftType: 'FLEXIBLE' }
+                }
               />
             </div>
           </div>

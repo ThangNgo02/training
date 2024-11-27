@@ -4,14 +4,14 @@ import { useFormContext } from 'react-hook-form';
 import { type IDepartment } from '..';
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const DepartmentSelect = ({ departments }: { departments: IDepartment[] }) => {
+const DepartmentSelect = ({ departments, disabled }: { departments: IDepartment[]; disabled?: boolean }) => {
   const {
     watch,
     setValue,
     formState: { errors },
   } = useFormContext();
 
-  const departmentList = watch('departmentList') || []; // Watching `departmentList`
+  const departmentList = watch('departmentList') || [];
 
   return (
     <Select
@@ -32,6 +32,7 @@ const DepartmentSelect = ({ departments }: { departments: IDepartment[] }) => {
       status={errors.departmentList ? 'error' : undefined}
       allowClear
       maxTagCount='responsive'
+      disabled={disabled}
     />
   );
 };
