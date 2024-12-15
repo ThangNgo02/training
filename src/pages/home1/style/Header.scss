@@ -1,0 +1,52 @@
+@import "./main.scss";
+
+// Apply the mixins to the styles
+
+.header {
+  @include flex-layout(row, space-between, center, 2rem); // Applying flex-layout mixin
+  padding: 1rem 2rem;
+  border-bottom: 1px solid #eee;
+  
+  &__logo {
+    @include flex-layout(row, flex-start, center, 0.5rem); // Applying flex-layout mixin
+    
+    &-icon {
+      font-size: 2rem;
+      color: $primary-color;
+      margin-right: 0.5rem;
+    }
+  
+    &-title {
+      @include text-style(1.5rem, bold, #000);
+    }
+  }
+  
+  &__nav {
+    @include flex-layout(row, flex-start, center, 2rem);
+    
+    &-item {
+      @include text-style(1rem, normal, #333);
+      text-decoration: none;
+      transition: color 0.3s;
+
+      &:hover {
+        color: $primary-color;
+      }
+    }
+  }
+  
+  &__icons {
+    @include flex-layout(row, center, center, 1.5rem);
+    
+    .header__icon {
+      font-size: 1.5rem;
+      color: #333;
+      cursor: pointer;
+      transition: color 0.3s;
+
+      &:hover {
+        color: $primary-color;
+      }
+    }
+  }
+}

@@ -13,4 +13,6 @@ export enum IconVariable {
   arrowDown,
   error,
   required,
+
+  companyIcon,
 }

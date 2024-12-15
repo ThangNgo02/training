@@ -1,0 +1,249 @@
+@import './mixin.scss';
+////////////////////////////////
+$primary-color: #d4a056;
+
+*, *::before, *::after {
+    box-sizing: inherit;
+}
+
+.body{
+    width: 100vw;
+    height: auto !important;
+    @include flex-layout(column, center,center, 0.5rem);
+
+    &__part1{
+        display: flex;
+        align-items: center;
+        height: 650px;
+        max-height: auto;
+        width: 100%;
+
+        &-background{
+            @include background-image('/homepage1_image.png');
+            min-height: 100%;
+            height: auto;
+            width: 100%;
+
+            .body__part1-content{
+                @include flex-layout(column, center, flex-start, 0.5rem);
+                margin-left: 51.5%;
+                margin-top: 10%;
+                padding: 1em 2em;
+                min-height: 60%;
+                height: auto;
+                width: 40%;
+                background-color: #FFF3E3;
+
+                h1 {
+                    @include text-style(2.5rem, 500, $primary-color);
+                    width: 55%;
+                }
+                    
+                p {
+                    @include text-style(1.3rem);
+                    display: flex;
+
+                }
+
+                a {
+                    @include button-style($primary-color);
+                    margin-top: 2em;
+                }
+            }
+        }
+        
+    }
+
+    &__part2{
+        width: 100%;
+        min-height: 650px;
+        height: auto !important;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+        border: 1px solid red;
+
+        &-background{
+            min-height: 100%;
+            height: auto;
+            width: 100%;
+            background-color: white;
+
+            .body__part2-content {
+                @include flex-layout(column, center, center);
+                min-height: 40%;
+                height: auto;
+                width: 100%;
+                margin: 0 auto;
+
+                h1{
+                    @include text-style(2.5rem, 500, black);
+                    margin: 1em 0 0 0;
+                }
+
+                p{
+                    @include text-style(1rem, 500, rgb(116, 114, 114));
+                    margin: 0 0 1em 0;
+                }
+
+                .cards {
+                    @include grid-layout();
+
+                    .card {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        text-align: center;
+                    
+                        img {
+                        width: 100%;
+                        max-width: 350px;
+                        height: 400px;
+                        @include box-style(1px solid #ccc, 10px);
+                        object-fit: cover;
+                        }
+
+                        p {
+                        @include text-style(1rem);
+                        margin-top: 0.5rem;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &__part3{
+        width: 100%;
+        min-height: 650px;
+        height: auto!important;
+        display: flex;
+        align-items: center;
+        box-sizing: border-box;
+
+        &-background{
+            min-height: 100%;
+            height: auto;
+            width: 100%;
+            background-color: white;
+
+            .body__part3-content {
+                @include flex-layout(column, center, center);
+                min-height: 40%;
+                height: auto;
+                width: 100%;
+                margin: 0 auto;
+
+                h1{
+                    @include text-style(2.5rem, 500, black);
+                    margin: 1em 0 1em 0;
+                }
+
+                .cards {
+                    @include grid-layout(repeat(4, 1fr), 1rem);
+
+                    .card {
+                        position: relative;
+                        display: flex;
+                        flex-direction: column;
+                        text-align: left;
+                        border: 1px solid #ccc;
+                        border-radius: 10px;
+                        overflow: hidden;
+                        transition: transform 0.3s, box-shadow 0.3s;
+
+                        &:hover {
+                            transform: translateY(-5px);
+                            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+                        }
+
+                        img {
+                            width: 100%;
+                            max-width: 300px;
+                            height: 250px;
+                            object-fit: cover;
+                        }
+
+                        .card-details {
+                            padding: 1rem;
+                            display: flex;
+                            flex-direction: column;
+                            gap: 0.5rem;
+
+                            h1 {
+                                @include text-style(1.2rem, 600, #333);
+                            }
+
+                            p {
+                                @include text-style(1rem, 500, #666);
+                            }
+
+                            .price {
+                                display: flex;
+                                justify-content: space-between;
+                                align-items: center;
+
+                                .discounted {
+                                    @include text-style(1.2rem, 700, $primary-color);
+                                }
+
+                                .original {
+                                    @include text-style(1rem, 500, #999);
+                                    text-decoration: line-through;
+                                }
+                            }
+                        }
+
+                        .hover-overlay {
+                            position: absolute;
+                            top: 0;
+                            left: 0;
+                            width: 100%;
+                            height: 100%;
+                            background-color: rgba(0, 0, 0, 0.6);
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: center;
+                            align-items: center;
+                            opacity: 0;
+                            transition: opacity 0.3s;
+
+                            a {
+                                @include button-style( #fff, $primary-color, 0.8rem 1.5rem, 1rem);
+                                margin: 0.5rem 0;
+                            }
+
+                            &:hover {
+                                opacity: 1;
+                            }
+
+                            .hover__icons {
+                                @include flex-layout(row, center, center, 0.5rem);
+
+                                span{
+                                    @include text-style(1rem, 700, white);
+                                    
+                                    &:hover {
+                                        cursor: pointer;
+                                    }
+                                }
+                                
+                                .hover__icon {
+                                    font-size: 1.5rem;
+                                    color: #fff;
+                                    cursor: pointer;
+                                    transition: color 0.3s;
+                                    padding: 0 0.02em;
+                                    
+                                    &:hover {
+                                        cursor: pointer;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

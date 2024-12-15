@@ -1,0 +1,30 @@
+.text {
+    margin: 0;
+  
+    // Font sizes
+    &--small {
+      font-size: 0.875rem;
+    }
+  
+    &--medium {
+      font-size: 1rem;
+    }
+  
+    &--large {
+      font-size: 1.25rem;
+    }
+  
+    // Font weights
+    &--light {
+      font-weight: 300;
+    }
+  
+    &--normal {
+      font-weight: 400;
+    }
+  
+    &--bold {
+      font-weight: 700;
+    }
+  }
+  

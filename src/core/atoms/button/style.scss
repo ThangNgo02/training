@@ -1,0 +1,61 @@
+$primary-color: #d4a056;
+
+.button {
+  display: inline-block;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  font-family: inherit;
+  transition: all 0.3s ease;
+  text-align: center;
+
+  &--small {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  &--medium {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+
+  &--large {
+    font-size: 1.25rem;
+    padding: 0.75rem 1.5rem;
+  }
+
+  &--primary {
+    background-color: $primary-color;
+    color: #ffffff;
+    border-color: $primary-color;
+
+    &:hover {
+      background-color: darken($primary-color, 10%);
+      border-color: darken($primary-color, 10%);
+    }
+  }
+
+  &--secondary {
+    background-color: white;
+    color: $primary-color;
+    border-color: $primary-color;
+
+    &:hover {
+      background-color: $primary-color;
+      color: #ffffff;
+      border-color: $primary-color;
+    }
+  }
+
+  &--outline {
+    background-color: transparent;
+    border: 1px solid $primary-color;
+    color: $primary-color;
+
+    &:hover {
+      background-color: $primary-color;
+      color: #ffffff;
+    }
+  }
+}

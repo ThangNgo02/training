@@ -1,0 +1,52 @@
+@mixin flex-layout($flex-direction: row, $justify-content: center, $align-items: center, $gap: 0) {
+    display: flex;
+    flex-direction: $flex-direction;
+    justify-content: $justify-content;
+    align-items: $align-items;
+    gap: $gap;
+}
+
+@mixin grid-layout($columns: repeat(3, 1fr), $gap: 1.5rem) {
+    display: grid;
+    grid-template-columns: $columns;
+    gap: $gap;
+}
+
+
+@mixin text-style($font-size, $font-weight: 500, $color: #333, $line-height: 1.5) {
+    font-size: $font-size;
+    font-weight: $font-weight;
+    color: $color;
+    line-height: $line-height;
+}
+
+@mixin button-style($background-color, $text-color: #fff, $padding: 1rem 3rem, $font-size: 1.2rem) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $background-color;
+    color: $text-color;
+    padding: $padding;
+    text-decoration: none;
+    font-size: $font-size;
+    font-weight: 600;
+    transition: background-color 0.3s;
+
+    &:hover {
+        background-color: darken($background-color, 10%);
+    }
+}  
+
+@mixin background-image($image-url, $size: cover, $position: center) {
+    background-image: url($image-url);
+    background-size: $size;
+    background-position: $position;
+    background-repeat: no-repeat;
+}  
+
+@mixin box-style($border: 1px solid #ccc, $radius: 10px, $shadow: none) {
+    border: $border;
+    border-radius: $radius;
+    box-shadow: $shadow;
+}
+

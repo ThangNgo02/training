@@ -1,0 +1,59 @@
+$primary-color: #d4a056;
+
+.input {
+  display: block;
+  width: 100%;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  font-family: inherit;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+
+  &--small {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+  }
+
+  &--medium {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+
+  &--large {
+    font-size: 1.25rem;
+    padding: 0.75rem 1.5rem;
+  }
+
+  &--primary {
+    border: 1px solid $primary-color;
+    background-color: #ffffff;
+    color: $primary-color;
+
+    &:focus {
+      border-color: darken($primary-color, 10%);
+      outline: none;
+    }
+  }
+
+  &--secondary {
+    border: 1px solid #cccccc;
+    background-color: #f9f9f9;
+    color: #333;
+
+    &:focus {
+      border-color: $primary-color;
+      outline: none;
+    }
+  }
+
+  &--outline {
+    border: 1px dashed $primary-color;
+    background-color: transparent;
+    color: $primary-color;
+
+    &:focus {
+      border-color: darken($primary-color, 10%);
+      outline: none;
+    }
+  }
+}
