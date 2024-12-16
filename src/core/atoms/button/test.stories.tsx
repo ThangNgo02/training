@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react';
 
-import Button from './';
+import Button from '.';
 
 // Update: Use `const` for the default export and explicitly type it as `Meta`.
 const meta: Meta = {
