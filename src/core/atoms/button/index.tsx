@@ -8,6 +8,7 @@ interface IButtonProps {
   size?: 'small' | 'medium' | 'large';
   variant?: 'primary' | 'secondary' | 'outline';
   color?: string;
+  backgroundColor?: string;
   align?: 'left' | 'center' | 'right';
   className?: string;
   /** Inline styles */
@@ -21,6 +22,7 @@ const Button: React.FC<IButtonProps> = ({
   size = 'medium',
   variant = 'primary',
   color,
+  backgroundColor,
   align = 'center',
   className = '',
   style = {},
@@ -29,7 +31,7 @@ const Button: React.FC<IButtonProps> = ({
   return (
     <button
       className={`button button--${size} button--${variant} ${className}`}
-      style={{ color, textAlign: align, border, ...style }}>
+      style={{ color, backgroundColor, textAlign: align, border, ...style }}>
       {children}
     </button>
   );
