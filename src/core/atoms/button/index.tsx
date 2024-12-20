@@ -2,11 +2,11 @@ import './style.scss';
 
 import React from 'react';
 
-interface IButtonProps {
+export interface IButtonProps {
   /** Content inside the button */
   children: React.ReactNode;
   size?: 'small' | 'medium' | 'large';
-  variant?: 'primary' | 'secondary' | 'outline';
+  variant?: 'primary' | 'secondary';
   color?: string;
   backgroundColor?: string;
   align?: 'left' | 'center' | 'right';
@@ -26,15 +26,38 @@ const Button: React.FC<IButtonProps> = ({
   align = 'center',
   className = '',
   style = {},
-  border,
+  border = '1px solid transparent',
 }) => {
+  // Align dynamically using inline style
+  const alignmentStyle: React.CSSProperties =
+    align === 'center'
+      ? { margin: '0 auto', display: 'block' } // Center
+      : align === 'right'
+        ? { marginLeft: 'auto', display: 'block' } // Right
+        : {}; // Default (left alignment, no changes)
+
   return (
-    <button
-      className={`button button--${size} button--${variant} ${className}`}
-      style={{ color, backgroundColor, textAlign: align, border, ...style }}>
-      {children}
-    </button>
+    <div style={{ textAlign: align }}>
+      <button
+        className={`button button--${size} button--${variant} ${className}`}
+        style={{
+          color,
+          backgroundColor,
+          border,
+          ...style,
+          ...alignmentStyle,
+        }}>
+        {children}
+      </button>
+    </div>
   );
+};
+
+Button.defaultProps = {
+  size: 'medium',
+  variant: 'primary',
+  align: 'center',
+  border: '1px solid transparent',
 };
 
 export default Button;

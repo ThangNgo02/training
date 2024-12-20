@@ -7,20 +7,20 @@ interface ILinkProps {
   href: string;
   /** Content of the link */
   children: React.ReactNode;
+  /** Size of the link: small, medium, or large */
   size?: 'small' | 'medium' | 'large';
+  /** Weight of the font: light, normal, or bold */
   weight?: 'light' | 'normal' | 'bold';
+  /** Text color */
   color?: string;
-  align?: 'left' | 'center' | 'right';
-  /** Custom class names */
-  className?: string;
+  /** Inline styles for custom styling */
+  style?: React.CSSProperties;
   /** Target behavior */
   target?: '_blank' | '_self' | '_parent' | '_top';
-  /** Security and SEO (e.g., "noopener noreferrer") */
+  /** Security and SEO attributes (e.g., "noopener noreferrer") */
   rel?: string;
-  /** HTML element type (default: 'a') */
-  as?: 'a' | 'button' | 'div';
-  /** Inline styles */
-  style?: React.CSSProperties;
+  /** Custom class names */
+  className?: string;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -29,23 +29,21 @@ const Link: React.FC<ILinkProps> = ({
   children,
   size = 'medium',
   weight = 'normal',
-  color = '#007bff',
-  align = 'left',
-  className = '',
+  color,
+  style = {},
   target = '_self',
   rel,
-  as: Component = 'a',
-  style = {},
+  className = '',
 }) => {
   return (
-    <Component
-      href={Component === 'a' ? href : undefined} // Only add href if it's an 'a' tag
+    <a
+      href={href}
       target={target}
       rel={rel ?? (target === '_blank' ? 'noopener noreferrer' : undefined)}
       className={`link link--${size} link--${weight} ${className}`}
-      style={{ color, textAlign: align, ...style }}>
+      style={{ color, ...style }}>
       {children}
-    </Component>
+    </a>
   );
 };
 

@@ -34,7 +34,7 @@
     "./src",
     "vite.config.ts",
     "./src/app.d.ts"
-  ],
+, "src/core/atoms/button/talkfj.stories.tsx"  ],
   "exclude": ["vite.config.ts", "node_modules"],
   "references": [
     {

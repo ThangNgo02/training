@@ -4,26 +4,9 @@ $textarea-disabled-color: #e0e0e0;
 $textarea-error-color: #e74c3c;
 
 .textarea {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-
-  &__label {
-    font-size: 1rem;
-    color: $textarea-primary-color;
-    font-weight: bold;
-  }
-
   &__field {
-    width: 100%;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    font-family: inherit;
     border: 2px solid $textarea-primary-color;
-    border-radius: 4px;
-    background-color: $textarea-secondary-color;
     color: $textarea-primary-color;
-    resize: vertical;
     transition: all 0.3s ease;
 
     &:hover {
@@ -31,64 +14,8 @@ $textarea-error-color: #e74c3c;
     }
 
     &:focus {
-      outline: none;
       border-color: lighten($textarea-primary-color, 10%);
-      box-shadow: 0 0 0 3px lighten($textarea-primary-color, 40%);
-    }
-
-    &--error {
-      border-color: $textarea-error-color;
-      background-color: lighten($textarea-error-color, 40%);
-    }
-
-    &--disabled {
-      background-color: $textarea-disabled-color;
-      color: $textarea-disabled-color;
-      border-color: $textarea-disabled-color;
-      cursor: not-allowed;
-    }
-  }
-
-  &__message {
-    font-size: 0.875rem;
-    color: $textarea-primary-color;
-
-    &--error {
-      color: $textarea-error-color;
-    }
-  }
-
-  // Size Variants
-  &--small {
-    &__field {
-      font-size: 0.875rem;
-      padding: 0.25rem 0.75rem;
-    }
-
-    &__label {
-      font-size: 0.875rem;
-    }
-  }
-
-  &--medium {
-    &__field {
-      font-size: 1rem;
-      padding: 0.5rem 1rem;
-    }
-
-    &__label {
-      font-size: 1rem;
-    }
-  }
-
-  &--large {
-    &__field {
-      font-size: 1.125rem;
-      padding: 0.75rem 1.25rem;
-    }
-
-    &__label {
-      font-size: 1.125rem;
     }
   }
 }
+

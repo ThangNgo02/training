@@ -1,30 +1,19 @@
-$primary-color: #d4a056;
-$secondary-color: #f0f0f0;
-$checked-color: #ffffff;
-$disabled-color: #cccccc;
-
 .checkbox {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  align-items: center; // Ensures the box and label are aligned vertically
+  gap: 0.5rem; // Adds spacing between the checkbox box and label
   cursor: pointer;
-  user-select: none;
-  font-family: inherit;
-
-  &__input {
-    display: none; // Hide the native checkbox
-  }
 
   &__box {
-    width: 1.25rem; // Default size (medium)
+    width: 1.25rem;
     height: 1.25rem;
     border: 2px solid $primary-color;
-    border-radius: 4px;
+    border-radius: 4px; // Rounded corners
+    position: relative;
     background-color: transparent;
     transition: all 0.3s ease;
-    position: relative;
 
-    // Checkmark
+    // Checkmark (for checked state)
     &::after {
       content: '';
       position: absolute;
@@ -32,143 +21,23 @@ $disabled-color: #cccccc;
       left: 50%;
       width: 0.6rem;
       height: 0.3rem;
-      border: solid $checked-color;
+      border: solid white;
       border-width: 0 0.2rem 0.2rem 0;
       transform: translate(-50%, -50%) rotate(45deg);
-      opacity: 0;
-      transition: all 0.3s ease;
+      opacity: 0; // Hidden by default
+      transition: opacity 0.3s ease;
     }
   }
 
   &__label {
-    font-size: 1rem; // Default font size (medium)
+    font-size: 1rem;
     color: $primary-color;
-    transition: color 0.3s ease;
   }
 
-  // Sizes
-  &--small {
-    &__box {
-      width: 1rem;
-      height: 1rem;
-      border-width: 1.5px;
-
-      &::after {
-        width: 0.4rem;
-        height: 0.2rem;
-      }
-    }
-
-    &__label {
-      font-size: 0.875rem;
-    }
-  }
-
-  &--medium {
-    &__box {
-      width: 1.25rem;
-      height: 1.25rem;
-
-      &::after {
-        width: 0.6rem;
-        height: 0.3rem;
-      }
-    }
-
-    &__label {
-      font-size: 1rem;
-    }
-  }
-
-  &--large {
-    &__box {
-      width: 1.5rem;
-      height: 1.5rem;
-
-      &::after {
-        width: 0.8rem;
-        height: 0.4rem;
-      }
-    }
-
-    &__label {
-      font-size: 1.25rem;
-    }
-  }
-
-  // States
-  &__input:checked + &__box {
-    background-color: $primary-color;
-    border-color: $primary-color;
-
+  // Checked state
+  &__box[style*="background-color"] {
     &::after {
-      opacity: 1;
-    }
-  }
-
-  &__input:hover + &__box {
-    border-color: darken($primary-color, 10%);
-  }
-
-  &__input:focus + &__box {
-    outline: 2px solid lighten($primary-color, 30%);
-  }
-
-  &__input:disabled + &__box {
-    background-color: $disabled-color;
-    border-color: $disabled-color;
-    cursor: not-allowed;
-
-    &::after {
-      border-color: $checked-color;
-    }
-  }
-
-  &__input:disabled ~ &__label {
-    color: $disabled-color;
-    cursor: not-allowed;
-  }
-
-  // Variants
-  &--primary {
-    &__box {
-      border-color: $primary-color;
-
-      &::after {
-        border-color: $checked-color;
-      }
-    }
-
-    &__label {
-      color: $primary-color;
-    }
-  }
-
-  &--secondary {
-    &__box {
-      border-color: $secondary-color;
-
-      &::after {
-        border-color: $primary-color;
-      }
-    }
-
-    &__label {
-      color: $secondary-color;
-    }
-  }
-
-  &--outline {
-    &__box {
-      border: 1px dashed $primary-color;
-
-      &::after {
-        border-color: $checked-color;
-      }
-    }
-
-    &__label {
-      color: $primary-color;
+      opacity: 1; // Show checkmark when background color is applied
     }
   }
 }
