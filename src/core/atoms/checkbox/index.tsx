@@ -1,49 +1,49 @@
-import React from 'react';
+import './style.scss';
+
+import React, { useState } from 'react';
 
 interface ICheckboxProps {
-  /** Label for the checkbox */
   label: string;
-  /** Dynamic border styling */
-  border?: string;
-  /** Checkbox size */
   size?: 'small' | 'medium' | 'large';
-  /** Background color when checked */
-  color?: string;
-  className?: string;
-  /** Inline styles */
-  style?: React.CSSProperties;
-  /** Checked state */
-  checked?: boolean;
-  /** Disabled state */
   disabled?: boolean;
+  color?: string; // Dynamic color for the checkbox
+  onChange?: (checked: boolean) => void;
 }
 
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const Checkbox: React.FC<ICheckboxProps> = ({
   label,
-  border = '2px solid #d4a056',
   size = 'medium',
-  color = '#d4a056',
-  className = '',
-  style = {},
-  checked = false,
   disabled = false,
+  color = '#d4a056', // Default color
+  onChange,
 }) => {
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleClick = () => {
+    if (disabled) return;
+    // eslint-disable-next-line @typescript-eslint/naming-convention
+    const newChecked = !isChecked;
+    setIsChecked(newChecked);
+    onChange?.(newChecked);
+  };
+
   return (
     <label
-      className={`checkbox checkbox--${size} ${disabled ? 'checkbox--disabled' : ''} ${className}`}
-      style={{
-        ...style,
-        cursor: disabled ? 'not-allowed' : 'pointer',
-        opacity: disabled ? 0.6 : 1,
-      }}>
+      className={`checkbox checkbox--${size} ${disabled ? 'checkbox--disabled' : ''}`}
+      onClick={handleClick}
+      style={
+        {
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          '--checkbox-border': color,
+          // eslint-disable-next-line @typescript-eslint/naming-convention
+          '--checkbox-bg': isChecked ? color : 'transparent',
+        } satisfies React.CSSProperties
+      }>
       <span
         className='checkbox__box'
-        style={{
-          border,
-          backgroundColor: checked ? color : 'transparent',
-        }}
-      />
+        data-checked={isChecked}
+        aria-disabled={disabled}></span>
       <span className='checkbox__label'>{label}</span>
     </label>
   );

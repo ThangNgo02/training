@@ -1,43 +1,59 @@
 .checkbox {
   display: flex;
-  align-items: center; // Ensures the box and label are aligned vertically
-  gap: 0.5rem; // Adds spacing between the checkbox box and label
-  cursor: pointer;
+  align-items: center;
+  gap: 0.5rem;
 
   &__box {
     width: 1.25rem;
     height: 1.25rem;
-    border: 2px solid $primary-color;
-    border-radius: 4px; // Rounded corners
+    border-radius: 4px;
+    border: 2px solid var(--checkbox-border, #d4a056);
+    background-color: var(--checkbox-bg, transparent);
     position: relative;
-    background-color: transparent;
     transition: all 0.3s ease;
 
-    // Checkmark (for checked state)
-    &::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0.6rem;
-      height: 0.3rem;
-      border: solid white;
-      border-width: 0 0.2rem 0.2rem 0;
-      transform: translate(-50%, -50%) rotate(45deg);
-      opacity: 0; // Hidden by default
-      transition: opacity 0.3s ease;
+    &[data-checked='true'] {
+      background-color: var(--checkbox-bg, #d4a056);
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0.4rem;
+        height: 0.8rem;
+        border: solid white;
+        border-width: 0 0.2rem 0.2rem 0;
+        transform: translate(-50%, -50%) rotate(45deg);
+      }
     }
   }
 
   &__label {
     font-size: 1rem;
-    color: $primary-color;
+    color: #333;
   }
 
-  // Checked state
-  &__box[style*="background-color"] {
-    &::after {
-      opacity: 1; // Show checkmark when background color is applied
+  &--disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+
+    &__box {
+      border-color: #ccc;
     }
+
+    &__label {
+      color: #ccc;
+    }
+  }
+
+  &--small .checkbox__box {
+    width: 1rem;
+    height: 1rem;
+  }
+
+  &--large .checkbox__box {
+    width: 1.5rem;
+    height: 1.5rem;
   }
 }
