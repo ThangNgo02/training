@@ -1,0 +1,51 @@
+$primary-color: #d4a056;
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #eee;
+  
+    /* Logo Section */
+    &__logo {
+      display: flex;
+      align-items: center;
+  
+      &-icon {
+        font-size: 2rem;
+        color: $primary-color;
+        margin-right: 0.5rem;
+      }
+  
+      &-title {
+        font-size: 1.5rem;
+        font-weight: bold;
+        color: #000;
+      }
+    }
+  
+    /* Navigation Bar */
+    &__nav {
+      flex-grow: 1; // Let it take up space between logo and icons
+      margin: 0 2rem;
+    }
+  
+    /* Icons Section */
+    &__icons {
+      display: flex;
+      gap: 1rem;
+  
+      .header__icon {
+        font-size: 1.5rem;
+        color: #333;
+        cursor: pointer;
+        transition: color 0.3s;
+  
+        &:hover {
+          color: $primary-color;
+        }
+      }
+    }
+  }
+  

@@ -1,0 +1,36 @@
+.nav-bar {
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: center;
+
+  &__list {
+    display: flex;
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  &__item {
+    margin-right: 3rem;
+  }
+
+  &__link {
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: normal;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #ffd700; // A gold-like color when hovered
+      text-decoration: underline;
+    }
+
+    &:active {
+      color: #003366; // A darker color when active
+    }
+
+    &:focus {
+      outline: 2px solid #ffd700; // Gold outline for focus
+    }
+  }
+}
