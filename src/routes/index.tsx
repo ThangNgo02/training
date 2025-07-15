@@ -1,13 +1,14 @@
-import React from 'react';
-import { createBrowserRouter } from 'react-router-dom';
+import React from "react";
+import { createBrowserRouter } from "react-router-dom";
 
-import { EnumPath } from '@/common/enum/Enums';
-import Notfound from '@/components/notfound';
-import FeatureComponent from '@/pages';
+import { EnumPath } from "@/common/enum/Enums";
+import Notfound from "@/components/notfound";
+import FeatureComponent from "@/pages";
 
-import PrivateRoute from './privateRoute';
+import PrivateRoute from "./privateRoute";
 // eslint-disable-next-line @typescript-eslint/naming-convention
-const HomePage = React.lazy(async () => import('@/pages/home'));
+const HomePage = React.lazy(async () => import("@/pages/home"));
+const LoginPage = React.lazy(async () => import("@/pages/auths/login"));
 
 const rootRoutes: Array<{
   element: JSX.Element;
@@ -24,17 +25,16 @@ const rootRoutes: Array<{
     children: [
       {
         path: EnumPath.home,
-        element: (
-          <PrivateRoute
-            role={[]}
-            children={<HomePage />}
-          />
-        ),
+        element: <PrivateRoute role={[]} children={<HomePage />} />,
+      },
+      {
+        path: EnumPath.login,
+        element: <PrivateRoute role={[]} children={<LoginPage />} />,
       },
     ],
   },
   {
-    path: '*',
+    path: "*",
     element: <Notfound />,
   },
 ];
