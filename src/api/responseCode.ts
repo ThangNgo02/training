@@ -4,11 +4,11 @@ import { LoggerService } from '@/utils/Logger';
 import { type IDataResponse, type State } from './api.interface';
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const REQUEST = {
-  REQUEST_200: '200',
+  REQUEST_2000: 2000,
 };
 // eslint-disable-next-line @typescript-eslint/naming-convention
 const REQUEST_PARSE = {
-  [REQUEST.REQUEST_200]: 'handleRequestSuccess',
+  [REQUEST.REQUEST_2000]: 'handleRequestSuccess',
 };
 
 class ResponseCode {
@@ -34,7 +34,7 @@ class ResponseCode {
       if (Helper.isEmpty(stateFunc)) {
         throw new Error(`ResponseCode code ${response.code} key of funcRequest not defined`);
       }
-      stateFunc(response.data);
+      stateFunc(response);
     } catch (error: any) {
       LoggerService.error('ResponseCode execute find receive error', error.toString());
       throw error;

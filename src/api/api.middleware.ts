@@ -136,6 +136,7 @@ const requestApiLogin = async ({ method, url, payload, params, headers, timeout 
 export const useLogin = ({ method, url, headers, timeout, callbackWhenError }: IApiRequest, funcRequest: State) => {
   return useMutation(async (data: any) => await requestApiLogin({ method, url, payload: data, headers, timeout }), {
     onSuccess: data => {
+      console.log('data', data);
       ResponseCode.find(data, funcRequest);
     },
     onError: () => {
