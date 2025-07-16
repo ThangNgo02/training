@@ -3,10 +3,12 @@ import { useState } from "react";
 import { type IApiRequest } from "@/api/api.interface";
 import { useLogin, useRequest } from "@/api/api.middleware";
 import Config from "@/env";
-import AuthService from "@/utils/Auth";
+import AuthService, { IAuth } from "@/utils/Auth";
 import { LoggerService } from "@/utils/Logger";
 
 import LoginView from "./view";
+
+import { useNavigate } from "react-router-dom";
 
 function LoginIndex() {
   const config = new Config().getState();
@@ -24,15 +26,35 @@ function LoginIndex() {
     method: "post",
   };
 
+  const navigate = useNavigate();
+
   const funcRequest = {
     handleRequestSuccess: (data: any) => {
       try {
-        console.log("Data: ", data.accessToken);
-        document.cookie = `token=${data.accessToken}; path=/; max-age=86400`;
-        if (data.accessToken) {
-          window.location.href = "/";
+        const now = Date.now();
+        const oneDay = 24 * 60 * 60 * 1000;
+
+        if (data) {
+          const authData = {
+            token: data.accessToken,
+            // expireAt: now + oneDay,
+            // refreshAt: now + oneDay,
+            // profileDetails: data.user,
+          };
+
+          // AuthService.setAllPackage(authData, data.user);
+
+          AuthService.setPackageAuth(authData.token, oneDay + now);
+
+          const dataAuthService = AuthService.getPackageAuth();
+
+          document.cookie = `token=${data.accessToken}; path=/; max-age=86400`;
+
+          if (dataAuthService) {
+            navigate("/list-account");
+          }
         }
-        LoggerService.debug("LoginIndex: handleRequestSuccess", data);
+        // LoggerService.debug("LoginIndex: handleRequestSuccess", data);
         setApiError(undefined);
       } catch (error: any) {
         LoggerService.error("LoginIndex: handleRequestSuccess error", error);

@@ -96,7 +96,7 @@ class AuthService {
   static handleLogout() {
     try {
       LoggerService.info('AuthService execute handleLogout');
-      AuthService.removeAll();
+      AuthService.removeAll()
     } catch (error: any) {
       LoggerService.error('AuthService execute handleLogout fail', error);
     }

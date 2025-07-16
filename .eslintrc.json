@@ -52,6 +52,8 @@
     "@typescript-eslint/no-empty-function": "off",
     "react/no-children-prop": "off",
     "react/react-in-jsx-scope": "off",
+    "no-multiple-empty-lines": 1,
+    "space-before-blocks": 1,
     "@typescript-eslint/prefer-optional-chain": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
     "@typescript-eslint/member-delimiter-style": [

@@ -26,7 +26,7 @@ class ResponseCode {
       LoggerService.debug('ResponseCode execute find receive state', state);
       LoggerService.debug('ResponseCode execute find receive funcName', state);
       const code = { ...REQUEST_PARSE };
-      const funcName = code[response.code];
+      const funcName = code[response.code as number];
       if (Helper.isEmpty(funcName)) {
         throw new Error(`ResponseCode code ${response.code} with funcName not defined`);
       }

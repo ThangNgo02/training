@@ -41,6 +41,7 @@ export class LoggerService {
    * @param {string} message
    * @param {string | object} content
    */
+  
   static warn(message: string, content: string | object) {
     if (typeof content === 'object') {
       content = JSON.stringify(content);

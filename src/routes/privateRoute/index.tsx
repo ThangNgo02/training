@@ -18,7 +18,7 @@ function PrivateRoute({ role, children }: IPrivateRoute) {
   const roleProfile = profile?.role;
   if (Helper.isEmpty(auth)) {
     LoggerService.info('Navigate to LOGIN PAGE because user is not authenticated');
-    navigate(EnumPath.home);
+    navigate(EnumPath.login);
   }
 
   const isAllow = role?.length > 0 ? role?.some(r => roleProfile?.includes(r)) : true;
